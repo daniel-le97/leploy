@@ -1,0 +1,10 @@
+services:
+  watchrarr:
+    image: homelabineer/watchrarr:latest
+    container_name: watchrarr
+    restart: unless-stopped
+    volumes:
+      - /portainer/Files/AppData/Config/watchrarr/config.yaml:/app/config.yaml
+      - /portainer/Files/AppData/Config/watchrarr/logs:/app/logs
+      - /portainer/Files/AppData/Config/watchrarr/db:/app/db
+      - /portainer/Files/AppData/Config/watchrarr:/app/watch

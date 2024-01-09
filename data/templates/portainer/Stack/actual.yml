@@ -1,0 +1,10 @@
+version: '3.3'
+services:
+  actual-server:
+    container_name: actual
+    ports:
+      - 5007:5006
+    volumes:
+      - /portainer/Files/AppData/Config/actual:/data
+    image: 'jlongster/actual-server:latest'
+    restart: unless-stopped

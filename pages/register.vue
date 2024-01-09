@@ -1,0 +1,3 @@
+<template>
+  <LoginOrRegister />
+</template>

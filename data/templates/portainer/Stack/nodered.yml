@@ -1,0 +1,15 @@
+version: '3.7'
+
+services:
+  node-red:
+    image: nodered/node-red:latest
+    environment:
+      - TZ=Europe/Athens
+    ports:
+      - '1880:1880'
+    networks:
+      - node-red-net
+    volumes:
+      - /portainer/Files/AppData/Config/nodered:/data
+networks:
+  node-red-net:

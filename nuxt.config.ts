@@ -1,0 +1,41 @@
+// https://nuxt.com/docs/api/configuration/nuxt-config
+const dev = process.env.NODE_ENV !== 'production'
+const cwd = process.cwd()
+export default defineNuxtConfig({
+  experimental: {
+    componentIslands: true,
+  },
+  devtools: { enabled: true },
+  imports: {
+    autoImport: true,
+    dirs: ['./types'],
+  },
+  tailwindcss: {
+    quiet: true,
+    addTwUtil: true,
+
+  },
+  ignore: ['/temp', '/data', '/stack'],
+  nitro: {
+    experimental: {
+      openAPI: true,
+      // wasm: true,
+    },
+    imports: {
+      dirs: ['./server/db', './server/db/services', './types'],
+    },
+    storage: {
+      db: { driver: 'fsLite', base: './.data' },
+    },
+    // set to undefined in prod so during build we use the correct entry and not the dev entry
+    entry: dev ? './core/entry.dev.ts' : undefined,
+    preset: './server/core',
+    typescript: {
+      tsConfig: {
+        exclude: ['../eslint.config.js', `${cwd}/temp`, `${cwd}/data`],
+      },
+    },
+  },
+
+  modules: ['@nuxt/ui', '@vueuse/nuxt', 'nuxt-auth-utils'],
+})

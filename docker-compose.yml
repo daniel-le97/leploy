@@ -1,0 +1,76 @@
+version: '3'
+
+services:
+  proxy:
+    image: 'traefik:v2.10'
+    container_name: le-ploy-proxy
+    command:
+      - --api.insecure=true
+      - --api.dashboard=true
+      - --providers.docker=true
+      - --providers.docker.exposedbydefault=false
+      - '--entrypoints.web.address=:80'
+    ports:
+      - '80:80'
+      - '8080:8080'
+    volumes:
+      - '/var/run/docker.sock:/var/run/docker.sock:ro'
+    networks:
+      - le-ploy
+
+  # realtime:
+  #   container_name: 'le-ploy-realtime'
+  #   depends_on:
+  #     - proxy
+  #   restart: unless-stopped
+  #   image: quay.io/soketi/soketi:1.0-16-distroless
+  #   ports:
+  #     - '${SOKETI_PORT:-6001}:6001'
+  #     - '${SOKETI_METRICS_SERVER_PORT:-9601}:9601'
+  #   labels:
+  #     - traefik.enable=true
+  #     - traefik.http.routers.socketio.rule=Host(`le-ploy-realtime.localhost`)
+  #     - traefik.http.routers.socketio.entrypoints=web
+  #     - traefik.http.services.socketio.loadbalancer.server.port=6001
+  #     - traefik.http.services.socketio.loadbalancer.server.scheme=http
+  #   environment:
+  #     - SOKETI_DEBUG='${SOCKETI_DEBUG:-1}'
+  #     - DEFAULT_APP_ID='${PUSHER_APP_ID:-some-id}'
+  #     - DEFAULT_APP_KEY='${PUSHER_APP_KEY:-app-key}'
+  #     - DEFAULT_APP_SECRET='${PUSHER_APP_SECRET:-some-app-secret}'
+  #     - PUSHER_HOST='${PUSHER_HOST:-127.0.0.1}'
+  #     - PUSHER_PORT= '${PUSHER_PORT:-6001}'
+  #     - PUSHER_SCHEME='${PUSHER_SCHEME:-http}' # or https
+  #     - METRICS_SERVER_PORT=${METRICS_SERVER_PORT:-9601}
+  #     - DEFAULT_APP_ENABLE_CLIENT_MESSAGES=${DEFAULT_APP_ENABLE_CLIENT_MESSAGES:-false}
+  #   networks:
+  #     - le-ploy
+
+  core:
+    build:
+      context: .
+      dockerfile: dockerfile
+    container_name: le-ploy-core
+    environment:
+      - NUXT_GITHUB_CLIENT_ID=${NUXT_GITHUB_CLIENT_ID:-b0b0b0b0b0b0b0b0b0b0}
+      - NUXT_GITHUB_CLIENT_SECRET=${NUXT_GITHUB_CLIENT_SECRET:-b12312qwdaSDasd1123}
+      - NUXT_AUTH_JS_SECRET=${NUXT_GITHUB_CLIENT_SECRET:-"b12312qwdaSDasd1123"}
+      - NUXT_PUBLIC_AUTH_JS_BASE_URL="http://localhost:3000"
+    depends_on:
+      - proxy
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.bun.rule=Host(`le-ploy.localhost`)
+      - traefik.http.routers.bun.entrypoints=web
+      - traefik.http.services.bun.loadbalancer.server.port=3000
+      - traefik.http.services.bun.loadbalancer.server.scheme=http
+    ports:
+      - '3000:3000'
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - le-ploy
+
+networks:
+  le-ploy:
+    driver: bridge
