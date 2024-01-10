@@ -26,7 +26,7 @@ async function findProject(url: string) {
 // For more information, see https://probot.github.io/docs/development/
 function probot(app: Probot) {
   app.log.info('Yay, the app was loaded!')
-  app.on('push', async (context: { payload: { repository: { html_url: any; }; }; }) => {
+  app.on('push', async (context: { payload: { repository: { html_url: any } } }) => {
     // consola.info('onAny')
     // console.log(context)
 
@@ -37,7 +37,6 @@ function probot(app: Probot) {
     // await context.octokit.repos.downloadTarballArchive
   })
 }
-
 
 export default defineEventHandler(async (event) => {
   // console.log(event);

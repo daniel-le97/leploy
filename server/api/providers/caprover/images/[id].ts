@@ -22,7 +22,8 @@ export default defineEventHandler(async (event) => {
   // let _data: string = ''
   const file = await fs.readFile(`${cwd}/data/templates/caprover/logos/${id}`)
 
-  setResponseHeaders(event, { 'Content-type': 'image/png', 'Content-Length': file.length })
+  setResponseHeader(event, 'Content-Type', 'image/png')
+  setResponseHeader(event, 'Content-Length', file.length)
 
   // createReadSteam()
 

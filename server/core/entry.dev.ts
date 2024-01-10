@@ -1,7 +1,7 @@
 import '#internal/nitro/virtual/polyfill'
 import { parentPort } from 'node:worker_threads'
 import type { Server } from 'bun'
-import { websocket } from './websocket'
+import { websocket } from '../websocket'
 import { setServer } from './server'
 
 // @ts-expect-error it is there

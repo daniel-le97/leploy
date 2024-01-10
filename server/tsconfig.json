@@ -1,3 +1,4 @@
 {
-  "extends": "../.nuxt/tsconfig.server.json"
+  "extends": "../.nuxt/tsconfig.server.json",
+  "exclude": ["pino-std-serializers.ts", "pino-std-serializers.d.ts"]
 }

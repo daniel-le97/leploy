@@ -1,15 +1,15 @@
-import { useJoinRoom, useSendRoomMessage } from '../../../utils/reworkSSE'
+import type { UserSession } from '#auth-utils'
 
 export default defineEventHandler(async (event: any) => {
   try {
-    const session = await requireAuthSession(event)
+    const user = await requireAuthSession(event)
 
     const id = getRouterParam(event, 'id')
 
-    if (!id || !session.user?.id)
+    if (!id || !user.id)
       throw createError('unable to find id')
 
-    const key = `${session.user.id}:${id}`
+    const key = `${user.id}:${id}`
 
     const db = useDbStorage('projects')
     const isProject = await db.hasItem(key)
@@ -28,17 +28,13 @@ export default defineEventHandler(async (event: any) => {
     const isInQueue = queue.queue?.find(queue => queue.id === id)
     // const isListening = queue._listeners.find(listener => listener.userId === session.user?.id)
 
-    await useJoinRoom(event, `build:${id}`)
+    // await useJoinRoom(event, `build:${id}`)
 
     // setInterval(() => {
     //   console.log('subbed');
-      
+
     //   useSendRoomMessage(`build:${id}`, { data: 'building stuff' })
     // }, 1000)
-
-
-
-    
 
     const newProject = {
       ...project,

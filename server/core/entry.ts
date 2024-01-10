@@ -1,5 +1,5 @@
 import '#internal/nitro/virtual/polyfill'
-import { websocket } from './websocket'
+import { websocket } from '../websocket'
 import { setServer } from './server'
 
 // @ts-expect-error it is there

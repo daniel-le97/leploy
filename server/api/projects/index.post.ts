@@ -9,7 +9,7 @@ export default defineEventHandler(async (event) => {
     // TODO replace user with a real user when authetication is added
     const project: Project = {
       id: crypto.randomUUID(),
-      user: session.user!.id,
+      user: session.id,
       createdAt: new Date().toLocaleString(),
       name: generateName(),
       deployed: '',

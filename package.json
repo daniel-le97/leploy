@@ -11,12 +11,14 @@
     "lint": "bun --bun eslint .",
     "lint:fix": "bun --bun eslint . --fix",
     "remove:db": "rm sqlite.db*",
-    "reset": "bun run remove:db && bun run dev",
+    "reset": "bun run remove:db && bun test.ts",
     "upgrade": "bun upgrade --canary && bun --version && bunx taze major -w && bun i",
     "bench": "bombardier -c 125 -n 100000 http://localhost:3000"
   },
   "dependencies": {
-    "nuxt-auth-utils": "latest"
+    "drizzle-orm": "^0.29.3",
+    "nuxt-auth-utils": "latest",
+    "probot": "^12.3.3"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^2.6.2",
@@ -24,7 +26,6 @@
     "@nuxt/ui": "latest",
     "@types/bun": "^1.0.0",
     "@vueuse/nuxt": "latest",
-    "better-sqlite3": "^9.2.2",
     "drizzle-kit": "^0.20.10",
     "eslint": "^8.56.0",
     "nuxt": "npm:nuxt-nightly@latest",

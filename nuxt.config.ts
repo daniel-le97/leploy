@@ -32,7 +32,7 @@ export default defineNuxtConfig({
     preset: './server/core',
     typescript: {
       tsConfig: {
-        exclude: ['../eslint.config.js', `${cwd}/temp`, `${cwd}/data`],
+        exclude: ['../eslint.config.js', `${cwd}/temp`, `${cwd}/data`, 'pino-std-serializers'],
       },
     },
   },

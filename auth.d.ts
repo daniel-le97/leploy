@@ -1,5 +1,3 @@
-import type { User } from './server/utils/users'
-
 declare module '#auth-utils' {
   interface UserSession {
     user: {
@@ -13,9 +11,16 @@ declare module '#auth-utils' {
       battledotnet?: any
       keycloak?: any
       linkedin?: any
-      credentials: User
+      credentials: {
+        id: string
+        name?: string
+        image?: string
+        email?: string
+        password?: string
+      }
     }
     loggedInAt: number
+    dogs: string[]
   }
 }
 
