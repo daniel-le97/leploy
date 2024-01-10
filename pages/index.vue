@@ -51,10 +51,16 @@ onMounted(() => {
   // console.log('clicked', { stringified })
 })
 const code = 'http://localhost:3000/?code=727aa4b859b15cc7ccba90de2168544ccdf8c8cb&state=abc123'
+const auth = useUserSession()
 </script>
 
 <template>
   <div>
+    <div>
+      auth
+      {{ auth }}
+      <button class="bg-green" type="button" @click="authLogout">logout</button>
+    </div>
     <ClientOnly>
       <form action="https://github.com/settings/apps/new?state=abc123" method="post">
         Register a GitHub App Manifest: <input id="manifest" type="text" :value="input" name="manifest"><br>

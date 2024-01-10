@@ -1,4 +1,5 @@
 <script setup lang="ts">
+
 const SideNavBar = ref < HTMLElement | null > (null)
 const isCollapsed = ref(false)
 
@@ -44,12 +45,6 @@ const navItems = [
     icon: 'material-symbols:login-rounded',
     label: 'Login',
     auth: false,
-  },
-  {
-    link: '/profile',
-    icon: 'material-symbols:account-box-sharp',
-    label: 'Profile',
-    auth: true,
   },
 
 ]

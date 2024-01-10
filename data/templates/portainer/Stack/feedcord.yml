@@ -1,9 +1,0 @@
-version: '3.9'
-
-services:
-  myfeedcord:
-    image: qolors/feedcord:latest
-    container_name: FeedCord
-    restart: unless-stopped
-    volumes:
-      - /portainer/Files/AppData/Config/feedcord/appsettings.json:/app/config/appsettings.json

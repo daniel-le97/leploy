@@ -13,3 +13,9 @@ export async function useCredentials(route: 'login' | 'register', body: { email:
     console.log('useCredentials:error', error)
   }
 }
+
+export async function authLogout() {
+  const { clear } = useUserSession()
+  await clear()
+  await navigateTo('/login')
+}

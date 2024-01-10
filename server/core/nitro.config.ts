@@ -3,7 +3,7 @@ import type { NitroPreset } from 'nitropack'
 
 export default <NitroPreset>{
   extends: 'node', // You can extend existing presets
-  entry: fileURLToPath(new URL('./cli.ts', import.meta.url)),
+  entry: fileURLToPath(new URL('./entry.ts', import.meta.url)),
   exportConditions: ['bun', 'worker', 'node', 'import', 'default'],
   // minify: true,
   serveStatic: true,
