@@ -1,6 +1,6 @@
 <script  lang="ts" setup>
-const router = useRoute('providers-portainer-id').params.id
-console.log(router);
+const router = useRoute().params.id
+console.log(router)
 
 const { data: templates } = await useFetch(`/api/providers/portainer/templates/${router}`)
 const thisRef = ref<string>(JSON.stringify(templates as unknown as string)) as unknown as CaproverDockerComposeConfig

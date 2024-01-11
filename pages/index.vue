@@ -2,7 +2,7 @@
 const input = ref('')
 
 async function create() {
-  const location = window?.location.origin
+  // const location = window?.location.origin
   // input.value.homepage_url = location
   // input.value.redirect_url = location
   const stringified = JSON.stringify(input.value)
@@ -27,6 +27,7 @@ async function create() {
 
 onMounted(() => {
   console.log('mounted')
+  // @ts-expect-error - window is not defined in vue files
   const location = window?.location.origin || 'http://localhost:3000'
   const value = {
     name: 'le-ploy-source-1',

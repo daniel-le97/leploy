@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import type { ITemplate } from '../../../types/portainer'
 
-const { data: templates } = await useLazyFetch<ITemplate[]>('/api/providers/portainer/templates')
-console.log(templates)
+const { data: templates } = await useFetch<ITemplate[]>('/api/providers/portainer/templates')
+// console.log(templates)
 function toggleDescription(template: any) {
   template.showFullDescription = !template.showFullDescription
 }

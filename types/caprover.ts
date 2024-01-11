@@ -53,3 +53,11 @@ export interface CaproverDockerComposeConfig {
     documentation: string
   }
 }
+export type CaproverTemplate = {
+  showFullDescription: boolean
+  name: string
+  displayName: string
+  description: string
+  isOfficial: boolean
+  logoUrl: string
+}[]

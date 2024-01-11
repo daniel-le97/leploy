@@ -2,7 +2,9 @@ import * as fs from 'node:fs/promises'
 
 const cwd = process.cwd()
 
-export default defineEventHandler(async (event) => {
+export default defineCachedEventHandler(async (event) => {
+  // TODO check what is typing event
+  // @ts-expect-error event is typed Different for some reason?
   const id = getRouterParam(event, 'id')
   if (!id) {
     throw createError({
@@ -20,14 +22,11 @@ export default defineEventHandler(async (event) => {
   }
 
   // let _data: string = ''
-  const file = await fs.readFile(`${cwd}/data/templates/caprover/logos/${id}`)
-
-  setResponseHeader(event, 'Content-Type', 'image/png')
-  setResponseHeader(event, 'Content-Length', file.length)
+  const file = Bun.file(`${cwd}/data/templates/caprover/logos/${id}`)
 
   // createReadSteam()
 
-  return file
+  return new Response(file)
   // return await sendWebResponse(event, new Response(file))
   // return sendStream(event, await file.stream())
 })

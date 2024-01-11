@@ -18,17 +18,17 @@ interface Payload {
 
 const handlers = new Map<string, (server: BunServer, ws: WS, payload: Payload) => void | Promise<void>>()
 
-  .set('publish', (server, ws, payload) => {
+  .set('insert', (server, ws, payload) => {
     const { data } = payload
     ws.publish(data, 'hello world')
   })
 
-  .set('subscribe', (server, ws, payload) => {
+  .set('update', (server, ws, payload) => {
     const { data } = payload
     ws.subscribe(data)
   })
 
-  .set('unsubscribe', (server, ws, payload) => {
+  .set('delete', (server, ws, payload) => {
     const { data } = payload
     ws.unsubscribe(data)
   })

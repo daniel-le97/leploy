@@ -8,8 +8,14 @@ interface OneClickAppsList {
     showFullDescription: boolean
   }[]
 }
-export default defineEventHandler(async (_event) => {
+export default defineCachedEventHandler(async (_event) => {
+  
+  const start = performance.now()
   const db = useDbStorage('templates:caprover')
   const caproverRaw = await db.getItem('list') as OneClickAppsList
-  return caproverRaw.oneClickApps.map(app => ({ ...app, showFullDescription: false }))
+  const mapper = caproverRaw.oneClickApps.map(app => ({ ...app, showFullDescription: false }))
+  const end = performance.now()
+  console.log('time', end - start)
+
+  return mapper
 })

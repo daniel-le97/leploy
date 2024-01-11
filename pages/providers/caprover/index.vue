@@ -1,5 +1,6 @@
 <script setup lang="ts">
-const { data: templates } = await useFetch('/api/providers/caprover')
+
+const { data: templates } = await useFetch<CaproverTemplate>('/api/providers/caprover')
 
 type TEMPLATE = typeof templates extends { value: { [index: number]: infer T } } ? T : never
 
@@ -8,7 +9,7 @@ function toggleDescription(template: any) {
 }
 async function _getTemplate(index: number) {
   const { data: found } = await useFetch(`/api/providers/portainer/templates/${index}`)
-  console.log(found.value)
+  // console.log(found.value)
 }
 const { shift_a } = useMagicKeys()
 whenever(shift_a, () => {

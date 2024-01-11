@@ -17,5 +17,5 @@ export async function useCredentials(route: 'login' | 'register', body: { email:
 export async function authLogout() {
   const { clear } = useUserSession()
   await clear()
-  await navigateTo('/login')
+  // await navigateTo('/login')
 }
