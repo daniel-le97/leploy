@@ -2,6 +2,12 @@
 const dev = process.env.NODE_ENV !== 'production'
 const cwd = process.cwd()
 export default defineNuxtConfig({
+  ssr: false,
+  routeRules:{
+    "/providers/caprover": {prerender:true},
+    "/providers/portainer": {prerender:true}
+
+  },
   experimental: {
     componentIslands: true,
   },
@@ -25,6 +31,10 @@ export default defineNuxtConfig({
       dirs: ['./server/db', './server/db/services', './types'],
     },
     storage: {
+      cache: {
+        driver: 'fsLite',
+        base: './.cache',
+      },
       db: { driver: 'fsLite', base: './.data' },
     },
     // set to undefined in prod so during build we use the correct entry and not the dev entry

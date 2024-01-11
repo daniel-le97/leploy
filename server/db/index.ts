@@ -29,7 +29,7 @@ CREATE TABLE IF NOT EXISTS docker_compose (
   dir TEXT NOT NULL,
   createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
   updatedAt DATETIME DEFAULT CURRENT_TIMESTAMP,
-  content TEXT,
+  content BLOB,
   type TEXT,
   UNIQUE (name, dir)
 );`,

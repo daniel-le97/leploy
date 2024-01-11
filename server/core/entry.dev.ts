@@ -2,6 +2,7 @@ import '#internal/nitro/virtual/polyfill'
 import { parentPort } from 'node:worker_threads'
 import type { Server } from 'bun'
 import { websocket } from '../websocket'
+import type { User } from '../db/services/users'
 import { setServer } from './server'
 
 // @ts-expect-error it is there
@@ -13,12 +14,7 @@ import { runNitroTask } from '#internal/nitro/task'
 // @ts-expect-error it is there
 import { tasks } from '#internal/nitro/virtual/tasks'
 
-declare module 'h3' {
-  interface H3EventContext {
-    server: Server
-    request: Request
-  }
-}
+
 
 // console.log('custom dev server')
 const nitroApp = useNitroApp()

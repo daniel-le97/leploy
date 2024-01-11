@@ -11,6 +11,7 @@
     "lint": "bun --bun eslint .",
     "lint:fix": "bun --bun eslint . --fix",
     "remove:db": "rm sqlite.db*",
+    "reset:workspace": "rm -rf node_modules && rm -rf .nuxt && rm bun.lockb && bun i",
     "reset": "bun run remove:db && bun test.ts",
     "upgrade": "bun upgrade --canary && bun --version && bunx taze major -w && bun i",
     "bench": "bombardier -c 125 -n 100000 http://localhost:3000"
@@ -24,12 +25,12 @@
     "@antfu/eslint-config": "^2.6.2",
     "@nuxt/devtools": "^1.0.6",
     "@nuxt/ui": "latest",
-    "@types/bun": "^1.0.0",
+    "@types/bun": "^1.0.1",
     "@vueuse/nuxt": "latest",
     "drizzle-kit": "^0.20.10",
     "eslint": "^8.56.0",
     "nuxt": "npm:nuxt-nightly@latest",
-    "vue": "^3.4.7",
+    "vue": "^3.4.8",
     "vue-router": "^4.2.5"
   }
 }
