@@ -14,8 +14,6 @@ import { runNitroTask } from '#internal/nitro/task'
 // @ts-expect-error it is there
 import { tasks } from '#internal/nitro/virtual/tasks'
 
-
-
 // console.log('custom dev server')
 const nitroApp = useNitroApp()
 
@@ -57,12 +55,12 @@ nitroApp.router.use(
 const server = Bun.serve({
   port: 0,
   reusePort: true,
-  async fetch(req, server) {
+  async fetch(request, server) {
     try {
-      return await handler(req, { server, request: req })
+      return await handler(request, { server, request })
     }
     catch (error) {
-      console.error(req.url, error)
+      console.error(request.url, error)
     }
   },
   websocket,
@@ -91,9 +89,9 @@ async function onShutdown(signal?: string) {
   // console.log('onShutdown')
   server.stop(true)
   await nitroApp.hooks.callHook('close')
-  parentPort?.postMessage({ event: 'exit' })
   Bun.gc(true)
   Bun.shrink()
+  parentPort?.postMessage({ event: 'exit' })
 }
 
 parentPort?.on('message', async (msg) => {

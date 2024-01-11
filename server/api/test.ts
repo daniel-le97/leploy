@@ -37,15 +37,12 @@ async function findProject(url: string) {
 
 // this route handler is for processing github webhooks
 export default defineEventHandler(async (event) => {
-  // this will be the id of the github app
-  const id = getRouterParam(event, 'id')
-  console.log(id);
-  
   const body = await readBody<GitHubWebhookPayload>(event)
   const url = body.repository.html_url
   const headers = filterHeadersBySubstring<GitHubWebhookHeaders>(getHeaders(event), 'hub')
   console.log(body.sender.id);
   
+  // await findProject(url)
 
   return 'ok'
 })

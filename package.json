@@ -18,19 +18,19 @@
   },
   "dependencies": {
     "drizzle-orm": "^0.29.3",
-    "nuxt-auth-utils": "latest",
-    "probot": "^12.3.3"
+    "nuxt-auth-utils": "latest"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^2.6.2",
-    "@nuxt/devtools": "^1.0.6",
+    "@nuxt/devtools": "^1.0.8",
     "@nuxt/ui": "latest",
     "@types/bun": "^1.0.1",
     "@vueuse/nuxt": "latest",
     "drizzle-kit": "^0.20.10",
     "eslint": "^8.56.0",
     "nuxt": "npm:nuxt-nightly@latest",
-    "vue": "^3.4.8",
+    "smee-client": "^2.0.0",
+    "vue": "^3.4.10",
     "vue-router": "^4.2.5"
   }
 }
