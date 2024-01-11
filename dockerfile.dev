@@ -13,8 +13,6 @@ COPY --from=copy /usr/src/app/sqlite.db-wal /usr/src/app/sqlite.db-wal
 COPY --from=copy /usr/src/app/sqlite.db-shm /usr/src/app/sqlite.db-shm
 
 
-
-
 ARG TARGETPLATFORM
 # https://download.docker.com/linux/static/stable/
 ARG DOCKER_VERSION=24.0.7
@@ -49,9 +47,7 @@ RUN if [[ ${TARGETPLATFORM} == 'linux/arm64' ]]; then \
 
 COPY --from=minio/mc /usr/bin/mc /usr/bin/mc
 RUN chmod +x /usr/bin/mc
-
-# run the app
-USER bun
+ENV NUXT_SESSION_PASSWORD=cNJhJsZRdwSuSs5V/jiv4QuyJ79vwSy0hJkPCx5NJBg=
 EXPOSE 3000/tcp
 
 CMD ["sh", "-c", "bun .output/server/index.mjs"]

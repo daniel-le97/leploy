@@ -14,15 +14,15 @@ export default credentialsLogin({
   },
   async onError(event, error) {
     console.log('credentialsEventHandler onError', error)
+    throw error
   },
 })
 
 function credentialsLogin({ onSuccess, onError }: OAuthConfig<any>) {
   return defineEventHandler(async (event) => {
-    // console.log('credentialsLogin', event.path)
-
     const { email, password } = await readBody(event) as Record<string, string>
     const found = usersService.getUserByEmail(email)
+
     if (!found) {
       const notFound = createError({
         message: 'Email not found! Please register.',
@@ -33,7 +33,8 @@ function credentialsLogin({ onSuccess, onError }: OAuthConfig<any>) {
 
       return onError(event, notFound)
     }
-    if (!Bun.password.verify(password, found.password)) {
+
+    if (!(await Bun.password.verify(password, found.password))) {
       const Incorrect = createError({
         message: 'Incorrect password!',
         statusCode: 401,

@@ -34,7 +34,8 @@ CREATE TABLE IF NOT EXISTS docker_compose (
   UNIQUE (name, dir)
 );`,
 
-  'projects': /* sql */`CREATE TABLE IF NOT EXISTS projects (
+  'projects': /* sql */`
+  CREATE TABLE IF NOT EXISTS projects (
   id TEXT PRIMARY KEY,
   user TEXT,
   createdAt DATETIME,

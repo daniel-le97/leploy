@@ -2,6 +2,7 @@ const minioEndpoint = 'http://minio-server:9000'
 const accessKey = 'your-access-key'
 const secretKey = 'your-secret-key'
 const bucketName = 'your-bucket'
+
 export default defineAuthRequiredHandler(async (event) => {
   const backupDir = `/.data`
   const backup = Bun.spawn({

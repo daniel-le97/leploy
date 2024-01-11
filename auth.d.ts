@@ -20,7 +20,6 @@ declare module '#auth-utils' {
       }
     }
     loggedInAt: number
-    dogs: string[]
   }
 }
 
