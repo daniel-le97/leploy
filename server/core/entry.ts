@@ -9,7 +9,8 @@ import { runNitroTask } from '#internal/nitro/task'
 import { tasks } from '#internal/nitro/virtual/tasks'
 
 const nitroApp = useNitroApp()
-// @ts-expect-error it is there
+
+// @ts-expect-error H3App is App
 const handler = toWebHandler(nitroApp.h3App)
 
 nitroApp.router.get(
@@ -44,18 +45,18 @@ nitroApp.router.use(
 
 const server = Bun.serve({
   port: process.env.NITRO_PORT || process.env.PORT || 3000,
-  async fetch(req, server) {
+  async fetch(request, server) {
     try {
-      return await handler(req, { server, request: req })
+      return await handler(request, { server, request })
     }
     catch (error) {
-      console.error(req.url, error)
+      console.error(request.url, error)
     }
   },
   websocket,
 })
 setServer(server)
-// @ts-expect-error calling it here, unable to update hook type
-nitroApp.hooks.callHook('server', server)
+
+serverHooks.callHook('start', server)
 
 console.log(`Listening on http://localhost:${server.port}...`)

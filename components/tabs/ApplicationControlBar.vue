@@ -5,13 +5,20 @@ interface EventWatch {
   [key: string]: WatchStopHandle | null
 }
 const defaults: EventWatch = {}
+const ws = useWs()
 
 async function handleClick() {
   console.log('building project')
+  const id = useRoute().params.id
+  ws.send(JSON.stringify({ type: 'subscribe', payload: { id } }))
+ const data =  await $fetch(`/api/build/${id}`, {
+    method: 'POST',
+    body: JSON.stringify({})
+  })
+  console.log('build post', data)
 
-  const id = useRoute('projects-id').params.id
 
-  const { data, pending, error, refresh } = await useFetch(`/api/build/${id}`)
+
 
 }
 </script>

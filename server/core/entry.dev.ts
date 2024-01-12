@@ -71,8 +71,8 @@ nitroApp.router.get('/api/server', defineEventHandler(event => server.port))
 // console.log('server', server);
 
 setServer(server)
-// @ts-expect-error it is there
-nitroApp.hooks.callHook('server', server)
+
+serverHooks.callHook('start', server)
 
 parentPort?.postMessage({
   event: 'listen',

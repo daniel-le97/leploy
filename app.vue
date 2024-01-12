@@ -3,6 +3,7 @@ import SideNavBar from './components/navigation/sideNavBar.vue'
 
 const route = useRoute()
 const isLoginOrRegister = computed(() => route.fullPath.includes('/login') || route.fullPath.includes('/register'))
+
 </script>
 
 <template>

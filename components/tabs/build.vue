@@ -13,53 +13,21 @@ const defaults: EventWatch = {}
 
 const activeId = useState('active-log-id')
 
+const routerId = useRoute().params.id
 async function getLogs(id: string) {
 //  console.log(id);
   activeId.value = id
-  const routerId = useRoute('projects-id').params.id
   const { data, pending, error, refresh } = await useFetch(`/api/build/${routerId}/logs/${id}`)
   // console.log(data.value);
 
   buildData.value = data.value as string
 }
 
-async function handleClick() {
-  const id = useRoute('projects-id').params.id
-  const watchEvents = useState<EventWatch>('event-source', () => defaults)
-  // const data = useState('event-data', () => '')
-  buildData.value = ''
+// async function handleClick() {
+//   const watchEvents = useState<EventWatch>('event-source', () => defaults)
+//   buildData.value = ''
 
-  const { data, status, error, close } = useEventSource(`http://localhost:3000/api/build/${id}`)
-
-  if (data.value)
-    buildData.value += JSON.parse(data.value).message
-
-  const end = () => Object.values(watchEvents.value).forEach((fn) => {
-    if (fn) {
-      fn()
-      close()
-    }
-  })
-
-  watchEvents.value.data = watch(data, (value) => {
-    console.log(value)
-
-    if (data.value) {
-      console.log(JSON.parse(data.value))
-      buildData.value += JSON.parse(data.value).message
-    }
-  })
-
-  watchEvents.value.status = watch(status, () => {
-    const sending = status.value === 'CONNECTING' || status.value === 'OPEN'
-    if (!sending)
-      end()
-  })
-
-  watchEvents.value.error = watch(error, () => {
-    end()
-  })
-}
+// }
 </script>
 
 <template>
@@ -68,9 +36,9 @@ async function handleClick() {
       <label class="block dark:text-white text-gray-700 text-3xl  font-bold mb-2" for="build-logs">
         Build Logs
       </label>
-      <UButton type="button" class=" font-bold py-1" @click="handleClick">
+      <!-- <UButton type="button" class=" font-bold py-1" @click="handleClick">
         makeshift build
-      </UButton>
+      </UButton> -->
       <UTooltip>
         <UIcon name="uil:rocket" class="text-2xl" />
         <template #text>

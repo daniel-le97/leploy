@@ -56,15 +56,22 @@ CREATE TABLE IF NOT EXISTS docker_compose (
   logsPath TEXT
 );
 `,
-  // kv table
   'buildlogs': /* sql */`
 CREATE TABLE IF NOT EXISTS build_logs (
   id TEXT NOT NULL PRIMARY KEY,
-  data TEXT
+  data TEXT,
   status TEXT,
   build_time TEXT
 );`,
-  // kv table
+  'queue': /* sql */`
+CREATE TABLE IF NOT EXISTS queue (
+  id TEXT NOT NULL PRIMARY KEY,
+  status TEXT NOT NULL DEFAULT 'in-queue',
+  projectId TEXT NOT NULL REFERENCES projects(id),
+  logs TEXT,
+  date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  buildTime TEXT
+);`,
 
 }
 

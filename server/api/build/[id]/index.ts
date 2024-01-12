@@ -1,32 +1,45 @@
-
+import type { BuildPayload } from '../../../utils/hooks'
 
 export default defineEventHandler(async (event: any) => {
   try {
     const session = await requireAuthSession(event)
 
-    const id = getRouterParam(event, 'id')
+    const projectId = getRouterParam(event, 'id')
 
-    if (!id || !session.id)
+    if (!projectId || !session.id)
       throw createError('unable to find id')
 
-    const key = `${session.id}:${id}`
+    const payload: BuildPayload = {
+      id: crypto.randomUUID(),
+      projectId,
+      userId: session.id,
+      date: Date.now().toString(),
+      buildTime: null,
+      logs: null,
+      status: 'in-queue',
+    }
+    // console.log('build', payload);
+    
+    await serverHooks.callHook('build', payload)
+    return 'ok'
 
-    const db = useDbStorage('projects')
-    const isProject = await db.hasItem(key)
+    // const key = `${session.id}:${id}`
 
-    if (!isProject)
-      throw createError('unable to find project for user')
+    // const db = useDbStorage('projects')
+    // const isProject = await db.hasItem(key)
 
-    const project = await db.getItem<Project>(key)
+    // if (!isProject)
+    //   throw createError('unable to find project for user')
 
-    const logsPath = `${process.cwd()}/data/logs/${id}/`
+    // const project = await db.getItem<Project>(key)
 
-    if (!project?.application.repoUrl)
-      throw createError('please update your configuration to include a repoURL')
+    // const logsPath = `${process.cwd()}/data/logs/${id}/`
 
-    const isActiveProject = queue.activeProject?.id === id
-    const isInQueue = queue.queue?.find(queue => queue.id === id)
+    // if (!project?.application.repoUrl)
+    //   throw createError('please update your configuration to include a repoURL')
 
+    // const isActiveProject = queue.activeProject?.id === id
+    // const isInQueue = queue.queue?.find(queue => queue.id === id)
 
     // if (isActiveProject || isInQueue) {
     //   const connection = SSEEvents.connections.get(session.user.id)

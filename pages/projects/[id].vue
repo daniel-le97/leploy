@@ -24,20 +24,10 @@ const tabs = computed(() => {
   }
   return [
     { label: 'configuration', component: LazyTabsConfiguration },
-
     { label: 'build', component: LazyTabsBuild },
     { label: 'secrets', component: LazyTabsSecrets },
   ]
 })
-
-// if (useActiveProject().value.configured) {
-//   tabs.value = [
-//     { label: 'configuration', component: LazyTabsConfiguration },
-//     { label: 'compose', component: LazyTabsCompose },
-//     { label: 'build', component: LazyTabsBuild },
-//     { label: 'secrets', component: LazyTabsSecrets },
-//   ]
-// }
 
 function selectTab(index: number) {
   selectedTab.value = index
