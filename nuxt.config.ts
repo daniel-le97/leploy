@@ -25,6 +25,7 @@ export default defineNuxtConfig({
   nitro: {
     experimental: {
       openAPI: true,
+      'typescriptBundlerResolution': true
       // wasm: true,
     },
     imports: {

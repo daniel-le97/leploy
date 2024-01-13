@@ -45,7 +45,7 @@ const handlers = new Map<string, (server: BunServer, ws: WS, payload: Payload) =
     }
 
     // ws.subscribe(payload.id)
-    console.log('server:ws:subscribe', payload)
+    // console.log('server:ws:subscribe', payload)
   })
 
   .set('build', (server, ws, payload) => {

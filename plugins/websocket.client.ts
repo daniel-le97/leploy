@@ -11,7 +11,10 @@ export default defineNuxtPlugin(async () => {
       console.log('websocket connected', ws)
     },
     onMessage(ws, event) {
-      console.log('websocket message', event)
+      console.log('websocket message', event);
+      
+      // const state = useBuildSSE()
+      // state.value += event.data
     },
   })
 

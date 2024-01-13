@@ -19,14 +19,14 @@ export interface ServerHooks {
 export const serverHooks = createHooks<ServerHooks>()
 
 serverHooks.hook('build', async (payload) => {
-  console.log('hooks:build', payload.id)
+  console.log('hooks:build', payload.projectId)
   let count = 0
   const interval = setInterval(() => {
     if (count === 10)
       clearInterval(interval)
 
       const string = `${crypto.randomUUID()}\n`
-      console.log('publishing', string);
+      // console.log('publishing', string, 'to', payload.projectId);
       
     Server().publish(payload.projectId, string)
 
