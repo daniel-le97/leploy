@@ -1,4 +1,4 @@
-import type { OAuthConfig } from 'nuxt-auth-utils/dist/runtime/types/oauth-config'
+import type { OAuthConfig } from '#auth-utils'
 
 export default credentialsLogin({
   async onSuccess(event, session) {

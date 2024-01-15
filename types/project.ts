@@ -43,3 +43,21 @@ export interface Listener {
   send: (callback: (id: number) => any) => void
   close: () => void
 }
+
+export interface SqliteProject {
+  id: string
+  user: string
+  createdAt: string // Assuming you want to represent DATETIME as a string, adjust if needed
+  updatedAt: string // Assuming you want to represent DATETIME as a string, adjust if needed
+  name: string
+  deployed: number
+  configured: number
+  ports: string// Store the JSON array as a string
+  https: number
+  www: number
+  repoUrl: string
+  startCommand: string
+  buildCommand: string
+  installCommand: string
+  buildPack: string
+}

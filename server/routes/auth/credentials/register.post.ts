@@ -1,4 +1,4 @@
-import type { OAuthConfig } from 'nuxt-auth-utils/dist/runtime/types/oauth-config'
+import type { OAuthConfig } from '#auth-utils'
 
 export default credentialsRegister({
   async onSuccess(event, _session) {
@@ -10,15 +10,10 @@ export default credentialsRegister({
       },
       loggedInAt: Date.now(),
     })
-    // console.log('credentials:register:onSuccess:session', session)
-
-    // return await sendRedirect(event, '/')
   },
   async onError(event, error) {
     console.log('credentials:register:onerror', error)
-
-    // await clearUserSession(event)
-    // return sendRedirect(event, '/')
+    throw error
   },
 })
 

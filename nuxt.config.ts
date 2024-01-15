@@ -3,13 +3,14 @@ const dev = process.env.NODE_ENV !== 'production'
 const cwd = process.cwd()
 export default defineNuxtConfig({
   ssr: false,
-  routeRules:{
-    "/providers/caprover": {prerender:true},
-    "/providers/portainer": {prerender:true}
+  routeRules: {
+    '/providers/caprover': { prerender: true },
+    '/providers/portainer': { prerender: true },
 
   },
   experimental: {
     componentIslands: true,
+    typedPages: true,
   },
   devtools: { enabled: true },
   imports: {
@@ -23,9 +24,13 @@ export default defineNuxtConfig({
   },
   ignore: ['/temp', '/data', '/stack'],
   nitro: {
+    compressPublicAssets: {
+      gzip: true,
+      brotli: true,
+    },
     experimental: {
       openAPI: true,
-      'typescriptBundlerResolution': true
+      typescriptBundlerResolution: true,
       // wasm: true,
     },
     imports: {

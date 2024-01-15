@@ -1,6 +1,6 @@
 // import type { Project } from "../types/project";
 
-import type { Project } from '../types/project'
+import type { Project, SqliteProject } from '../types/project'
 
 export const useTabIndex = () => useState('tab-index', () => 0)
 
@@ -16,8 +16,10 @@ export const useActiveTemplate = () => useState('activeTemplate', () => '')
 
 export const useActiveProject = () => useState<Project>('activeProject')
 
+export const useLiteProject = () => useState<SqliteProject>('liteProject')
+
 export async function refreshActiveProject() {
-  const route = useRoute()
+  const route = useRoute('projects-id')
   const { data, pending, error, refresh } = await useFetch<Project>(`/api/projects/${route.params.id}`)
   if (data.value) {
     const activeProject = useActiveProject()

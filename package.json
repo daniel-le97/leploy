@@ -17,6 +17,7 @@
     "bench": "bombardier -c 125 -n 100000 http://localhost:3000"
   },
   "dependencies": {
+    "@deno/kv": "0.7.0",
     "drizzle-orm": "^0.29.3",
     "nuxt-auth-utils": "latest"
   },

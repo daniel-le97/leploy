@@ -13,7 +13,7 @@ const defaults: EventWatch = {}
 
 const activeId = useState('active-log-id')
 
-const routerId = useRoute().params.id
+const routerId = useRoute('projects-id').params.id
 async function getLogs(id: string) {
 //  console.log(id);
   activeId.value = id

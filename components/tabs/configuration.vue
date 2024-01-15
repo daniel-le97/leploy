@@ -17,11 +17,11 @@ const onePort = ref('')
 
 type Schema = z.output<typeof schema>
 
-const state = useActiveProject()
-// console.log(state.value)
-
-onePort.value = state.value.ports.join(',')
-
+const state = useLiteProject()
+const https = ref<boolean>(state.value.https === 1)
+watch(https, (value) => {
+  state.value.https = value ? 1 : 0
+})
 const options = [
   { label: 'nixpacks', value: 'nixpacks' },
   { label: 'dockerfile', value: 'dockerfile' },
@@ -29,17 +29,16 @@ const options = [
 ]
 
 async function onSubmit() {
-  state.value.ports = onePort.value ? onePort.value.split(',') : []
   try {
-    // console.log(state.value)
+    console.log(state.value)
 
-    const { data } = await useFetch<Project>(`/api/projects/${state.value.id}`, {
+    const data = await $fetch<SqliteProject>(`/api/projects/${state.value.id}`, {
       method: 'PUT',
       body: state.value,
     })
 
-    if (!data.value)
-      throw new Error('unable to update config')
+    // // if (!data)
+    // //   throw new Error('unable to update config')
 
     useToast().add({
       id: state.value.id,
@@ -47,47 +46,51 @@ async function onSubmit() {
       timeout: 1500,
     })
 
-    useActiveProject().value = data.value
+    // useLiteProject().value = data
   }
   catch (error) {
     consola.withTag('configuration').error('unable to update configuration')
   }
 }
 
-const needsRepo = computed(() => state?.value?.application?.buildCommand === 'nixpacks')
+function updateBool(value: any) {
+  console.log(value)
+}
+
+const needsRepo = computed(() => state?.value.buildCommand === 'nixpacks')
 </script>
 
 <template>
-  <div v-if="state.application">
-    <UForm :schema=" schema " :state=" state.application " class="space-y-4" @submit="onSubmit">
+  <div v-if="state.id">
+    <UForm :schema=" schema " :state=" state " class="space-y-4" @submit="onSubmit">
       <UFormGroup label="Repo URL" name="repoUrl" :required="needsRepo">
-        <UInput v-model=" state.application.repoUrl " type="url" />
+        <UInput v-model=" state.repoUrl " type="url" />
       </UFormGroup>
 
       <div class="flex space-x-4">
         <div class="w-1/2 flex flex-col space-y-3">
           <UFormGroup label="Install command" name="installCommand">
-            <UInput v-model=" state.application.installCommand " placeholder="npm install" type="text" />
+            <UInput v-model=" state.installCommand " placeholder="npm install" type="text" />
           </UFormGroup>
           <UFormGroup label="Build command" name="buildCommand">
-            <UInput v-model=" state.application.buildCommand " placeholder="npm run build" type="text" />
+            <UInput v-model=" state.buildCommand " placeholder="npm run build" type="text" />
           </UFormGroup>
           <UFormGroup label="Start command" name="startCommand">
-            <UInput v-model=" state.application.startCommand " placeholder="npm run serve" type="text" />
+            <UInput v-model=" state.startCommand " placeholder="npm run serve" type="text" />
           </UFormGroup>
         </div>
         <div class="w-1/2">
           <UFormGroup label="choose a build pack" name="buildPack">
-            <USelect v-model=" state.application.buildPack" :options=" options " />
+            <USelect v-model=" state.buildPack" :options=" options " />
           </UFormGroup>
           <UFormGroup label="please specify ports" name="ports">
-            <UInput v-model="onePort" placeholder="3000,3001" />
+            <UInput v-model="state.ports" placeholder="3000,3001" />
           </UFormGroup>
-          <UFormGroup label="use our proxy?" name="proxy">
-            <input v-model="state.managed" type="checkbox">
-          </UFormGroup>
+          <!-- <UFormGroup label="use our proxy?" name="proxy">
+            <input v-model="state.c" type="checkbox">
+          </UFormGroup> -->
           <UFormGroup label="https" name="https">
-            <input v-model="state.https" type="checkbox">
+            <input v-model="https" type="checkbox">
           </UFormGroup>
           <!-- <div class="flex gap-2">
             <div class="w-1/2">

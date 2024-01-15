@@ -2,26 +2,20 @@
 <script setup lang="ts">
 import { LazyTabsBuild, LazyTabsCompose, LazyTabsConfiguration, LazyTabsSecrets } from '#components'
 
-const route = useRoute()
+const route = useRoute('projects-id')
 // console.log(route.params)
-
-const { data, pending, error, refresh } = await useFetch<Project>(`/api/projects/${route.params.id}`)
-if (data.value) {
-  const activeProject = useActiveProject()
-  activeProject.value = data.value
-}
 
 const selectedTab = ref(0)
 
 const tabs = computed(() => {
-  if (useActiveProject().value.configured) {
-    return [
-      { label: 'configuration', component: LazyTabsConfiguration },
-      { label: 'compose', component: LazyTabsCompose },
-      { label: 'build', component: LazyTabsBuild },
-      { label: 'secrets', component: LazyTabsSecrets },
-    ]
-  }
+  // if (useActiveProject().value.configured) {
+  //   return [
+  //     { label: 'configuration', component: LazyTabsConfiguration },
+  //     { label: 'compose', component: LazyTabsCompose },
+  //     { label: 'build', component: LazyTabsBuild },
+  //     { label: 'secrets', component: LazyTabsSecrets },
+  //   ]
+  // }
   return [
     { label: 'configuration', component: LazyTabsConfiguration },
     { label: 'build', component: LazyTabsBuild },

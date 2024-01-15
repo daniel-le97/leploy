@@ -4,13 +4,13 @@ import { createHooks } from 'hookable'
 import consola from 'consola'
 import YAML from 'yaml'
 
-
 class Queue {
   hooks = createHooks()
   queue: ProcessProject[] | null
   isProcessing: boolean
   fileContents: string
   activeProject: ProcessProject | null = null
+  textDecoder = new TextDecoder()
   // _listeners: Listener[] = []
 
   constructor() {
@@ -61,30 +61,23 @@ class Queue {
 
     console.log(this.queue?.length)
 
-    const Project = this.queue?.shift()
-    if (!Project)
+    const project = this.queue?.shift()
+    if (!project)
       return
 
     this.isProcessing = true
-    this.activeProject = Project
+    this.activeProject = project
 
-    // Trigger 'processProject' hook
-    // await this.hooks.callHook('processProject', Project)
+    console.log(`Processing project: ${project.id} at ${Date.now()}`)
+    await this.doProject(project)
 
-    // Simulate Project processing
-    console.log(`Processing Project: ${Project.id} at ${new Date(Date.now())}`)
-    await this.doProject(Project)
-
-    // Trigger 'afterProcessProject' hook
-    // await this.hooks.callHook('afterProcessProject', Project)
-
-    await this.processQueue() // Process the next Project
+    await this.processQueue()
   }
 
   private async doProject(project: ProcessProject) {
     const start = performance.now()
-    const { id, name, buildsLogs, application, createdAt, configured, deployed } = project
-    const { repoUrl, buildPack, buildCommand, installCommand, startCommand } = application
+    // const { id, name, buildsLogs, application, createdAt, configured, deployed } = project
+    // const { repoUrl, buildPack, buildCommand, installCommand, startCommand } = application
     const generateId = crypto.randomUUID()
     const generatedName = project.name
     const repoPath = `./data/temp/${generatedName}`
@@ -96,60 +89,45 @@ class Queue {
     const date = new Date()
     this.fileContents = ''
 
-    await this.runCommandAndSendStream('git', ['clone', '--depth=1', application.repoUrl, repoPath], project.id)
+    await this.runCommandAndSendStream(['git', 'clone', '--depth=1', `${''}`, `${repoPath}`], project.id)
 
-    await this.runCommandAndSendStream('nixpacks', ['build', repoPath, '--name', generatedName], project.id)
+    await this.runCommandAndSendStream([`nixpacks`, `build`, `${repoPath}`, `--name`, `${generatedName}`], project.id)
 
     const end = performance.now()
 
-    if (!fs.existsSync(project.logsPath))
-      fs.mkdirSync(project.logsPath, { recursive: true })
-
-    await fs.promises.writeFile(`${project.logsPath + generateId}.txt`, this.fileContents)
-
-    const newBuildLog = {
-      id: generateId,
-      buildTime: (end - start),
-      date,
-    }
-    // const db = useDbStorage('projects')
-    // buildsLogs.push(newBuildLog)
-    // await db.setItem(project.key, { ...project, buildsLogs })
-    // sseHooks.callHookParallel(`sse:event:${project.id}:close`)
+    await Bun.write(`${project.logsPath + generateId}.txt`, this.fileContents)
   }
-  
-  private async runCommandAndSendStream(first: string, command: string[], projectId: string, env = {}) {
+
+  toDecode(chunk: Uint8Array) {
+    if (chunk instanceof Uint8Array || Buffer.isBuffer(chunk))
+      return this.textDecoder.decode(chunk)
+
+    return chunk as string
+  }
+
+  private async runCommandAndSendStream(commands: string[], projectId: string, env = {}) {
     try {
-      const decoder = new TextDecoder()
-      const toDecode = (chunk: Uint8Array | any) => {
-        if (chunk instanceof Uint8Array || Buffer.isBuffer(chunk))
-          return decoder.decode(chunk)
+      console.log('running:', commands)
 
-        return chunk as string
+      const _command = Bun.spawn(commands, {
+        stdio: ['inherit', 'pipe', 'pipe'],
+      })
+
+      const { stdout, stderr } = _command
+      const stdoutChunks = await Bun.readableStreamToArray(stdout)
+      const stderrChunks = await Bun.readableStreamToArray(stderr)
+      for await (const chunk of stdoutChunks) {
+        const decoded = this.toDecode(chunk)
+        console.log('stdout', decoded)
       }
-
-      console.log('running:', first, command.join(' '))
-
-      const _command = execa(first, command)
-
-      _command.stderr?.on('data', async(data) => {
-        const message = toDecode(data)
-        // await useSendRoomMessage(`build:${projectId}`, { data: message })
-        this.fileContents += `\n${message}`
-      })
-      _command.stdout?.on('data', async(data) => {
-        const message = toDecode(data)
-        // await useSendRoomMessage(`build:${projectId}`, { data: message })
-        this.fileContents += `\n${message}`
-      })
-
-      await _command
-      _command.kill()
+      for await (const chunk of stderrChunks) {
+        const decoded = this.toDecode(chunk)
+        console.log('stderr', decoded)
+      }
     }
     catch (error) {
       console.log(error)
-
-      consola.withTag('command:failed').error(`${command}`)
+      consola.withTag('command:failed').error(`${commands.join(' ')}`)
     }
   }
 }

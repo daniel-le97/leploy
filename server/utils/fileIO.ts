@@ -39,7 +39,7 @@ export const bunDriver = defineDriver((opts: FSStorageOptions) => {
       return await Bun.file(r(key)).exists()
     },
    async getItem(key) {
-      return await Bun.file(r(key)).json()
+      return await Bun.file(r(key)).text()
     },
     getItemRaw(key) {
       return Bun.file(r(key))

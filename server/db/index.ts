@@ -1,5 +1,5 @@
+import * as fs from 'node:fs'
 import { Database } from 'bun:sqlite'
-
 const tables = {
   // users table
   'users': /* sql */`
@@ -33,40 +33,44 @@ CREATE TABLE IF NOT EXISTS docker_compose (
   type TEXT,
   UNIQUE (name, dir)
 );`,
+  // 'kv': /* sql */`
+  // CREATE TABLE IF NOT EXISTS kv (
+  //   key BLOB NOT NULL PRIMARY KEY,
+  //   value BLOB
+  //   );`,
 
   'projects': /* sql */`
   CREATE TABLE IF NOT EXISTS projects (
   id TEXT PRIMARY KEY,
-  user TEXT,
-  createdAt DATETIME,
-  name TEXT,
-  deployed TEXT,
-  configured BOOLEAN,
-  buildLogs TEXT, -- Store the JSON array as a string
-  ports TEXT, -- Store the JSON array as a string
-  https BOOLEAN,
-  www BOOLEAN,
-  managed BOOLEAN,
-  applicationRepoUrl TEXT,
-  applicationStartCommand TEXT,
-  applicationBuildCommand TEXT,
-  applicationInstallCommand TEXT,
-  applicationBuildPack TEXT,
-  key TEXT,
-  logsPath TEXT
+  user TEXT NOT NULL REFERENCES users(id),
+  createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updatedAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+  name TEXT NOT NULL DEFAULT '',
+  deployed BOOLEAN NOT NULL DEFAULT false,
+  configured BOOLEAN NOT NULL DEFAULT false,
+  ports TEXT NOT NULL DEFAULT '', -- Store the JSON array as a string
+  https BOOLEAN NOT NULL DEFAULT false,
+  www BOOLEAN NOT NULL DEFAULT false,
+  repoUrl TEXT NOT NULL DEFAULT '',
+  startCommand TEXT NOT NULL DEFAULT '',
+  buildCommand TEXT NOT NULL DEFAULT '',
+  installCommand TEXT NOT NULL DEFAULT '',
+  buildPack TEXT NOT NULL DEFAULT 'nixpacks'
 );
 `,
   'buildlogs': /* sql */`
 CREATE TABLE IF NOT EXISTS build_logs (
   id TEXT NOT NULL PRIMARY KEY,
+  projectId TEXT NOT NULL REFERENCES projects(id),
+  createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
   data TEXT,
   status TEXT,
-  build_time TEXT
+  buildTime TEXT
 );`,
   'queue': /* sql */`
 CREATE TABLE IF NOT EXISTS queue (
   id TEXT NOT NULL PRIMARY KEY,
-  status TEXT NOT NULL DEFAULT 'in-queue',
+  status TEXT NOT NULL DEFAULT 'enqueued',
   projectId TEXT NOT NULL REFERENCES projects(id),
   logs TEXT,
   date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -85,4 +89,7 @@ class DB extends Database {
   }
 }
 
-export const db = new DB('sqlite.db')
+const path = `${process.cwd()}/.data/db`
+fs.mkdirSync(path, { recursive: true })
+
+export const db = new DB(`${path}/sqlite.db`)

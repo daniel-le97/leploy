@@ -44,11 +44,13 @@ export default defineEventHandler(async (event) => {
     if (!id)
       throw createError({ message: 'please provide an id' })
 
-    const db = useDbStorage('projects')
+    // const db = useDbStorage('projects')
 
-    const project = await db.getItem<Project>(`${session.id}:${id}`)
+    // const project = await db.getItem<Project>(`${session.id}:${id}`)
 
-    const compose = await createComposeFile(project!)
+    // const compose = await createComposeFile(project!)
+
+    const project = await projectsService.getProjectById(id)
 
     return project
   }

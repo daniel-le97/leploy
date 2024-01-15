@@ -1,17 +1,16 @@
 <script setup lang="ts">
 const { data, pending, error, refresh } = await useFetch<Project[]>('/api/projects')
 
-async function handleProjectCreate() {
-  const project = await $fetch<Project>('/api/projects', {
-    method: 'POST',
-    body: {
-      user: 'me',
-    },
-  })
-  const activeProject = useActiveProject()
-  activeProject.value = project
 
-  await navigateTo(`/projects/${project.id}`)
+async function handleProjectCreate() {
+  const projectId = await $fetch<string>('/api/projects', {
+    method: 'POST',
+  })
+  // const activeProject = useActiveProject()
+  // activeProject.value = project
+  // console.log('activeProject', project)
+
+  await navigateTo(`/projects/${projectId}`)
   // execute()
 }
 </script>
