@@ -4,26 +4,26 @@ WORKDIR /usr/src/app
 FROM base AS copy
 COPY . .
 
-FROM base AS install
+FROM base AS main
 COPY --from=copy /usr/src/app/.output /usr/src/app/.output
 COPY --from=copy /usr/src/app/.data /usr/src/app/.data
 COPY --from=copy /usr/src/app/.cache /usr/src/app/.cache
-COPY --from=copy /usr/src/app/sqlite.db /usr/src/app/sqlite.db
-COPY --from=copy /usr/src/app/sqlite.db-wal /usr/src/app/sqlite.db-wal
-COPY --from=copy /usr/src/app/sqlite.db-shm /usr/src/app/sqlite.db-shm
 
+
+
+# updated as of 01/15/2024
 
 ARG TARGETPLATFORM
 # https://download.docker.com/linux/static/stable/
 ARG DOCKER_VERSION=24.0.7
 # https://github.com/docker/compose/releases
-ARG DOCKER_COMPOSE_VERSION=2.23.3
+ARG DOCKER_COMPOSE_VERSION=2.24.0
 # https://github.com/docker/buildx/releases
-ARG DOCKER_BUILDX_VERSION=0.12.0
+ARG DOCKER_BUILDX_VERSION=0.12.1
 # https://github.com/buildpacks/pack/releases
 ARG PACK_VERSION=0.32.1
 # https://github.com/railwayapp/nixpacks/releases
-ARG NIXPACKS_VERSION=1.19.0
+ARG NIXPACKS_VERSION=1.20.0
 
 RUN apk add --no-cache bash curl git git-lfs openssh-client tar tini
 RUN mkdir -p ~/.docker/cli-plugins

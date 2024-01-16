@@ -12,5 +12,4 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
   const project = await $fetch<SqliteProject>(`/api/projects/${id}`)
   ws.send(JSON.stringify({ type: 'subscribe', payload: { id }}))
   useLiteProject().value = project
-  console.log('middleware:project', project)
 })

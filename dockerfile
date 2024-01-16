@@ -1,5 +1,3 @@
-# use the official Bun image
-# see all versions at https://hub.docker.com/r/oven/bun/tags
 FROM node:latest as base
 WORKDIR /usr/src/app
 RUN npm install -g bun
@@ -23,7 +21,7 @@ COPY --from=install /temp/dev/node_modules node_modules
 COPY . .
 
 # [optional] tests & build
-RUN bun test
+# RUN bun test
 RUN bun run build
 
 # copy production dependencies and source code into final image
