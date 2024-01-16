@@ -65,7 +65,8 @@ CREATE TABLE IF NOT EXISTS build_logs (
   createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
   data TEXT,
   status TEXT,
-  buildTime TEXT
+  buildTime TEXT,
+  type TEXT NOT NULL DEFAULT 'manual'
 );`,
   'queue': /* sql */`
 CREATE TABLE IF NOT EXISTS queue (

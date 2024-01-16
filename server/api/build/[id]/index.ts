@@ -9,18 +9,19 @@ export default defineEventHandler(async (event: any) => {
     if (!projectId || !session.id)
       throw createError('unable to find id')
 
-    const payload: BuildPayload = {
-      id: crypto.randomUUID(),
-      projectId,
-      userId: session.id,
-      date: Date.now().toString(),
-      buildTime: null,
-      logs: null,
-      status: 'in-queue',
-    }
+    // const payload: BuildPayload = {
+    //   id: crypto.randomUUID(),
+    //   projectId,
+    //   userId: session.id,
+    //   date: Date.now().toString(),
+    //   buildTime: null,
+    //   logs: null,
+    //   status: 'in-queue',
+    // }
     // console.log('build', payload);
-    
-    await serverHooks.callHook('build', payload)
+
+    const project = await projectsService.getProjectById(projectId)
+    await serverHooks.callHook('build', { ...project, type: 'manual' })
     return 'ok'
 
     // const key = `${session.id}:${id}`

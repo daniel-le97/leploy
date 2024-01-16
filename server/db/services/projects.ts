@@ -7,7 +7,6 @@ class Project {
   constructor(data: SqliteProject | Partial<SqliteProject>) {
     this.id = data.id!
     this.name = data.name!
-    
   }
 }
 
@@ -59,6 +58,10 @@ class ProjectsService {
     console.log(project)
 
     return project
+  }
+
+  async getProjectByRepoUrl(url: string) {
+    return db.prepare('SELECT * FROM projects WHERE repoUrl = ?1').all(url) as SqliteProject[]
   }
 
   async getProjectsByUserId(userId: string) {

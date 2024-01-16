@@ -26,6 +26,13 @@ const tabs = computed(() => {
 function selectTab(index: number) {
   selectedTab.value = index
 }
+
+onUnmounted(() => {
+  const ws = useWs()
+  ws.send(JSON.stringify({ type: 'unsubscribe', payload: { id: route.params.id } }))
+  console.log('unsubscribed from', route.params.id)
+})
+
 // onMounted( () => setPageLayout('application-layout'))
 </script>
 

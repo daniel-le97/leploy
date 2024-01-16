@@ -28,20 +28,28 @@ const handlers = new Map<string, (server: BunServer, ws: WS, payload: Payload) =
     ws.subscribe(data)
   })
 
-  .set('delete', (server, ws, payload) => {
-    const { data } = payload
-    ws.unsubscribe(data)
+  .set('unsubscribe', (server, ws, payload) => {
+    console.log('server:ws:unsubscribe', payload);
+    
+    const isSubbed = (id: string) => ws.isSubscribed(id)
+    // @ts-expect-error we will fix this later
+    const id = payload.payload.id
+    console.log('server:ws:unsubscribe', id)
+    const isSubscribed = isSubbed(id)
+    if (!isSubscribed) {
+      ws.unsubscribe(id)
+      console.log('issubbed', isSubbed(id))
+    }
   })
   .set('subscribe', (server, ws, payload) => {
-    const isSubbed = (id:string) => ws.isSubscribed(id)
+    const isSubbed = (id: string) => ws.isSubscribed(id)
     // @ts-expect-error we will fix this later
     const id = payload.payload.id
     console.log('server:ws:subscribe', id)
     const isSubscribed = isSubbed(id)
-    if (!isSubscribed){
+    if (!isSubscribed) {
       ws.subscribe(id)
-      console.log('issubbed',isSubbed(id));
-      
+      console.log('issubbed', isSubbed(id))
     }
 
     // ws.subscribe(payload.id)
@@ -79,6 +87,5 @@ export const websocket: WebSocketHandler<{ socketId: string, auth: { id?: string
   },
   close(ws) {
     console.log('server:ws:close', ws.data)
-
   },
 }

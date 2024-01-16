@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import type { WatchStopHandle } from 'vue'
+import type { BuildLog } from '../../types/logs'
 
 const buildData = useBuildSSE()
 
@@ -14,20 +15,21 @@ const defaults: EventWatch = {}
 const activeId = useState('active-log-id')
 
 const routerId = useRoute('projects-id').params.id
-async function getLogs(id: string) {
-//  console.log(id);
-  activeId.value = id
-  const { data, pending, error, refresh } = await useFetch(`/api/build/${routerId}/logs/${id}`)
-  // console.log(data.value);
 
-  buildData.value = data.value as string
-}
+const { data, pending, error, refresh } = await useFetch<BuildLog[]>(`/api/build/${routerId}/logs`)
 
-// async function handleClick() {
-//   const watchEvents = useState<EventWatch>('event-source', () => defaults)
-//   buildData.value = ''
+// async function getLogs(id: string) {
+// //  console.log(id);
+//   activeId.value = id
+//   const { data, pending, error, refresh } = await useFetch(`/api/build/${routerId}/logs/${id}`)
+//   // console.log(data.value);
 
+//   buildData.value = data.value as string
 // }
+
+async function handleClick(log: BuildLog) {
+  buildData.value = log.data
+}
 </script>
 
 <template>
@@ -47,21 +49,19 @@ async function getLogs(id: string) {
       </UTooltip>
     </div>
     <UDivider class="w-full" />
-    <div class="w-full flex p-2 gap-2">
-      <div class="w-4/5">
-        <div class="p-2 bg-zinc-700 rounded-md">
-          <pre v-if="buildData.length" id="pre-build" class="w-full h-full overflow-auto whitespace-pre-wrap scrollable-pre"> {{ buildData }}</pre>
+    <div class=" flex  gap-2">
+      <div class="w-4/5  max-w-2xl min-w-[42rem]">
+        <div class=" bg-zinc-700 rounded-md">
+          <pre v-if="buildData.length" id="pre-build" class="w-full h-full overflow-y-auto whitespace-pre-wrap scrollable-pre"> {{ buildData }}</pre>
           <pre v-else id="pre-build" class="w-full h-full overflow-auto whitespace-pre-wrap scrollable-pre"> {{ 'no builds logged' }}</pre>
         </div>
       </div>
-      <div class="w-1/5">
-        <div v-for="logs in Logs.buildsLogs" :key="logs.id" class="w-full flex justify-center items-center">
-          <BuildLogCard :duration="logs.buildTime" :date="logs.date" :class=" activeId === logs.id ? 'bg-white text-black' : ''" @click="getLogs(logs.id)" />
+
+      <div v-if="data?.length" class="w-1/5">
+        <div v-for="logs in data" :key="logs.id" class="w-full flex justify-center items-center">
+          <BuildLogCard :duration="logs.buildTime" :type="logs.type" :date="logs.createdAt" :class=" activeId === logs.id ? 'bg-white text-black' : ''" @click="handleClick(logs)" />
         </div>
       </div>
-
-      <!-- BUILD STATUS -->
-      <!-- BUILD STATUS -->
     </div>
   </section>
 </template>

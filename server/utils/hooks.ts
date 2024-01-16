@@ -1,6 +1,7 @@
 import type { Server as BunServer } from 'bun'
 import { createHooks } from 'hookable'
-import { Server } from '../core/server';
+import { Server } from '../core/server'
+import type { SqliteProject } from '../../types/project'
 
 export interface BuildPayload {
   id: string
@@ -13,23 +14,13 @@ export interface BuildPayload {
 }
 
 export interface ServerHooks {
-  build: (payload: BuildPayload) => void | Promise<void>
+  build: (project: SqliteProject & {type:string}) => void | Promise<void>
   start: (server: BunServer) => void | Promise<void>
 }
 export const serverHooks = createHooks<ServerHooks>()
 
-serverHooks.hook('build', async (payload) => {
-  console.log('hooks:build', payload.projectId)
-  let count = 0
-  const interval = setInterval(() => {
-    if (count === 10)
-      clearInterval(interval)
-
-      const string = `${crypto.randomUUID()}\n`
-      // console.log('publishing', string, 'to', payload.projectId);
-      
-    Server().publish(payload.projectId, string)
-
-    count++
-  }, 1000)
+serverHooks.hook('build', async (project) => {
+  // console.log('hooks:build', payload.id)
+  // const project = await projectsService.getProjectById(payload.projectId)
+  queue.addProject(project)
 })

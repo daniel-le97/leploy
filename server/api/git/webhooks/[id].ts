@@ -12,40 +12,41 @@ function filterHeadersBySubstring<T>(headers: Partial<Record<HTTPHeaderName, str
   return filteredHeaders as T
 }
 
-async function findProject(url: string) {
-  const db = useDbStorage('projects')
-  const keys = await db.getKeys()
-  const apps: Project[] = []
-  for await (const key of keys) {
-    const item = await db.getItem<Project>(key)
-    if (item) {
-      if (item.application.repoUrl.includes(url)) {
-        const logsPath = `${process.cwd()}/data/logs/${item.id}/`
-        const processProject = {
-          ...item,
-          key,
-          logsPath,
-        }
-        await queue.addProject(processProject)
-      }
-    }
-  }
-  // console.log(apps)
+// async function findProject(url: string) {
+//   const db = useDbStorage('projects')
+//   const keys = await db.getKeys()
+//   const apps: Project[] = []
+//   for await (const key of keys) {
+//     const item = await db.getItem<Project>(key)
+//     if (item) {
+//       if (item.application.repoUrl.includes(url)) {
+//         const logsPath = `${process.cwd()}/data/logs/${item.id}/`
+//         const processProject = {
+//           ...item,
+//           key,
+//           logsPath,
+//         }
+//         await queue.addProject(processProject)
+//       }
+//     }
+//   }
+//   // console.log(apps)
 
-  return apps
-}
+//   return apps
+// }
 
 // this route handler is for processing github webhooks
 export default defineEventHandler(async (event) => {
   // this will be the id of the github app
   const id = getRouterParam(event, 'id')
-  
+
   const body = await readBody<GitHubWebhookPayload>(event)
-  const url = body.repository.html_url
+  const url = 'https://github.com/daniel-le97/astro-portfolio'
   const headers = filterHeadersBySubstring<GitHubWebhookHeaders>(getHeaders(event), 'hub')
-  console.log({ headers, body});
-  
-  
+
+  const projects = await projectsService.getProjectByRepoUrl(url)
+  for await (const project of projects)
+    await serverHooks.callHook('build', { ...project, type: 'webhook' })
 
   return 'ok'
 })

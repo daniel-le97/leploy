@@ -1,9 +1,11 @@
+import type { BuildLog } from '../types/logs'
+
 export default defineNuxtPlugin(async () => {
   const port = await $fetch('/api/server')
   console.log('websocket port', port)
 
   const { loggedIn, user, session, fetch, clear } = useUserSession()
-
+  const parse = <T>(data: MessageEvent<any>) => JSON.parse(data.data) as { type: string, data: T }
   const websocket = useWebSocket<{ type: string }>(`ws://localhost:${port}`, {
     immediate: loggedIn.value,
     autoReconnect: true,
@@ -11,10 +13,14 @@ export default defineNuxtPlugin(async () => {
       console.log('websocket connected', ws)
     },
     onMessage(ws, event) {
-      console.log('websocket message', event);
-      
-      // const state = useBuildSSE()
-      // state.value += event.data
+      const data = parse<string>(event)
+      if (data.type === 'build')
+        useBuildSSE().value += data.data
+
+      if (data.type === 'logs') {
+        const newData = parse<BuildLog>(event)
+        console.log('newData', newData)
+      }
     },
   })
 
