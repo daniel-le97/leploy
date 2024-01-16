@@ -1,6 +1,6 @@
 import { readdir } from 'node:fs/promises'
 import * as yaml from 'yaml'
-import { db } from './server/db/index'
+import { db } from '../db/index'
 
 const cwd = `${process.cwd()}/.data/templates/caprover/apps`
 const number = 1000

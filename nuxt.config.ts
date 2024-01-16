@@ -24,9 +24,12 @@ export default defineNuxtConfig({
   },
   ignore: ['/temp', '/data', '/stack'],
   nitro: {
-    compressPublicAssets: {
-      gzip: true,
-      brotli: true,
+    devStorage: {
+      cache:{
+        'driver': 'fsLite',
+        'base': './.data',
+      }
+      
     },
     experimental: {
       openAPI: true,
@@ -38,8 +41,8 @@ export default defineNuxtConfig({
     },
     storage: {
       cache: {
-        driver: 'fsLite',
-        base: './.cache',
+        driver: './server/utils/sqliteDriver',
+        base: './.data',
       },
       db: { driver: 'fsLite', base: './.data' },
     },

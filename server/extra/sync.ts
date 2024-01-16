@@ -1,9 +1,9 @@
-import { readdir } from 'node:fs/promises'
-import { db } from './server/db/index'
-const cwd = `${process.cwd()}/.test`
-const files = db.prepare(/* sql */`Select * from fs`).all() as { name: string, dir: string, content: string, type: string, createdAt: string, updatedAt: string }[]
-for await (const file of files)
-  await Bun.write(`${cwd}/${file.name}`, file.content)
+// import { readdir } from 'node:fs/promises'
+// import { db } from './server/db/index'
+// const cwd = `${process.cwd()}/.test`
+// const files = db.prepare(/* sql */`Select * from fs`).all() as { name: string, dir: string, content: string, type: string, createdAt: string, updatedAt: string }[]
+// for await (const file of files)
+//   await Bun.write(`${cwd}/${file.name}`, file.content)
 
 // const files = await readdir('./.data', { recursive: true, withFileTypes: true })
 // const cwd = `${process.cwd()}/.data`

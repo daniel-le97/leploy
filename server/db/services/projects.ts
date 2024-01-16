@@ -45,9 +45,10 @@ class ProjectsService {
       id: crypto.randomUUID(),
       name: generateName(),
       user,
+      createdAt: Date.now(),
     }
     const transaction = db.transaction(() => {
-      db.prepare('INSERT INTO projects (id, name, user) VALUES (?1, ?2, ?3)').run(project.id, project.name, project.user)
+      db.prepare('INSERT INTO projects (id, name, user, createdAt) VALUES (?1, ?2, ?3, ?4)').run(project.id, project.name, project.user, project.createdAt)
       return project.id
     })
     return await transaction() as string
