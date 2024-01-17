@@ -11,14 +11,10 @@ async function handleClick() {
   console.log('building project')
   const id = useRoute('projects-id').params.id
   // ws.send(JSON.stringify({ type: 'subscribe', payload: { id } }))
- const data =  await $fetch(`/api/build/${id}`, {
+  const data = await $fetch(`/api/build/${id}`, {
     method: 'POST',
   })
   console.log('build post', data)
-
-
-
-
 }
 </script>
 

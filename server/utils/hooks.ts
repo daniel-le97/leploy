@@ -1,6 +1,5 @@
 import type { Server as BunServer } from 'bun'
 import { createHooks } from 'hookable'
-import { Server } from '../core/server'
 import type { SqliteProject } from '../../types/project'
 
 export interface BuildPayload {
@@ -14,7 +13,7 @@ export interface BuildPayload {
 }
 
 export interface ServerHooks {
-  build: (project: SqliteProject & {type:string}) => void | Promise<void>
+  build: (project: SqliteProject & { type: string }) => void | Promise<void>
   start: (server: BunServer) => void | Promise<void>
 }
 export const serverHooks = createHooks<ServerHooks>()

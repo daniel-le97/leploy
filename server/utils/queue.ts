@@ -1,5 +1,4 @@
 import * as fs from 'node:fs'
-import { execa } from 'execa'
 import { createHooks } from 'hookable'
 import consola from 'consola'
 import YAML from 'yaml'

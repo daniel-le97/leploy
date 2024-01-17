@@ -9,7 +9,6 @@ interface OneClickAppsList {
   }[]
 }
 export default defineCachedEventHandler(async (_event) => {
-  
   const start = performance.now()
   const db = useDbStorage('templates:caprover')
   const caproverRaw = await db.getItem('list') as OneClickAppsList

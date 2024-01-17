@@ -15,10 +15,10 @@ function toggleDescription(template: any) {
         <div class="flex    items-center justify-center space-x-3">
           <img
             fallback="/docker-compose.png"
-            @error="() => (template.logo = '/docker-compose.png')"
             :src="template.logo"
             height="5vh"
             class="w-16 "
+            @error="() => (template.logo = '/docker-compose.png')"
           >
           <div class="text-xl font-bold ">
             {{ template.name }}

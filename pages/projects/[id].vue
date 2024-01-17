@@ -1,6 +1,6 @@
 <!-- components/Tabs.vue -->
 <script setup lang="ts">
-import { LazyTabsBuild, LazyTabsCompose, LazyTabsConfiguration, LazyTabsSecrets } from '#components'
+import { LazyTabsBuild, LazyTabsConfiguration, LazyTabsSecrets } from '#components'
 
 const route = useRoute('projects-id')
 // console.log(route.params)

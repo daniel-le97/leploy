@@ -1,5 +1,3 @@
-import type { BuildPayload } from '../../../utils/hooks'
-
 export default defineEventHandler(async (event: any) => {
   try {
     const session = await requireAuthSession(event)

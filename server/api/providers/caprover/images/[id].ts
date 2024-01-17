@@ -1,5 +1,3 @@
-import * as fs from 'node:fs/promises'
-
 const cwd = process.cwd()
 
 export default defineCachedEventHandler(async (event) => {

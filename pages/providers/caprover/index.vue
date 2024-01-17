@@ -1,5 +1,4 @@
 <script setup lang="ts">
-
 const { data: templates } = await useFetch<CaproverTemplate>('/api/providers/caprover')
 
 type TEMPLATE = typeof templates extends { value: { [index: number]: infer T } } ? T : never

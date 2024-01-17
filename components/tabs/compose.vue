@@ -7,7 +7,7 @@ const projectid = useRoute('projects-id').params.id
 <template>
   <div>
     <!-- <MonacoEditor v-if="data" v-model="data" lang="yaml" class="min-h-screen" /> -->
-    <div >
+    <div>
       no compose found
     </div>
     <!-- <textarea v-if="data" v-model="data" class="w-screen min-h-screen" /> -->

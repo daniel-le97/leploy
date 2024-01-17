@@ -25,11 +25,11 @@ export default defineNuxtConfig({
   ignore: ['/temp', '/data', '/stack'],
   nitro: {
     devStorage: {
-      cache:{
-        'driver': 'fsLite',
-        'base': './.data',
-      }
-      
+      cache: {
+        driver: 'fsLite',
+        base: './.data',
+      },
+
     },
     experimental: {
       openAPI: true,

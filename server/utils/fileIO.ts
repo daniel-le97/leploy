@@ -1,9 +1,8 @@
 import type { Stats } from 'node:fs'
 import { readdir, rm, unlink } from 'node:fs/promises'
-import { existsSync, promises as fsp } from 'node:fs'
+import { promises as fsp } from 'node:fs'
 import { join, resolve } from 'node:path'
-import anymatch from 'anymatch'
-import { createStorage, defineDriver } from 'unstorage'
+import { defineDriver } from 'unstorage'
 
 export interface FSStorageOptions {
   base?: string
@@ -38,7 +37,7 @@ export const bunDriver = defineDriver((opts: FSStorageOptions) => {
     async hasItem(key) {
       return await Bun.file(r(key)).exists()
     },
-   async getItem(key) {
+    async getItem(key) {
       return await Bun.file(r(key)).text()
     },
     getItemRaw(key) {

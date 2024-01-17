@@ -1,5 +1,3 @@
-import * as fs from 'node:fs'
-
 export default defineEventHandler(async (event) => {
   try {
     const ip = getRequestIP(event)

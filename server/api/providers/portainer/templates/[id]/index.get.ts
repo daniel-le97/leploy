@@ -5,8 +5,6 @@ export default defineEventHandler(async (event) => {
   if (!id)
     return
 
-
-  
   const db = useDbStorage('templates:portainer')
   const templatesFile = await db.getItem('template.json') as ITemplateFile
   const foundTemplate = templatesFile.templates.find(template => template.name === id)

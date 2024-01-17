@@ -1,12 +1,12 @@
 export interface GitHubWebhookHeaders {
-    'x-github-delivery': string;
-    'x-github-event': string;
-    'x-github-hook-id': string;
-    'x-github-hook-installation-target-id': string;
-    'x-github-hook-installation-target-type': string;
-    'x-hub-signature': string;
-    'x-hub-signature-256': string;
-  }
+  'x-github-delivery': string
+  'x-github-event': string
+  'x-github-hook-id': string
+  'x-github-hook-installation-target-id': string
+  'x-github-hook-installation-target-type': string
+  'x-hub-signature': string
+  'x-hub-signature-256': string
+}
 
 export interface GitHubWebhookPayload {
   ref: string

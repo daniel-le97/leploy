@@ -38,7 +38,7 @@ CREATE TABLE IF NOT EXISTS docker_compose (
   //   key BLOB NOT NULL PRIMARY KEY,
   //   value BLOB
   //   );`,
- 'project-env': /* sql */`
+  'project-env': /* sql */`
   CREATE TABLE IF NOT EXISTS project_env (
     id TEXT NOT NULL PRIMARY KEY,
     projectId TEXT NOT NULL REFERENCES projects(id),

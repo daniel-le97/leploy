@@ -1,4 +1,3 @@
-import { writeFile } from 'node:fs/promises'
 import type { ITemplateFile } from '../../../../../types/portainer'
 
 function removeSpecialCharacters(inputString: string): string {

@@ -1,4 +1,4 @@
-import { createStorage, defineDriver } from 'unstorage'
+import { defineDriver } from 'unstorage'
 
 export const sqliteDriver = defineDriver(() => {
   return {

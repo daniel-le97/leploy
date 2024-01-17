@@ -1,6 +1,3 @@
-
-
-
 class ProjectEnvService {
   createEnv(env: ProjectEnv) {
     return db.prepare('INSERT INTO project_env (id, projectId, createdAt, updatedAt, name, value, forBuild) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7)').run(

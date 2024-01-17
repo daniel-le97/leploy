@@ -11,8 +11,8 @@ try {
     const fsFile = Bun.file(`${cwd}/${file}`)
     const data = await fsFile.text()
     const yamlString = yaml.stringify(await fsFile.text())
-    console.log(yamlString);
-    
+    console.log(yamlString)
+
     db.prepare(/* sql */`Insert into fs (name, dir, content, type) values (?1, ?2, ?3, ?4)`).run(file, cwd, data, 'json')
   }
 }

@@ -17,21 +17,20 @@
     "bench": "bombardier -c 125 -n 100000 http://localhost:3000"
   },
   "dependencies": {
-    "@deno/kv": "0.7.0",
-    "drizzle-orm": "^0.29.3",
-    "nuxt-auth-utils": "latest"
+    "drizzle-orm": "^0.29.3"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^2.6.2",
     "@nuxt/devtools": "^1.0.8",
     "@nuxt/ui": "latest",
-    "@types/bun": "^1.0.1",
+    "@types/bun": "^1.0.2",
     "@vueuse/nuxt": "latest",
-    "drizzle-kit": "^0.20.10",
+    "drizzle-kit": "^0.20.13",
     "eslint": "^8.56.0",
     "nuxt": "npm:nuxt-nightly@latest",
+    "nuxt-auth-utils": "latest",
     "smee-client": "^2.0.0",
-    "vue": "^3.4.10",
+    "vue": "^3.4.14",
     "vue-router": "^4.2.5"
   }
 }

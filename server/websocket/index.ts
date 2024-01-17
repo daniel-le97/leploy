@@ -29,8 +29,8 @@ const handlers = new Map<string, (server: BunServer, ws: WS, payload: Payload) =
   })
 
   .set('unsubscribe', (server, ws, payload) => {
-    console.log('server:ws:unsubscribe', payload);
-    
+    console.log('server:ws:unsubscribe', payload)
+
     const isSubbed = (id: string) => ws.isSubscribed(id)
     // @ts-expect-error we will fix this later
     const id = payload.payload.id

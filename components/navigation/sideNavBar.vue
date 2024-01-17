@@ -1,5 +1,4 @@
 <script setup>
-
 const SideNavBar = ref(null)
 const isCollapsed = ref(false)
 

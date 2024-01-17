@@ -53,7 +53,6 @@ onMounted(() => {
 })
 const code = 'http://localhost:3000/?code=727aa4b859b15cc7ccba90de2168544ccdf8c8cb&state=abc123'
 const auth = useUserSession()
-
 </script>
 
 <template>
