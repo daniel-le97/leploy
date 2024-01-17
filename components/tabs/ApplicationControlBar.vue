@@ -1,13 +1,10 @@
 <script lang="ts" setup>
-import type { WatchStopHandle } from 'vue'
 
-interface EventWatch {
-  [key: string]: WatchStopHandle | null
-}
-const defaults: EventWatch = {}
 // const ws = useWs()
 
 async function handleClick() {
+  const state = useState('selectedTab')
+  state.value = 'build'
   console.log('building project')
   const id = useRoute('projects-id').params.id
   // ws.send(JSON.stringify({ type: 'subscribe', payload: { id } }))

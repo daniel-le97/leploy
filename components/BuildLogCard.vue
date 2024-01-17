@@ -1,5 +1,5 @@
 <script setup>
-const props = defineProps(['branch', 'date', 'id', 'duration', 'type'])
+const props = defineProps(['branch', 'date', 'id', 'duration', 'type', 'status'])
 const durationInSeconds = computed(() => props.duration / 1e9)
 const minutes = computed(() => Math.floor(durationInSeconds.value / 60))
 // const seconds = computed(() => durationInSeconds.value % 60)
@@ -22,7 +22,8 @@ const timeago = useTimeAgo(props.date)
           <div class="text-xs">
             {{ props.type ?? 'manual' }}
           </div>
-          <span class=" text-xs bg-zinc-800 rounded-lg  flex items-center justify-center text-green-300 ">success</span>
+          <span v-if="props.status === 'success'" class=" text-xs bg-zinc-800 rounded-lg  flex items-center justify-center text-green-300 ">{{ props.status }}</span>
+          <span  v-else class=" text-xs bg-zinc-800 rounded-lg  flex items-center justify-center text-red-300 ">{{ props.status }}</span>
         </div>
       </div>
       <div class="w-2/3  text-xs flex flex-col items-center justify-center text-center">

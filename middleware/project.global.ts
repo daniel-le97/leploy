@@ -8,6 +8,8 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
   if (!hasPath || !id)
     return
 
+  const buildData = useBuildSSE()
+  buildData.value = ''
   const ws = useWs()
   const project = await $fetch<SqliteProject>(`/api/projects/${id}`)
   ws.send(JSON.stringify({ type: 'subscribe', payload: { id } }))

@@ -5,11 +5,12 @@ export default defineNuxtPlugin(async () => {
   console.log('websocket port', port)
 
   const { loggedIn, user, session, fetch, clear } = useUserSession()
+  await fetch()
   const parse = <T>(data: MessageEvent<any>) => JSON.parse(data.data) as { type: string, data: T }
   const websocket = useWebSocket<{ type: string }>(`ws://localhost:${port}`, {
     immediate: loggedIn.value,
     autoReconnect: true,
-    onConnected: (ws) => {
+    onConnected: async(ws) => {
       console.log('websocket connected', ws)
     },
     onMessage(ws, event) {

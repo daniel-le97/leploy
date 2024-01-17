@@ -1,7 +1,13 @@
 <script setup lang="ts">
 import type { ProjectEnv } from '../../types/env'
 
-const env = ref({
+interface ENV {
+  name: string | null
+  value: string | null
+  forBuild: boolean
+}
+
+const envRef = ref<ENV>({
   name: null,
   value: null,
   forBuild: false,
@@ -12,88 +18,129 @@ const id = useRoute('projects-id').params.id
 const { data, pending, error, refresh } = await useFetch<ProjectEnv[]>(`/api/projects/${id}/env`)
 console.log(data)
 
-async function handleEnvSubmit() {
-  if (!env.value.name || !env.value.value)
+async function handleEnvCreate(env: ENV, _refresh = false) {
+  if (!env.name || !env.value)
     return
 
-  console.log(env)
+  env.forBuild = env.forBuild || false
 
   const projectId = await $fetch<string>(`/api/projects/${id}/env`, {
     method: 'POST',
-    body: env.value,
+    body: env,
   })
+
+  if (_refresh) {
+    await refresh()
+    envRef.value = {
+      name: null,
+      value: null,
+      forBuild: false,
+    }
+  }
+}
+const bottomTextArea = ref('')
+
+async function handleEnvSubmit() {
+  if (!bottomTextArea.value)
+    return
+
+  const parseEnvs = bottomTextArea.value.split('\n')
+  for await (const env of parseEnvs) {
+    const [name, value] = env.split('=')
+    if (!name || !value)
+      continue
+
+    console.log(name, value)
+
+    await handleEnvCreate({
+      name,
+      value,
+      forBuild: false,
+    })
+  }
+  bottomTextArea.value = ''
+  await refresh()
+}
+
+async function deleteEnv(projectEnv: ProjectEnv) {
+  // Logic to enable editing for the selected projectEnv
+  console.log(`Deleting projectEnv: ${projectEnv.id}`)
+  await $fetch(`/api/projects/${id}/env/${projectEnv.id}`, {
+    method: 'DELETE',
+  })
+  await refresh()
+}
+
+function updateProjectEnv(projectEnv: ProjectEnv) {
+  // Logic to update the selected projectEnv
+  console.log(`Updating projectEnv: ${projectEnv.id}`)
 }
 </script>
 
 <template>
-  <div>
-    <div class="w-full">
-      <form class="">
-        <div class="mb-4">
-          <div class="lg:flex space-x-3">
-            <div class="flex space-x-3">
-              <div>
-                <label class="block dark:text-white text-gray-700 text-3xl font-bold mb-2" for="name">
-                  Name
-                </label>
-                <input
-                  id="name"
-                  v-model="env.name"
-                  class="h-12 shadow appearance-none border rounded w-full py-2 px-3 dark:text-white text-gray-700 leading-tight focus:outline-none focus:shadow-outline" type="text" placeholder="Enter name"
-                >
-              </div>
-              <div>
-                <label class="block dark:text-white text-gray-700 text-3xl font-bold mb-2" for="value">
-                  Value
-                </label>
-                <input
-                  id="value"
-                  v-model="env.value"
-                  class="h-12 shadow appearance-none border rounded w-full py-2 px-3 dark:text-white text-gray-700 leading-tight focus:outline-none focus:shadow-outline" type="text" placeholder="Enter value"
-                >
-              </div>
-              <div class="flex items-center">
-                <label class="block dark:text-white text-gray-700 text-3xl font-bold mb-2" for="build-time">
-                  Need During BuildTime?
-                </label>
-                <input id="build-time" v-model="env.forBuild" class="ml-2" type="checkbox">
-              </div>
-            </div>
-            <button class="bg-amber-400 p-2 rounded-md px-4" type="button" @click="handleEnvSubmit">
-              Add
-            </button>
+  <div class="flex flex-col border ">
+    <!-- Top Section -->
+    <div class="p-4 border-b border-gray-300">
+      <div v-for="env in data" :key="env.id" class="mb-4">
+        <div class="flex flex-row justify-between items-center">
+          <RippleBtn class="ml-4 bg-blue-500 text-white px-2 py-1 rounded" @click="updateProjectEnv(env)">
+            Update
+          </RippleBtn>
+          <Icon name="uil:trash-alt" class="text-2xl text-red-500 cursor-pointer" @click="deleteEnv(env)" />
+          <div>
+            <strong>Key: </strong>
+            <input v-model="env.name" class="w-48 border rounded text-xs">
           </div>
+          <div>
+            <strong>Value: </strong>
+            <input v-model="env.value" class="w-48 border rounded text-xs">
+          </div>
+          <div> {{ env.id }}</div>
+          <div>
+            <strong>Build Time: </strong>
+            <RippleBtn>
+              <input v-model="env.forBuild" type="checkbox">
+            </RippleBtn>
+          </div>
+        </div>
+        <!-- <div class="flex items-center">
+          <div class="flex-grow">
+            <div>
+              <strong>Key:</strong> <input v-model="env.name">
+            </div>
+            <div>
+              <strong>Value:</strong> <input v-model="env.value">
+            </div>
+          </div>
+
+        </div> -->
+      </div>
+      <form class="flex flex-row justify-between items-center border-t py-2">
+        <RippleBtn class="ml-4 bg-blue-500 text-white px-2 py-1 rounded" type="submit" @click.prevent="handleEnvCreate(envRef, true)">
+          create
+        </RippleBtn>
+        <div>
+          <strong>Key: </strong>
+          <input v-model="envRef.name" class="w-48 border rounded">
+        </div>
+        <div>
+          <strong>Value: </strong>
+          <input v-model="envRef.value" class="w-48 border rounded">
+        </div>
+        <div>
+          <strong>Build Time: </strong>
+          <input v-model="envRef.forBuild" type="checkbox">
         </div>
       </form>
     </div>
-    <div class="p-2">
-      <div class="lg:flex space-x-3">
-        <div class="flex items-center">
-          <label class="block dark:text-white text-gray-700 text-3xl font-bold mb-2" for="preview">
-            Preview Secrets
-          </label>
-          <UTooltip>
-            <UIcon name="uil:info-circle" class="text-2xl" />
-            <template #text>
-              <span class="italic">Hello World!</span>
-            </template>
-          </UTooltip>
-        </div>
-      </div>
-      <hr class="my-2">
-      <div>
-        <label class="block dark:text-white text-gray-700 text-3xl font-bold mb-2" for="enc-file">
-          Past.envFile
-        </label>
-        <button class="bg-amber-400 p-2 rounded-md px-4" @click.prevent="handleEnvSubmit">
-          Add
-        </button>
-        <textarea
-          id="enc-file"
-          class="h-24 shadow appearance-none border rounded w-full py-2 px-3 dark:text-white text-gray-700 leading-tight focus:outline-none focus:shadow-outline mt-2"
-          placeholder="Enter Past.encFile"
-        />
-      </div>
+
+    <RippleBtn class="pt-3" @click="handleEnvSubmit">
+      SUBMIT ENV
+    </RippleBtn>
+    <!-- Bottom Section (Scrollable Div) -->
+    <div class="flex-grow overflow-y-auto p-4">
+      <!-- Text area for the bottom section -->
+      <textarea v-model="bottomTextArea" class="w-full h-full p-2 border" placeholder="Enter text..." />
     </div>
   </div>
 </template>

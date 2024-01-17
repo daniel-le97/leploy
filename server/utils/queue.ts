@@ -90,9 +90,12 @@ class Queue {
     const date = new Date()
     this.fileContents = ''
 
-    await this.runCommandAndSendStream(['git', 'clone', '--depth=1', `${project.repoUrl}`, `${repoPath}`])
+    const git = await this.runCommandAndSendStream(['git', 'clone', '--depth=1', `${project.repoUrl}`, `${repoPath}`])
 
-    await this.runCommandAndSendStream([`nixpacks`, `build`, `${repoPath}`, `--name`, `${generatedName}`])
+    const build = await this.runCommandAndSendStream([`nixpacks`, `build`, `${repoPath}`, `--name`, `${generatedName}`])
+
+    const isSuccessful = (git === 0 && build === 0)
+    console.log({ isSuccessful, git, build })
 
     const end = (Bun.nanoseconds() - start)
     const buildLog: BuildLog = {
@@ -100,7 +103,7 @@ class Queue {
       projectId: project.id,
       buildTime: end.toString(),
       data: this.fileContents,
-      status: 'success',
+      status: isSuccessful ? 'success' : 'failed',
       createdAt: Date.now().toString(),
       type: this.activeProject?.type || 'manual',
     }
@@ -139,11 +142,9 @@ class Queue {
         write,
       }))
 
-      await _command.exited
-      _command.kill(1)
+      return await _command.exited
     }
     catch (error) {
-      console.log(error)
       consola.withTag('command:failed').error(`${commands.join(' ')}`)
     }
   }

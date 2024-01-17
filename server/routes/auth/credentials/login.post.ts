@@ -20,7 +20,7 @@ export default credentialsLogin({
 
 function credentialsLogin({ onSuccess, onError }: OAuthConfig<any>) {
   return defineEventHandler(async (event) => {
-    const { email, password } = await readBody(event) as Record<string, string>
+    const { email, password } = await readBody(event)
     const found = usersService.getUserByEmail(email)
 
     if (!found) {

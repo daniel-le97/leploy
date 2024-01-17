@@ -5,7 +5,7 @@ import { LazyTabsBuild, LazyTabsConfiguration, LazyTabsSecrets } from '#componen
 const route = useRoute('projects-id')
 // console.log(route.params)
 
-const selectedTab = ref(0)
+const selectedTab = useState('selectedTab', () => 'configuration')
 
 const tabs = computed(() => {
   // if (useActiveProject().value.configured) {
@@ -23,7 +23,7 @@ const tabs = computed(() => {
   ]
 })
 
-function selectTab(index: number) {
+function selectTab(index: string) {
   selectedTab.value = index
 }
 
@@ -57,9 +57,9 @@ onUnmounted(() => {
         <RippleBtn
           v-for="(tab, index) in tabs"
           :key="index"
-          :class="{ 'bg-white text-black': selectedTab === index }"
+          :class="{ 'bg-white text-black': selectedTab === tab.label }"
           class="w-full p-2 mb-2 text-left max rounded"
-          @click="selectTab(index)"
+          @click="selectTab(tab.label)"
         >
           {{ tab.label }}
         </RippleBtn>
@@ -68,7 +68,7 @@ onUnmounted(() => {
       <!-- Main component area -->
       <div class=" w-full">
         <div v-for="(tab, index) in tabs" :key="index">
-          <div v-if="selectedTab === index">
+          <div v-if="selectedTab === tab.label">
             <component :is="tab.component" />
           </div>
         </div>

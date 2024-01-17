@@ -50,16 +50,16 @@ async function handleClick(log: BuildLog) {
     </div>
     <UDivider class="w-full" />
     <div class=" flex  gap-2">
-      <div class="w-4/5  max-w-2xl min-w-[42rem]">
-        <div class=" bg-zinc-700 rounded-md">
-          <pre v-if="buildData.length" id="pre-build" class="w-full h-full overflow-y-auto whitespace-pre-wrap scrollable-pre"> {{ buildData }}</pre>
+      <div class="w-4/5  max-w-2xl min-w-[42rem] ">
+        <div class=" bg-zinc-700 rounded-md h-full">
+          <pre v-if="buildData.length" id="pre-build" class="w-full h-full overflow-y-auto whitespace-pre-wrap scrollable-pre text-xs"> {{ buildData }}</pre>
           <pre v-else id="pre-build" class="w-full h-full overflow-auto whitespace-pre-wrap scrollable-pre"> {{ 'no builds logged' }}</pre>
         </div>
       </div>
 
       <div v-if="data?.length" class="w-1/5">
         <div v-for="logs in data" :key="logs.id" class="w-full flex justify-center items-center">
-          <BuildLogCard :duration="logs.buildTime" :type="logs.type" :date="logs.createdAt" :class=" activeId === logs.id ? 'bg-white text-black' : ''" @click="handleClick(logs)" />
+          <BuildLogCard :duration="logs.buildTime" :type="logs.type" :status="logs.status" :date="logs.createdAt" :class=" activeId === logs.id ? 'bg-white text-black' : ''" @click="handleClick(logs)" />
         </div>
       </div>
     </div>
@@ -69,7 +69,7 @@ async function handleClick(log: BuildLog) {
 <style>
 .scrollable-pre {
   min-height: 55vh;
-  max-height: 500px; /* Set the desired fixed height */
+  max-height: 70vh; /* Set the desired fixed height */
   overflow-y: auto; /* Enable vertical scrolling */
   border: 1px solid #ccc; /* Optional: add a border for styling */
   padding: 10px; /* Optional: add padding for better appearance */

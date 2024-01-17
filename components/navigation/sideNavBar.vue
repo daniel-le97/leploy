@@ -42,7 +42,7 @@ const navItems = [
   {
     link: '/login',
     icon: 'material-symbols:login-rounded',
-    label: 'Login',
+    label: 'logout',
     auth: false,
   },
 

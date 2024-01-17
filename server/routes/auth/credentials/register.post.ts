@@ -19,7 +19,7 @@ export default credentialsRegister({
 
 function credentialsRegister({ onSuccess, onError }: OAuthConfig<any>) {
   return defineEventHandler(async (event) => {
-    const { email, password: userPass } = await readBody(event) as Record<string, string>
+    const { email, password: userPass } = await readBody(event)
     if (!email || !userPass) {
       const notFound = createError({
         message: 'please submit and email and password!',
