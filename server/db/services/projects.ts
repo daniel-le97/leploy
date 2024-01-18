@@ -73,7 +73,6 @@ class ProjectsService {
     // const partialProject = this.formatProject(partial)
     const found = await this.getProjectById(id)
     const merged = defu(partialProject, found)
-    console.log({ found, partialProject, merged })
 
     const { name, deployed, configured, ports, https, www, repoUrl, startCommand, buildCommand, installCommand, buildPack } = merged
     return db

@@ -13,7 +13,7 @@ export interface BuildPayload {
 }
 
 export interface ServerHooks {
-  build: (project: SqliteProject & { type: string }) => void | Promise<void>
+  build: (project: SqliteProject) => void | Promise<void>
   start: (server: BunServer) => void | Promise<void>
 }
 export const serverHooks = createHooks<ServerHooks>()

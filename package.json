@@ -17,7 +17,8 @@
     "bench": "bombardier -c 125 -n 100000 http://localhost:3000"
   },
   "dependencies": {
-    "drizzle-orm": "^0.29.3"
+    "drizzle-orm": "^0.29.3",
+    "nitropack": "^2.8.1"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^2.6.2",

@@ -34,13 +34,13 @@ export default defineEventHandler(async (event: any) => {
     //   useSendRoomMessage(`build:${id}`, { data: 'building stuff' })
     // }, 1000)
 
-    const newProject = {
-      ...project,
-      logsPath,
-      key,
-    } as ProcessProject
+    // const newProject = {
+    //   ...project,
+    //   logsPath,
+    //   key,
+    // } as ProcessProject
 
-    await queue.addProject(newProject)
+    // await queue.addProject(newProject)
   }
 
   catch (error) {

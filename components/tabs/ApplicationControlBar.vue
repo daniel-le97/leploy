@@ -1,17 +1,16 @@
 <script lang="ts" setup>
-
 // const ws = useWs()
 
 async function handleClick() {
   const state = useState('selectedTab')
   state.value = 'build'
-  console.log('building project')
+  useBuildSSE().value = ''
+
   const id = useRoute('projects-id').params.id
   // ws.send(JSON.stringify({ type: 'subscribe', payload: { id } }))
   const data = await $fetch(`/api/build/${id}`, {
     method: 'POST',
   })
-  console.log('build post', data)
 }
 </script>
 

@@ -2,16 +2,19 @@ import * as fs from 'node:fs'
 import { createHooks } from 'hookable'
 import consola from 'consola'
 import YAML from 'yaml'
+import type { Subprocess } from 'bun'
 import type { SqliteProject } from '../../types/project'
 import { Server } from '../core/server'
 
 class Queue {
-  hooks = createHooks()
-  queue: (SqliteProject & { type: string })[] | null
+  queue: SqliteProject[] | null
   isProcessing: boolean
   fileContents: string
-  activeProject: SqliteProject & { type: string } | null = null
+  commandExec: Subprocess<'ignore', 'pipe', 'pipe'> | null = null
+  activeProject: SqliteProject | null = null
+  killed = false
   textDecoder = new TextDecoder()
+  type = new Map<string, string>()
   // _listeners: Listener[] = []
 
   constructor() {
@@ -20,8 +23,42 @@ class Queue {
     this.fileContents = ''
   }
 
-  async addProject(Project: SqliteProject & { type: string }) {
+  async killBuild(projectId: string) {
+    if (this.activeProject?.id === projectId) {
+      const data = '\nERROR: build process killed by user\n'
+      this.fileContents += data
+      console.log('killing build:', projectId)
+      this.commandExec?.kill(9)
+      await this.commandExec?.exited
+      this.killed = true
+      this.commandExec?.unref()
+      this.commandExec = null
+
+      Server().publish(projectId, JSON.stringify({ type: 'build', data }))
+      this.activeProject = null
+    }
+    if (this.queue)
+      this.queue = this.queue.filter(project => project.id !== projectId)
+  }
+
+  getEnv() {
+    const envs: Record<string, any> = {
+      ...process.env,
+      NIXPACKS_INSTALL_CMD: this.activeProject?.installCommand ?? undefined,
+      NIXPACKS_BUILD_CMD: this.activeProject?.buildCommand ?? undefined,
+      NIXPACKS_START_CMD: this.activeProject?.startCommand ?? undefined,
+    }
+    const projectEnvs = projectEnvService.getProjectBuildEnvs(this.activeProject?.id || '')
+    for (const env of projectEnvs)
+      envs[env.name] = env.value
+
+    return envs
+  }
+
+  async addProject(Project: SqliteProject, type?: string) {
     this.queue?.push(Project)
+    this.type.set(Project.id, type || 'manual')
+
     if (!this.isProcessing)
       await this.processQueue()
   }
@@ -60,18 +97,18 @@ class Queue {
       return
     }
 
-    console.log(this.queue?.length)
-
     const project = this.queue?.shift()
     if (!project)
       return
 
     this.isProcessing = true
+    this.killed = false
     this.activeProject = project
 
     console.log(`Processing project: ${project.id} at ${Date.now()}`)
     await this.doProject(project)
 
+    this.type.delete(project.id)
     await this.processQueue()
   }
 
@@ -92,11 +129,15 @@ class Queue {
 
     const git = await this.runCommandAndSendStream(['git', 'clone', '--depth=1', `${project.repoUrl}`, `${repoPath}`])
 
-    const build = await this.runCommandAndSendStream([`nixpacks`, `build`, `${repoPath}`, `--name`, `${generatedName}`])
+    const nixCommand = [`nixpacks`, `build`, `${repoPath}`, `--name`, `${generatedName}`]
+    // for await (const [key, value] of Object.entries(this.getEnv())) {
+    //   if (value)
+    //     nixCommand.push(`--${key}`, value)
+    // }
+
+    const build = await this.runCommandAndSendStream(nixCommand)
 
     const isSuccessful = (git === 0 && build === 0)
-    console.log({ isSuccessful, git, build })
-
     const end = (Bun.nanoseconds() - start)
     const buildLog: BuildLog = {
       id: crypto.randomUUID(),
@@ -105,7 +146,7 @@ class Queue {
       data: this.fileContents,
       status: isSuccessful ? 'success' : 'failed',
       createdAt: Date.now().toString(),
-      type: this.activeProject?.type || 'manual',
+      type: this.type.get(project.id) || 'manual',
     }
     logsService.createLogs(buildLog)
     Server().publish(project.id, JSON.stringify({ type: 'logs', data: buildLog }))
@@ -120,7 +161,7 @@ class Queue {
     return chunk as string
   }
 
-  private async runCommandAndSendStream(commands: string[], env = {}) {
+  private async runCommandAndSendStream(commands: string[], env = this.getEnv()) {
     try {
       console.log('running:', commands)
       const project = this.activeProject
@@ -128,21 +169,26 @@ class Queue {
         return
 
       const write = (chunk: Uint8Array) => {
+        if (this.killed)
+          return
+
         const data = this.toDecode(chunk)
         Server().publish(project.id, JSON.stringify({ type: 'build', data }))
         this.fileContents += data
       }
-      const _command = Bun.spawn(commands, {
+
+      this.commandExec = Bun.spawn(commands, {
         stdio: ['ignore', 'pipe', 'pipe'],
+        env,
       })
-      _command.stdout.pipeTo(new WritableStream({
+      this.commandExec.stdout.pipeTo(new WritableStream({
         write,
       }))
-      _command.stderr.pipeTo(new WritableStream({
+      this.commandExec.stderr.pipeTo(new WritableStream({
         write,
       }))
 
-      return await _command.exited
+      return await this.commandExec.exited
     }
     catch (error) {
       consola.withTag('command:failed').error(`${commands.join(' ')}`)

@@ -1,7 +1,7 @@
 import '#internal/nitro/virtual/polyfill'
 import { parentPort } from 'node:worker_threads'
 import { websocket } from '../websocket'
-import { setServer } from './server'
+import { Server, setServer } from './server'
 
 // @ts-expect-error it is there
 import { trapUnhandledNodeErrors } from '#internal/nitro/utils'
@@ -86,6 +86,7 @@ trapUnhandledNodeErrors()
 async function onShutdown(signal?: string) {
   // console.log('onShutdown')
   server.stop(true)
+  Server()
   await nitroApp.hooks.callHook('close')
   Bun.gc(true)
   Bun.shrink()

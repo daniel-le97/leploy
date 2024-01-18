@@ -17,6 +17,9 @@ class ProjectEnvService {
   getProjectEnvs(projectId: string) {
     return db.prepare('SELECT * FROM project_env WHERE projectId = ?1').all(projectId) as ProjectEnv[]
   }
+  getProjectBuildEnvs(projectId: string) {
+    return db.prepare('SELECT * FROM project_env WHERE projectId = ?1 AND forBuild = 1').all(projectId) as ProjectEnv[]
+  }
 }
 
 export const projectEnvService = new ProjectEnvService()

@@ -16,8 +16,16 @@ const activeId = useState('active-log-id')
 
 const routerId = useRoute('projects-id').params.id
 
-const { data, pending, error, refresh } = await useFetch<BuildLog[]>(`/api/build/${routerId}/logs`)
+const logs = useBuildLogs()
 
+const { data, pending, error, refresh } = await useFetch<BuildLog[]>(`/api/build/${routerId}/logs`)
+if (data.value)
+  logs.value = data.value
+
+watch(data, (newVal) => {
+  if (newVal)
+    logs.value = newVal
+})
 // async function getLogs(id: string) {
 // //  console.log(id);
 //   activeId.value = id
@@ -30,36 +38,36 @@ const { data, pending, error, refresh } = await useFetch<BuildLog[]>(`/api/build
 async function handleClick(log: BuildLog) {
   buildData.value = log.data
 }
+
+async function handleBuildKill() {
+  const { data, pending, error, refresh } = await useFetch(`/api/build/${routerId}/kill`, {
+    method: 'DELETE',
+  })
+}
 </script>
 
 <template>
   <section class="flex  flex-col items-center  justify-center w-full space-y-3 ">
-    <div class="lg:flex space-x-3 w-full">
+    <div class="lg:flex space-x-3 w-full flex flex-row">
       <label class="block dark:text-white text-gray-700 text-3xl  font-bold mb-2" for="build-logs">
         Build Logs
       </label>
-      <!-- <UButton type="button" class=" font-bold py-1" @click="handleClick">
-        makeshift build
-      </UButton> -->
-      <UTooltip>
-        <UIcon name="uil:rocket" class="text-2xl" />
-        <template #text>
-          <span class="italic">Hello World!</span>
-        </template>
-      </UTooltip>
+      <RippleBtn type="button" class=" font-bold py-1 bg-red-600 rounded-lg" @click="handleBuildKill">
+        kill build
+      </RippleBtn>
     </div>
     <UDivider class="w-full" />
     <div class=" flex  gap-2">
-      <div class="w-4/5  max-w-2xl min-w-[42rem] ">
+      <div class="w-4/5  max-w-2xl min-w-[42rem] min-h-[80vh]">
         <div class=" bg-zinc-700 rounded-md h-full">
           <pre v-if="buildData.length" id="pre-build" class="w-full h-full overflow-y-auto whitespace-pre-wrap scrollable-pre text-xs"> {{ buildData }}</pre>
           <pre v-else id="pre-build" class="w-full h-full overflow-auto whitespace-pre-wrap scrollable-pre"> {{ 'no builds logged' }}</pre>
         </div>
       </div>
 
-      <div v-if="data?.length" class="w-1/5">
-        <div v-for="logs in data" :key="logs.id" class="w-full flex justify-center items-center">
-          <BuildLogCard :duration="logs.buildTime" :type="logs.type" :status="logs.status" :date="logs.createdAt" :class=" activeId === logs.id ? 'bg-white text-black' : ''" @click="handleClick(logs)" />
+      <div v-if="logs.length" class="w-1/5">
+        <div v-for="log in logs" :key="log.id" class="w-full flex justify-center items-center max-h-[75vh]">
+          <BuildLogCard :duration="log.buildTime" :type="log.type" :status="log.status" :date="log.createdAt" :class=" activeId === log.id ? 'bg-white text-black' : ''" @click="handleClick(log)" />
         </div>
       </div>
     </div>

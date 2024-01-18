@@ -2,7 +2,7 @@ import type { BuildLog } from '../../../types/logs'
 
 class LogsService {
   getLogsByProjectId(id: string) {
-    return db.prepare('SELECT * FROM build_logs WHERE projectId = ?1').all(id) as BuildLog[]
+    return db.prepare('SELECT * FROM build_logs WHERE projectId = ?1 ORDER BY createdAt DESC').all(id) as BuildLog[]
   }
 
   createLogs(log: BuildLog) {
