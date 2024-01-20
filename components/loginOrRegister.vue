@@ -64,7 +64,6 @@ const providers = computed(() => [
             autocomplete="email"
             type="email"
             name="email"
-            autocomplete="email"
             class="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500"
             required
           >
@@ -77,7 +76,6 @@ const providers = computed(() => [
             v-model="password"
             type="password"
             name="password"
-            autocomplete="current-password"
             autocomplete="current-password"
             class="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500"
             required
