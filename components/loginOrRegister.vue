@@ -14,6 +14,17 @@ async function handleSubmit(type: 'login' | 'register') {
 async function handleNavigate(type: 'login' | 'register') {
   await navigateTo(type)
 }
+
+async function handleGithub() {
+  console.log('github')
+
+  const { loggedIn, user, fetch } = useUserSession()
+  // await fetch()
+  // console.log('data', loggedIn.value, user.value);
+
+  await navigateTo('/api/auth/github')
+}
+
 const { session, user } = useUserSession()
 const providers = computed(() => [
   {
@@ -38,7 +49,7 @@ const providers = computed(() => [
 </script>
 
 <template>
-  <div class="min-h-screen flex items-center justify-center bg-black">
+  <div class="min-h-screen flex items-center justify-center bg-black w-screen">
     <div class="bg-white p-8 rounded-md w-full sm:w-96 shadow-xl">
       <h2 class="text-2xl text-black font-semibold mb-6">
         {{ header }}
@@ -53,6 +64,7 @@ const providers = computed(() => [
             autocomplete="email"
             type="email"
             name="email"
+            autocomplete="email"
             class="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500"
             required
           >
@@ -66,24 +78,23 @@ const providers = computed(() => [
             type="password"
             name="password"
             autocomplete="current-password"
+            autocomplete="current-password"
             class="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500"
             required
           >
         </div>
-      </form>
-      <div class="flex items-center justify-between">
-        <button type="submit" class="bg-blue-500 text-white px-6 py-2 rounded-md focus:outline-none">
-          {{ buttonMessage }}
-        </button>
-        <div class="flex gap-2">
-          <button class="text-sm text-gray-600 hover:underline border border-indigo-950 p-2 rounded" @click="navigateTo('/auth/github')">
-            <Icon name="skill-icons:github-light" class="w-5 h-5 inline-block mr-1" />
+
+        <div class="flex items-center justify-between">
+          <button type="submit" class="bg-blue-500 text-white px-6 py-2 rounded-md focus:outline-none">
+            {{ buttonMessage }}
           </button>
-          <button class="text-sm text-gray-600 hover:underline border border-indigo-950 p-2 rounded" @click="navigateTo('/auth/google')">
-            <Icon name="logos:google-icon" class="w-5 h-5 inline-block mr-1" />
-          </button>
+          <div class="flex gap-2">
+            <a href="/auth/github" class="text-sm text-gray-600 hover:underline border border-indigo-950 p-2 rounded">
+              <Icon name="skill-icons:github-light" class="w-5 h-5 inline-block mr-1" />
+            </a>
+          </div>
         </div>
-      </div>
+      </form>
 
       <div class="mt-6">
         <p v-if="isLogin" class="text-sm text-gray-600">
