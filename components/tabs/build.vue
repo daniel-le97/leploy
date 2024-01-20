@@ -44,6 +44,9 @@ async function handleBuildKill() {
     method: 'DELETE',
   })
 }
+
+const term = ref()
+const ansi = '#12 4.696 computing gzip size...\n#12 4.699 dist/<span style="font-weight:normal;text-decoration:none;font-style:normal"><span style="color:#0AA">_astro/hoisted.ec938008.js  <span style="color:#FFF"><b>8.74 kB<span style="font-weight:normal;text-decoration:none;font-style:normal"><b><span style="font-weight:normal;text-decoration:none;font-style:normal"> │ gzip: 3.01 kB<span style="font-weight:normal;text-decoration:none;font-style:normal">\n#12 4.699 <span style="color:#0A0">✓ built in 80ms<span style="color:#FFF">\n#12 4.699 Completed in 90ms.\n#12 4.699 \n#12 4.705 \n#12 4.705  generating static routes \n#12 4.803 ▶ src/pages/index.astro\n</span></span></span></span></b></span></b></span></span></span>'
 </script>
 
 <template>
@@ -58,16 +61,18 @@ async function handleBuildKill() {
     </div>
     <UDivider class="w-full" />
     <div class=" flex  gap-2">
-      <div class="w-4/5  max-w-2xl min-w-[42rem] min-h-[80vh]">
+      <div class="w-4/5  max-w-2xl min-h-[80vh]">
         <div class=" bg-zinc-700 rounded-md h-full">
           <pre v-if="buildData.length" id="pre-build" class="w-full h-full overflow-y-auto whitespace-pre-wrap scrollable-pre text-xs"> {{ buildData }}</pre>
           <pre v-else id="pre-build" class="w-full h-full overflow-auto whitespace-pre-wrap scrollable-pre"> {{ 'no builds logged' }}</pre>
         </div>
       </div>
 
-      <div v-if="logs.length" class="w-1/5">
-        <div v-for="log in logs" :key="log.id" class="w-full flex justify-center items-center max-h-[75vh]">
-          <BuildLogCard :duration="log.buildTime" :type="log.type" :status="log.status" :date="log.createdAt" :class=" activeId === log.id ? 'bg-white text-black' : ''" @click="handleClick(log)" />
+      <div class="w-1/5">
+        <div v-if="logs.length">
+          <div v-for="log in logs" :key="log.id" class="w-full flex justify-center items-center max-h-[75vh]">
+            <BuildLogCard :duration="log.buildTime" :type="log.type" :status="log.status" :date="log.createdAt" :class=" activeId === log.id ? 'bg-white text-black' : ''" @click="handleClick(log)" />
+          </div>
         </div>
       </div>
     </div>

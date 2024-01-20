@@ -16,7 +16,7 @@ const envRef = ref<ENV>({
 const id = useRoute('projects-id').params.id
 
 const { data, pending, error, refresh } = await useFetch<ProjectEnv[]>(`/api/projects/${id}/env`)
-console.log(data)
+console.log({ data: data.value })
 
 async function handleEnvCreate(env: ENV, _refresh = false) {
   if (!env.name || !env.value)
@@ -71,6 +71,12 @@ async function deleteEnv(projectEnv: ProjectEnv) {
   await refresh()
 }
 
+
+async function handleForBuildChange(projectEnv: ProjectEnv) {
+  // Logic to enable editing for the selected projectEnv
+  console.log(`Updating projectEnv: ${projectEnv}`)
+
+}
 function updateProjectEnv(projectEnv: ProjectEnv) {
   // Logic to update the selected projectEnv
   console.log(`Updating projectEnv: ${projectEnv.id}`)
@@ -81,39 +87,24 @@ function updateProjectEnv(projectEnv: ProjectEnv) {
   <div class="flex flex-col border ">
     <!-- Top Section -->
     <div class="p-4 border-b border-gray-300">
-      <div v-for="env in data" :key="env.id" class="mb-4">
-        <div class="flex flex-row justify-between items-center">
-          <RippleBtn class="ml-4 bg-blue-500 text-white px-2 py-1 rounded" @click="updateProjectEnv(env)">
-            Update
-          </RippleBtn>
-          <Icon name="uil:trash-alt" class="text-2xl text-red-500 cursor-pointer" @click="deleteEnv(env)" />
-          <div>
-            <strong>Key: </strong>
-            <input v-model="env.name" class="w-48 border rounded text-xs">
-          </div>
-          <div>
-            <strong>Value: </strong>
-            <input v-model="env.value" class="w-48 border rounded text-xs">
-          </div>
-          <div> {{ env.id }}</div>
-          <div>
-            <strong>Build Time: </strong>
-            <RippleBtn>
-              <input v-model="env.forBuild" type="checkbox">
-            </RippleBtn>
-          </div>
+      <div v-for="env in data" :key="env.id" class="mb-4 flex flex-row justify-between items-center">
+        <RippleBtn class="ml-4 bg-blue-500 text-white px-2 py-1 rounded" @click="updateProjectEnv(env)">
+          Update
+        </RippleBtn>
+        <Icon name="uil:trash-alt" class="text-2xl text-red-500 cursor-pointer" @click="deleteEnv(env)" />
+        <div>
+          <strong>Key: </strong>
+          <input v-model="env.name" class="w-48 border rounded text-xs">
         </div>
-        <!-- <div class="flex items-center">
-          <div class="flex-grow">
-            <div>
-              <strong>Key:</strong> <input v-model="env.name">
-            </div>
-            <div>
-              <strong>Value:</strong> <input v-model="env.value">
-            </div>
-          </div>
-
-        </div> -->
+        <div>
+          <strong>Value: </strong>
+          <input v-model="env.value" class="w-48 border rounded text-xs" >
+        </div>
+        <!-- <div> {{ env.id }}</div> -->
+        <div>
+          <strong>Build Time: </strong>
+            <input v-model="env.forBuild" type="checkbox">
+        </div>
       </div>
       <form class="flex flex-row justify-between items-center border-t py-2">
         <RippleBtn class="ml-4 bg-blue-500 text-white px-2 py-1 rounded" type="submit" @click.prevent="handleEnvCreate(envRef, true)">

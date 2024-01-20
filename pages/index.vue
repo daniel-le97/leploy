@@ -27,7 +27,7 @@ async function create() {
 
 onMounted(() => {
   console.log('mounted')
-  // @ts-expect-error - window is not defined in vue files
+
   const location = window?.location.origin || 'http://localhost:3000'
   const value = {
     name: 'le-ploy-source-1',

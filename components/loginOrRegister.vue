@@ -50,6 +50,7 @@ const providers = computed(() => [
           <input
             id="email"
             v-model="email"
+            autocomplete="email"
             type="email"
             name="email"
             class="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500"
@@ -64,25 +65,25 @@ const providers = computed(() => [
             v-model="password"
             type="password"
             name="password"
+            autocomplete="current-password"
             class="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500"
             required
           >
         </div>
-
-        <div class="flex items-center justify-between">
-          <button type="submit" class="bg-blue-500 text-white px-6 py-2 rounded-md focus:outline-none">
-            {{ buttonMessage }}
-          </button>
-          <div class="flex gap-2">
-            <button class="text-sm text-gray-600 hover:underline border border-indigo-950 p-2 rounded" @click="navigateTo('/auth/github')">
-              <Icon name="skill-icons:github-light" class="w-5 h-5 inline-block mr-1" />
-            </button>
-            <button class="text-sm text-gray-600 hover:underline border border-indigo-950 p-2 rounded" @click="navigateTo('/auth/google')">
-              <Icon name="logos:google-icon" class="w-5 h-5 inline-block mr-1" />
-            </button>
-          </div>
-        </div>
       </form>
+      <div class="flex items-center justify-between">
+        <button type="submit" class="bg-blue-500 text-white px-6 py-2 rounded-md focus:outline-none">
+          {{ buttonMessage }}
+        </button>
+        <div class="flex gap-2">
+          <button class="text-sm text-gray-600 hover:underline border border-indigo-950 p-2 rounded" @click="navigateTo('/auth/github')">
+            <Icon name="skill-icons:github-light" class="w-5 h-5 inline-block mr-1" />
+          </button>
+          <button class="text-sm text-gray-600 hover:underline border border-indigo-950 p-2 rounded" @click="navigateTo('/auth/google')">
+            <Icon name="logos:google-icon" class="w-5 h-5 inline-block mr-1" />
+          </button>
+        </div>
+      </div>
 
       <div class="mt-6">
         <p v-if="isLogin" class="text-sm text-gray-600">
