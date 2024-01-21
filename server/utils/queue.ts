@@ -116,9 +116,9 @@ class Queue {
     const start = Bun.nanoseconds()
     // const { id, name, buildsLogs, application, createdAt, configured, deployed } = project
     // const { repoUrl, buildPack, buildCommand, installCommand, startCommand } = application
-    const generateId = crypto.randomUUID()
+
     const generatedName = project.name
-    const repoPath = `./data/temp/${generatedName}`
+    const repoPath = `./temp/${generatedName}`
 
     if (fs.existsSync(repoPath))
       fs.rmSync(repoPath, { recursive: true })
@@ -150,6 +150,9 @@ class Queue {
     }
     logsService.createLogs(buildLog)
     Server().publish(project.id, JSON.stringify({ type: 'logs', data: buildLog }))
+
+    if (fs.existsSync(repoPath))
+    fs.rmSync(repoPath, { recursive: true })
 
     // await Bun.write(`${project.logsPath + generateId}.txt`, this.fileContents)
   }

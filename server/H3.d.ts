@@ -4,6 +4,5 @@ declare module 'h3' {
   interface H3EventContext {
     server: Server
     request: Request
-    user: User
   }
 }
