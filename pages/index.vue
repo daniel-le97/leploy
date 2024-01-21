@@ -1,5 +1,16 @@
 <script setup lang="ts">
+import GithubRegister from '../components/GithubRegister.vue';
+
+definePageMeta({
+  middleware: ['code'],
+})
+
 const input = ref('')
+
+const route = useRoute()
+watch(route, (query) => {
+  console.log({ query })
+})
 
 async function create() {
   // const location = window?.location.origin
@@ -7,20 +18,12 @@ async function create() {
   // input.value.redirect_url = location
   const stringified = JSON.stringify(input.value)
   console.log('clicked', { stringified })
-  const { data, pending, error, refresh } = await useFetch('https://github.com/settings/apps/new', {
-    method: 'POST',
-    mode: 'navigate',
-    params: {
-      manifest: JSON.stringify(input.value),
-      state: 'create',
-    },
-    redirect: 'follow',
-
+  const data = await $fetch('/api/github/apps', {
+    method: 'GET',
+    body:{manifest: stringified}
   })
-  console.log(data, pending, error, refresh)
-  // await navigateTo('https://nuxt.com', {
-  //   external: true,
-  // })
+  console.log({ data})
+ 
 }
 
 // const location = computed(() => window?.location?.origin)
@@ -65,10 +68,7 @@ const auth = useUserSession()
       </button>
     </div>
     <ClientOnly>
-      <form action="https://github.com/settings/apps/new?state=abc123" method="post">
-        Register a GitHub App Manifest: <input id="manifest" type="text" :value="input" name="manifest"><br>
-        <input type="submit" value="Submit">
-      </form>
+      <GithubRegister />
     </ClientOnly>
   </div>
 </template>
