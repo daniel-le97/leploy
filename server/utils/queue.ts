@@ -3,6 +3,7 @@ import { createHooks } from 'hookable'
 import consola from 'consola'
 import YAML from 'yaml'
 import type { Subprocess } from 'bun'
+import { $ } from 'bun'
 import type { SqliteProject } from '../../types/project'
 import { Server } from '../core/server'
 
@@ -152,7 +153,7 @@ class Queue {
     Server().publish(project.id, JSON.stringify({ type: 'logs', data: buildLog }))
 
     if (fs.existsSync(repoPath))
-    fs.rmSync(repoPath, { recursive: true })
+      fs.rmSync(repoPath, { recursive: true })
 
     // await Bun.write(`${project.logsPath + generateId}.txt`, this.fileContents)
   }
@@ -166,7 +167,7 @@ class Queue {
 
   private async runCommandAndSendStream(commands: string[], env = this.getEnv()) {
     try {
-      console.log('running:', commands)
+      console.log('running:', commands.join(' '))
       const project = this.activeProject
       if (!project)
         return
@@ -176,9 +177,18 @@ class Queue {
           return
 
         const data = this.toDecode(chunk)
+        // const data = chunk
         Server().publish(project.id, JSON.stringify({ type: 'build', data }))
         this.fileContents += data
+
       }
+
+      // for await (const line of $`${commands.join(' ')}`.lines()){
+      //   console.log(line) // Hello World!
+      //   write(line)
+      // }
+
+      // return 0
 
       this.commandExec = Bun.spawn(commands, {
         stdio: ['ignore', 'pipe', 'pipe'],

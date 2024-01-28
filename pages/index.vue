@@ -1,10 +1,6 @@
 <script setup lang="ts">
 import GithubRegister from '../components/GithubRegister.vue';
 
-definePageMeta({
-  middleware: ['code'],
-})
-
 const input = ref('')
 
 const route = useRoute()
@@ -13,9 +9,6 @@ watch(route, (query) => {
 })
 
 async function create() {
-  // const location = window?.location.origin
-  // input.value.homepage_url = location
-  // input.value.redirect_url = location
   const stringified = JSON.stringify(input.value)
   console.log('clicked', { stringified })
   const data = await $fetch('/api/github/apps', {
@@ -63,7 +56,7 @@ const auth = useUserSession()
     <div>
       auth
       {{ auth }}
-      <button class="bg-green" type="button" @click="authLogout">
+      <button class="bg-green text-green-600" type="button" @click="authLogout">
         logout
       </button>
     </div>

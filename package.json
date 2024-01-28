@@ -24,7 +24,7 @@
     "@antfu/eslint-config": "^2.6.3",
     "@nuxt/devtools": "^1.0.8",
     "@nuxt/ui": "latest",
-    "@types/bun": "^1.0.3",
+    "@types/bun": "^1.0.4",
     "@vueuse/nuxt": "latest",
     "drizzle-kit": "^0.20.13",
     "eslint": "^8.56.0",

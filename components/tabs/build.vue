@@ -74,6 +74,9 @@ const ansi = '#12 4.696 computing gzip size...\n#12 4.699 dist/<span style="font
             <BuildLogCard :duration="log.buildTime" :type="log.type" :status="log.status" :date="log.createdAt" :class=" activeId === log.id ? 'bg-white text-black' : ''" @click="handleClick(log)" />
           </div>
         </div>
+        <div v-else>
+          hello
+        </div>
       </div>
     </div>
   </section>

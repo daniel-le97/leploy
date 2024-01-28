@@ -22,7 +22,7 @@ interface GitHubAppConfig {
     received_events_url: string;
     type: string;
     site_admin: boolean;
-  };
+  } | undefined;
   name: string;
   description: string | null;
   external_url: string;
@@ -38,8 +38,8 @@ interface GitHubAppConfig {
     deployments: string;
     metadata: string;
     pull_requests: string;
-  };
-  events: string[];
+  } | undefined;
+  events: string[] | undefined;
 }
 
 export default defineEventHandler(async (event) => {
@@ -53,6 +53,9 @@ export default defineEventHandler(async (event) => {
     method: 'POST',
   })
   console.log('fetched', fetched)
+  fetched.owner = undefined
+  fetched.permissions = undefined
+  fetched.events = undefined
 
   return fetched
 })

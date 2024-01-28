@@ -43,8 +43,12 @@ export default defineEventHandler(async (event) => {
   const body = await readBody<GitHubWebhookPayload>(event)
   const url = 'https://github.com/daniel-le97/astro-portfolio'
   const headers = filterHeadersBySubstring<GitHubWebhookHeaders>(getHeaders(event), 'hub')
+  console.log({body});
+  
+  if (!body?.repository?.html_url)
+    return 'ok'
 
-  const projects = await projectsService.getProjectByRepoUrl(url)
+  const projects = await projectsService.getProjectByRepoUrl(body.repository.html_url)
   for await (const project of projects)
     await queue.addProject(project, 'webhook')
 
