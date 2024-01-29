@@ -17,7 +17,9 @@
     "bench": "bombardier -c 125 -n 100000 http://localhost:3000"
   },
   "dependencies": {
+    "@types/js-yaml": "^4.0.9",
     "drizzle-orm": "^0.29.3",
+    "js-yaml": "^4.1.0",
     "nitropack": "^2.8.1"
   },
   "devDependencies": {
@@ -28,8 +30,8 @@
     "@vueuse/nuxt": "latest",
     "drizzle-kit": "^0.20.13",
     "eslint": "^8.56.0",
-    "nuxt-auth-utils": "latest",
     "nuxt": "npm:nuxt-nightly@latest",
+    "nuxt-auth-utils": "latest",
     "smee-client": "^2.0.0",
     "vue": "^3.4.15",
     "vue-router": "^4.2.5"

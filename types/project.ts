@@ -13,7 +13,7 @@ export interface Project {
   www: boolean
   application: Application// Adjust the type based on the actual structure of the project property
   buildsLogs: Logs[] // Adjust the type based on the actual structure of the buildsLogs property
-  ports: string[]
+  ports: string
   managed: boolean
 }
 

@@ -7,6 +7,8 @@ import { $ } from 'bun'
 import type { SqliteProject } from '../../types/project'
 import { Server } from '../core/server'
 
+
+
 class Queue {
   queue: SqliteProject[] | null
   isProcessing: boolean
@@ -62,33 +64,6 @@ class Queue {
 
     if (!this.isProcessing)
       await this.processQueue()
-  }
-
-  async createComposeFile(project: ProcessProject | Project) {
-    const traefik = true
-    const serviceName = project.name
-    let labels: string[]
-
-    const compose: DockerComposeConfig = {
-      version: '3',
-      services: {
-        [serviceName]: {
-          image: serviceName,
-          ports: project.ports.map(port => `${port}:${port}`).filter(Boolean),
-          restart: 'always',
-          labels: traefik
-            ? [
-                'traefik.enable=true',
-        `traefik.http.routers.${serviceName}.rule=Host(\`${serviceName}.localhost\`)`,
-        `traefik.http.routers.${serviceName}.entrypoints=web`,
-        `traefik.http.services.${serviceName}.loadbalancer.server.port=${project.ports[0]}`,
-        `traefik.http.services.${serviceName}.loadbalancer.server.scheme=http`,
-              ]
-            : [],
-        },
-      },
-    }
-    const yaml = YAML.stringify(compose)
   }
 
   async processQueue() {
@@ -165,7 +140,7 @@ class Queue {
     return chunk as string
   }
 
-  private async runCommandAndSendStream(commands: string[], env = this.getEnv()) {
+  private async runCommandAndSendStream(commands: string[], env = {...process.env}) {
     try {
       console.log('running:', commands.join(' '))
       const project = this.activeProject
@@ -180,7 +155,6 @@ class Queue {
         // const data = chunk
         Server().publish(project.id, JSON.stringify({ type: 'build', data }))
         this.fileContents += data
-
       }
 
       // for await (const line of $`${commands.join(' ')}`.lines()){
