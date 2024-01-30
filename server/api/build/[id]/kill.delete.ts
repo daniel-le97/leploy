@@ -4,5 +4,5 @@ export default defineEventHandler(async (event) => {
   if (!id)
     throw NOTFOUND
 
-  await queue.killBuild(id)
+  await queue.killJob(id)
 })

@@ -22,7 +22,7 @@ export default defineEventHandler(async (event: any) => {
     if (!project?.application.repoUrl)
       throw createError('please update your configuration to include a repoURL')
 
-    const isActiveProject = queue.activeProject?.id === id
+    const isActiveProject = queue.job?.project?.id === id
     const isInQueue = queue.queue?.find(queue => queue.id === id)
     // const isListening = queue._listeners.find(listener => listener.userId === session.user?.id)
 
