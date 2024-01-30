@@ -18,6 +18,7 @@ export class Job {
     if (fs.existsSync(this.getPath()))
       fs.rmSync(this.getPath(), { recursive: true, force: true })
   }
+
   clone() {
     const commands = ['git', 'clone', '--depth=1', this.project.repoUrl, this.getPath()]
     return Bun.spawn(commands, { env: this.getProjectEnv(), stdio: ['ignore', 'pipe', 'pipe'] })
@@ -25,12 +26,13 @@ export class Job {
 
   build() {
     const builder = this.project.buildPack || 'nixpacks'
-    const git = `git clone --depth=1 ${this.project.repoUrl} ${this.getPath()}`
-    const nix= `${builder} build ${this.getPath()} --name ${this.project.name}`
     const nixCommand = [`nixpacks`, `build`, `${this.getPath()}`, `--name`, `${this.project.name}`]
-    const commands = ['git', 'clone', '--depth=1', this.project.repoUrl, this.getPath(), '&&', ...nixCommand]
-    
+
     return Bun.spawn(nixCommand, { env: this.getProjectEnv(), stdio: ['ignore', 'pipe', 'pipe'] })
+  }
+
+  deploy() {
+    const compose = this.createComposeFile()
   }
 
   getProjectEnv() {
@@ -47,7 +49,7 @@ export class Job {
     return envs
   }
 
-  createComposeFile(project: SqliteProject) {
+  createComposeFile(project: SqliteProject = this.project) {
     const traefik = true
     const serviceName = project.name
     let labels: string[]
@@ -75,5 +77,6 @@ export class Job {
     }
     const yaml = YAML.dump(compose)
     console.log(yaml)
+    return yaml
   }
 }

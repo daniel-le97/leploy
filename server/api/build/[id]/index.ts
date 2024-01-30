@@ -19,7 +19,7 @@ export default defineEventHandler(async (event: any) => {
     // console.log('build', payload);
 
     const project = await projectsService.getProjectById(projectId)
-    await serverHooks.callHook('build', { ...project, type: 'manual' })
+    await queue.addJob(project)
     return 'ok'
 
     // const key = `${session.id}:${id}`

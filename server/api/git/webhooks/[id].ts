@@ -50,7 +50,7 @@ export default defineEventHandler(async (event) => {
 
   const projects = await projectsService.getProjectByRepoUrl(body.repository.html_url)
   for await (const project of projects)
-    await queue.addProject(project, 'webhook')
+    await queue.addJob(project, 'webhook')
 
   return 'ok'
 })

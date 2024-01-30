@@ -21,5 +21,5 @@ export const serverHooks = createHooks<ServerHooks>()
 serverHooks.hook('build', async (project) => {
   // console.log('hooks:build', payload.id)
   // const project = await projectsService.getProjectById(payload.projectId)
-  queue.addProject(project)
+  queue.addJob(project)
 })

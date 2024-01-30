@@ -42,7 +42,7 @@ class Queue {
       this.queue = this.queue.filter(project => project.id !== projectId)
   }
 
-  async addProject(Project: SqliteProject, type?: string) {
+  async addJob(Project: SqliteProject, type?: string) {
     this.queue?.push(Project)
     this.type.set(Project.id, type || 'manual')
 
