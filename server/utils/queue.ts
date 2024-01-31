@@ -83,9 +83,9 @@ class Queue {
     if (job.needsBuild)
       this.exitCodes.push(await this.sendStream(this.shell = job.build()))
 
-    await job.deploy()
+    // await job.deploy()
 
-    // this.exitCodes.push(await this.sendStream(this.shell = await job.deploy()))
+    this.exitCodes.push(await this.sendStream(this.shell = await job.deploy()))
 
     const end = (Bun.nanoseconds() - start)
     const buildLog: BuildLog = {
@@ -100,7 +100,7 @@ class Queue {
     logsService.createLogs(buildLog)
     Server().publish(project.id, JSON.stringify({ type: 'logs', data: buildLog }))
 
-    job.cleanPath()
+    // job.cleanPath()
 
     // await Bun.write(`${project.logsPath + generateId}.txt`, this.fileContents)
   }

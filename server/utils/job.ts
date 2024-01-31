@@ -5,6 +5,7 @@ import * as YAML from 'js-yaml'
 export class Job {
   project: SqliteProject
   needsBuild: boolean
+  id = crypto.randomUUID()
 
   constructor(project: SqliteProject) {
     this.project = project
@@ -29,7 +30,7 @@ export class Job {
 
   build() {
     const builder = this.project.buildPack || 'nixpacks'
-    const nixCommand = [`nixpacks`, `build`, `${this.getPath()}`, `--name`, `${this.project.name}`]
+    const nixCommand = [`nixpacks`, `build`, `${this.getPath()}`, `--name`, `${this.project.id}`]
     console.log('running:', nixCommand.join(' '))
 
     return Bun.spawn(nixCommand, { env: this.getProjectEnv(), stdio: ['ignore', 'pipe', 'pipe'] })
@@ -37,8 +38,10 @@ export class Job {
 
   async deploy() {
     const compose = this.createComposeFile()
-    await Bun.write(`${this.getPath()}/${this.project.id}.yml`, compose)
-    // return Bun.spawn(['ls'], { env: this.getProjectEnv(), stdio: ['ignore', 'pipe', 'pipe'] })
+    const path = `${this.getPath()}/docker-compose.yml`
+    await Bun.write(path, compose)
+    const commands = ['docker', 'compose' , '-f', path, 'up', '-d']
+    return Bun.spawn(commands, { env: this.getProjectEnv(), stdio: ['ignore', 'pipe', 'pipe'] })
   }
 
   getProjectEnv() {
@@ -62,13 +65,13 @@ export class Job {
     const ports = project.ports.split(',')
     const domain = 'localhost'
 
-    const environment = Object.entries(this.getProjectEnv()).map(compose => `${compose[0]}=${compose[1]}`)
+    const environment = Object.entries(this.getProjectEnv()).filter(env => env[1]).map(compose => `${compose[0]}=${compose[1]}`)
 
     const compose: DockerComposeConfig = {
       version: '3',
       services: {
         [serviceName]: {
-          image: serviceName,
+          image: `${this.project.id}`,
           ports: ports.map(port => `${port}:${port}`).filter(Boolean),
           restart: 'always',
           environment,
