@@ -11,16 +11,13 @@ CREATE TABLE IF NOT EXISTS users (
   image TEXT
 );`,
   'docker-compose': /* sql */`
-CREATE TABLE IF NOT EXISTS docker_compose (
+CREATE TABLE IF NOT EXISTS project_compose (
   id TEXT NOT NULL PRIMARY KEY,
-  name TEXT,
   yaml TEXT,
-  compose_json TEXT,
+  json TEXT,
   createdAt DATETIME,
   updatedAt DATETIME,
-  userId TEXT,
   projectId TEXT,
-  FOREIGN KEY (userId) REFERENCES users(id),
   FOREIGN KEY (projectId) REFERENCES projects(id)
 );`,
   'fs': /* sql */`

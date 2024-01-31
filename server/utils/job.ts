@@ -4,9 +4,11 @@ import * as YAML from 'js-yaml'
 
 export class Job {
   project: SqliteProject
+  needsBuild: boolean
 
   constructor(project: SqliteProject) {
     this.project = project
+    this.needsBuild = project.buildPack !== 'compose'
   }
 
   getPath() {
@@ -21,18 +23,22 @@ export class Job {
 
   clone() {
     const commands = ['git', 'clone', '--depth=1', this.project.repoUrl, this.getPath()]
+    console.log('running:', commands.join(' '))
     return Bun.spawn(commands, { env: this.getProjectEnv(), stdio: ['ignore', 'pipe', 'pipe'] })
   }
 
   build() {
     const builder = this.project.buildPack || 'nixpacks'
     const nixCommand = [`nixpacks`, `build`, `${this.getPath()}`, `--name`, `${this.project.name}`]
+    console.log('running:', nixCommand.join(' '))
 
     return Bun.spawn(nixCommand, { env: this.getProjectEnv(), stdio: ['ignore', 'pipe', 'pipe'] })
   }
 
-  deploy() {
+  async deploy() {
     const compose = this.createComposeFile()
+    await Bun.write(`${this.getPath()}/${this.project.id}.yml`, compose)
+    // return Bun.spawn(['ls'], { env: this.getProjectEnv(), stdio: ['ignore', 'pipe', 'pipe'] })
   }
 
   getProjectEnv() {
@@ -56,6 +62,8 @@ export class Job {
     const ports = project.ports.split(',')
     const domain = 'localhost'
 
+    const environment = Object.entries(this.getProjectEnv()).map(compose => `${compose[0]}=${compose[1]}`)
+
     const compose: DockerComposeConfig = {
       version: '3',
       services: {
@@ -63,6 +71,7 @@ export class Job {
           image: serviceName,
           ports: ports.map(port => `${port}:${port}`).filter(Boolean),
           restart: 'always',
+          environment,
           labels: traefik
             ? [
                 'traefik.enable=true',

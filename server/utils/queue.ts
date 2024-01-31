@@ -7,21 +7,14 @@ import { Server } from '../core/server'
 import { Job } from './job'
 
 class Queue {
-  queue: SqliteProject[] | null
-  isProcessing: boolean
-  fileContents: string
+  queue: SqliteProject[] = []
+  isProcessing: boolean = false
+  fileContents: string = ''
   shell: Subprocess<'ignore', 'pipe', 'pipe'> | null = null
   job: Job | null = null
-  // project: QueueHelper | null = null
+  exitCodes = [0]
   killed = false
   type = new Map<string, string>()
-  // _listeners: Listener[] = []
-
-  constructor() {
-    this.queue = []
-    this.isProcessing = false
-    this.fileContents = ''
-  }
 
   async killJob(projectId: string) {
     if (this.job?.project.id === projectId) {
@@ -51,22 +44,19 @@ class Queue {
   }
 
   async processQueue() {
-    if (this.queue?.length === 0) {
+    const project = this.queue?.shift()
+    if (!project) {
       this.isProcessing = false
-      this.job = null
-      this.killed = false
+      this.type.clear()
+      Bun.shrink()
       return
     }
-
-    const project = this.queue?.shift()
-    if (!project)
-      return
 
     this.isProcessing = true
     this.killed = false
     this.fileContents = ''
-    this.job = new Job(project)
-
+    this.exitCodes = [0]
+ 
     console.log(`Processing project: ${project.id} at ${Date.now()}`)
     await this.processJob(project)
 
@@ -74,29 +64,36 @@ class Queue {
     await this.processQueue()
   }
 
+  deploySuccessfull() {
+    for (const code of this.exitCodes) {
+      if (code !== 0)
+        return false
+    }
+    return true
+  }
+
   private async processJob(project: SqliteProject) {
     const start = Bun.nanoseconds()
 
-    const job = this.job!
-    const generatedName = project.name
-    const repoPath = job.getPath()
-
+    const job = this.job = new Job(project)
     job.cleanPath()
+    // clone the project
+    this.exitCodes.push(await this.sendStream(this.shell = job.clone()))
 
-    //clone the project
-    const git = await this.sendStream(this.shell = job.clone())
+    if (job.needsBuild)
+      this.exitCodes.push(await this.sendStream(this.shell = job.build()))
 
-    // build the project with specified builder or default to nixpacks
-    const build = await this.sendStream(this.shell = job.build())
+    await job.deploy()
 
-    const isSuccessful = (git === 0 && build === 0)
+    // this.exitCodes.push(await this.sendStream(this.shell = await job.deploy()))
+
     const end = (Bun.nanoseconds() - start)
     const buildLog: BuildLog = {
       id: crypto.randomUUID(),
       projectId: project.id,
       buildTime: end.toString(),
       data: this.fileContents,
-      status: isSuccessful ? 'success' : 'failed',
+      status: this.deploySuccessfull() ? 'success' : 'failed',
       createdAt: Date.now().toString(),
       type: this.type.get(project.id) || 'manual',
     }
@@ -110,17 +107,18 @@ class Queue {
 
   async sendStream(buildProcess: Subprocess<'ignore', 'pipe', 'pipe'>) {
     const write = (chunk: Uint8Array) => {
-      if (this.killed)
+      if (this.killed) {
+        buildProcess.kill(1)
         return
-
+      }
       const data = decode(chunk)
       console.log(data)
-
       Server().publish(this.job!.project.id!, JSON.stringify({ type: 'build', data }))
       this.fileContents += data
     }
-    buildProcess.stdout.pipeTo(new WritableStream({ write }))
-    buildProcess.stderr.pipeTo(new WritableStream({ write }))
+    const stream = new WritableStream({ write })
+    buildProcess.stdout.pipeTo(stream)
+    buildProcess.stderr.pipeTo(stream)
     return await buildProcess.exited
   }
 }
