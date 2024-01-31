@@ -116,9 +116,8 @@ class Queue {
       Server().publish(this.job!.project.id!, JSON.stringify({ type: 'build', data }))
       this.fileContents += data
     }
-    const stream = new WritableStream({ write })
-    buildProcess.stdout.pipeTo(stream)
-    buildProcess.stderr.pipeTo(stream)
+    buildProcess.stdout.pipeTo(new WritableStream({ write }))
+    buildProcess.stderr.pipeTo(new WritableStream({ write }))
     return await buildProcess.exited
   }
 }
