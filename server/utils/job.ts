@@ -1,6 +1,13 @@
 import * as fs from 'node:fs'
 import * as os from 'node:os'
 import * as YAML from 'js-yaml'
+import { $ } from 'bun'
+
+async function parseTar(path: string, out: string) {
+  await $`mkdir -p ${out}`
+  const shell = await $`tar -xzvf ${path} -C ${out}`
+  return shell
+}
 
 export class Job {
   project: SqliteProject
@@ -9,7 +16,7 @@ export class Job {
 
   constructor(project: SqliteProject) {
     this.project = project
-    this.needsBuild = project.buildPack !== 'compose'
+    this.needsBuild = !project.buildPack.includes('compose')
   }
 
   getPath() {
@@ -23,24 +30,34 @@ export class Job {
   }
 
   clone() {
-    const commands = ['git', 'clone', '--depth=1', this.project.repoUrl, this.getPath()]
+    const branch = 'main'
+    const commands = ['git', 'clone', '--depth=1', '--shallow-submodules', `--branch=${branch}`, `${this.project.repoUrl}.git`, this.getPath()]
     console.log('running:', commands.join(' '))
     return Bun.spawn(commands, { env: this.getProjectEnv(), stdio: ['ignore', 'pipe', 'pipe'] })
   }
 
   build() {
+    let commands: string[] = []
     const builder = this.project.buildPack || 'nixpacks'
-    const nixCommand = [`nixpacks`, `build`, `${this.getPath()}`, `--name`, `${this.project.id}`]
-    console.log('running:', nixCommand.join(' '))
+    if (builder === 'nixpacks')
+      commands = [`nixpacks`, `build`, this.getPath(), `--name`, `${this.project.id}`]
 
-    return Bun.spawn(nixCommand, { env: this.getProjectEnv(), stdio: ['ignore', 'pipe', 'pipe'] })
+    if (builder === 'dockerfile')
+      commands = [`docker`, `build`, `-t`, `${this.project.id}`, this.getPath()]
+
+    if (builder === 'docker-compose')
+      commands = ['docker', 'compose', '-f', this.getPath(), 'build']
+
+    console.log('running:', commands.join(' '))
+
+    return Bun.spawn(commands, { env: this.getProjectEnv(), stdio: ['ignore', 'pipe', 'pipe'] })
   }
 
   async deploy() {
     const compose = this.createComposeFile()
     const path = `${this.getPath()}/docker-compose.yml`
     await Bun.write(path, compose)
-    const commands = ['docker', 'compose' , '-f', path, 'up', '-d']
+    const commands = ['docker', 'compose', '-f', path, 'up', '-d']
     return Bun.spawn(commands, { env: this.getProjectEnv(), stdio: ['ignore', 'pipe', 'pipe'] })
   }
 

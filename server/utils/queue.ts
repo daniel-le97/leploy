@@ -79,12 +79,7 @@ class Queue {
     job.cleanPath()
     // clone the project
     this.exitCodes.push(await this.sendStream(this.shell = job.clone()))
-
-    if (job.needsBuild)
-      this.exitCodes.push(await this.sendStream(this.shell = job.build()))
-
-    // await job.deploy()
-
+    this.exitCodes.push(await this.sendStream(this.shell = job.build()))
     this.exitCodes.push(await this.sendStream(this.shell = await job.deploy()))
 
     const end = (Bun.nanoseconds() - start)

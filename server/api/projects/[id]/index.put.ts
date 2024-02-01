@@ -11,17 +11,7 @@ export default defineEventHandler(async (event) => {
       throw createError({ message: 'please provide an id' })
 
     const project = await projectsService.updateProject(id, body)
-    return { success: true }
-
-    // const db = useDbStorage('projects')
-
-    // const key = `${session.id}:${id}`
-
-    // if (!db.hasItem(key))
-    //   throw createError({ message: 'unable to find project' })
-
-    // await db.setItem<Project>(key, { ...body, configured: true })
-    // return { ...body, configured: true }
+    return { success: !!project }
   }
   catch (error) {
     console.log('invalid id or user')

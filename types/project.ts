@@ -59,7 +59,8 @@ export interface SqliteProject {
   startCommand: string
   buildCommand: string
   installCommand: string
-  buildPack: string
+  buildPack: 'nixpacks' | 'dockerfile' | 'docker-compose'
+  filePath: string
 }
 
 

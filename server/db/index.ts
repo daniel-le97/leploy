@@ -62,7 +62,8 @@ CREATE TABLE IF NOT EXISTS project_compose (
   startCommand TEXT NOT NULL DEFAULT '',
   buildCommand TEXT NOT NULL DEFAULT '',
   installCommand TEXT NOT NULL DEFAULT '',
-  buildPack TEXT NOT NULL DEFAULT 'nixpacks'
+  buildPack TEXT NOT NULL DEFAULT 'nixpacks',
+  filePath TEXT NOT NULL DEFAULT ''
 );
 `,
   'buildlogs': /* sql */`

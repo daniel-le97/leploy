@@ -56,8 +56,6 @@ class ProjectsService {
 
   async getProjectById(id: string) {
     const project = await db.prepare('SELECT * FROM projects WHERE id = ?1').get(id) as SqliteProject
-    console.log(project)
-
     return project
   }
 
@@ -70,41 +68,50 @@ class ProjectsService {
   }
 
   async updateProject(id: string, partialProject: Partial<SqliteProject>) {
-    // const partialProject = this.formatProject(partial)
-    const found = await this.getProjectById(id)
-    const merged = defu(partialProject, found)
+    try {
+      // const partialProject = this.formatProject(partial)
+      const found = await this.getProjectById(id)
+      const merged = defu(partialProject, found)
 
-    const { name, deployed, configured, ports, https, www, repoUrl, startCommand, buildCommand, installCommand, buildPack } = merged
-    return db
-      .prepare(`
-        UPDATE projects
-        SET
-          name = ?1,
-          deployed = ?2,
-          configured = ?3,
-          ports = ?4,
-          https = ?5,
-          www = ?6,
-          repoUrl = ?7,
-          startCommand = ?8,
-          buildCommand = ?9,
-          installCommand = ?10,
-          buildPack = ?11
-        WHERE id = ?12
+      const { name, deployed, configured, ports, https, www, repoUrl, startCommand, buildCommand, installCommand, buildPack, filePath } = merged
+      db
+        .prepare(`
+      UPDATE projects
+      SET
+      name = ?1,
+      deployed = ?2,
+      configured = ?3,
+      ports = ?4,
+      https = ?5,
+      www = ?6,
+      repoUrl = ?7,
+      startCommand = ?8,
+      buildCommand = ?9,
+      installCommand = ?10,
+      buildPack = ?11,
+      filePath = ?12
+      WHERE id = ?13
       `).run(
-        name,
-        deployed,
-        configured,
-        ports,
-        https,
-        www,
-        repoUrl,
-        startCommand,
-        buildCommand,
-        installCommand,
-        buildPack,
-        id,
-      )
+          name,
+          deployed,
+          configured,
+          ports,
+          https,
+          www,
+          repoUrl,
+          startCommand,
+          buildCommand,
+          installCommand,
+          buildPack,
+          filePath,
+          id,
+        )
+
+      return merged as SqliteProject
+    }
+    catch (error) {
+      console.log('error updating project', error)
+    }
   }
 }
 

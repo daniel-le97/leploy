@@ -31,22 +31,16 @@ const options = [
 async function onSubmit() {
   try {
     console.log(state.value)
-
     const data = await $fetch<SqliteProject>(`/api/projects/${state.value.id}`, {
       method: 'PUT',
       body: state.value,
     })
-
-    // // if (!data)
-    // //   throw new Error('unable to update config')
 
     useToast().add({
       id: state.value.id,
       title: 'Configuration Updated',
       timeout: 1500,
     })
-
-    // useLiteProject().value = data
   }
   catch (error) {
     consola.withTag('configuration').error('unable to update configuration')
@@ -57,13 +51,32 @@ function updateBool(value: any) {
   console.log(value)
 }
 
-const needsRepo = computed(() => state?.value.buildCommand === 'nixpacks')
+const filePath = reactive({
+  label: 'Dockerfile location',
+  name: '/Dockerfile',
+})
+watch(state.value, (value) => {
+  if (value.buildPack === 'dockerfile') {
+    filePath.label = 'Dockerfile location'
+    state.value.filePath = state.value.filePath.includes('.yml') ? '/Dockerfile' : state.value.filePath
+  }
+
+  if (value.buildPack === 'nixpacks')
+    state.value.filePath = ''
+
+  if (value.buildPack === 'docker-compose') {
+    filePath.label = 'docker-compose location'
+    state.value.filePath = state.value.filePath.includes('.yml') ? state.value.filePath : '/docker-compose.yml'
+  }
+})
+
+const needsfilePath = computed(() => state?.value.buildPack === 'nixpacks')
 </script>
 
 <template>
   <div v-if="state.id">
     <UForm :schema=" schema " :state=" state " class="space-y-4" @submit="onSubmit">
-      <UFormGroup label="Repo URL" name="repoUrl" :required="needsRepo">
+      <UFormGroup label="Repo URL" name="repoUrl">
         <UInput v-model=" state.repoUrl " type="url" />
       </UFormGroup>
 
@@ -91,6 +104,9 @@ const needsRepo = computed(() => state?.value.buildCommand === 'nixpacks')
           </UFormGroup> -->
           <UFormGroup label="https" name="https">
             <input v-model="https" type="checkbox">
+          </UFormGroup>
+          <UFormGroup v-if="!needsfilePath" :label="filePath.label" name="filePath">
+            <UInput v-model="state.filePath" />
           </UFormGroup>
           <!-- <div class="flex gap-2">
             <div class="w-1/2">
