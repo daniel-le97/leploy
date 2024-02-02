@@ -36,7 +36,7 @@ const handlers = new Map<string, (server: BunServer, ws: WS, payload: Payload) =
     const id = payload.payload.id
     console.log('server:ws:unsubscribe', id)
     const isSubscribed = isSubbed(id)
-    if (!isSubscribed) {
+    if (isSubscribed) {
       ws.unsubscribe(id)
       console.log('issubbed', isSubbed(id))
     }

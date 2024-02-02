@@ -73,7 +73,7 @@ class ProjectsService {
       const found = await this.getProjectById(id)
       const merged = defu(partialProject, found)
 
-      const { name, deployed, configured, ports, https, www, repoUrl, startCommand, buildCommand, installCommand, buildPack, filePath } = merged
+      const { name, deployed, configured, ports, https, www, repoUrl, startCommand, buildCommand, installCommand, buildPack, filePath, branch } = merged
       db
         .prepare(`
       UPDATE projects
@@ -89,8 +89,9 @@ class ProjectsService {
       buildCommand = ?9,
       installCommand = ?10,
       buildPack = ?11,
-      filePath = ?12
-      WHERE id = ?13
+      filePath = ?12,
+      branch = ?13
+      WHERE id = ?14
       `).run(
           name,
           deployed,
@@ -104,6 +105,7 @@ class ProjectsService {
           installCommand,
           buildPack,
           filePath,
+          branch,
           id,
         )
 

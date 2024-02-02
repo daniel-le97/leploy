@@ -61,6 +61,7 @@ export interface SqliteProject {
   installCommand: string
   buildPack: 'nixpacks' | 'dockerfile' | 'docker-compose'
   filePath: string
+  branch: string
 }
 
 

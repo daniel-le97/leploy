@@ -70,7 +70,7 @@ watch(state.value, (value) => {
   }
 })
 
-const needsfilePath = computed(() => state?.value.buildPack === 'nixpacks')
+const isNix = computed(() => state?.value.buildPack === 'nixpacks')
 </script>
 
 <template>
@@ -79,19 +79,11 @@ const needsfilePath = computed(() => state?.value.buildPack === 'nixpacks')
       <UFormGroup label="Repo URL" name="repoUrl">
         <UInput v-model=" state.repoUrl " type="url" />
       </UFormGroup>
+      <UFormGroup label="Branch" name="branch">
+        <UInput v-model=" state.branch " />
+      </UFormGroup>
 
       <div class="flex space-x-4">
-        <div class="w-1/2 flex flex-col space-y-3">
-          <UFormGroup label="Install command" name="installCommand">
-            <UInput v-model=" state.installCommand " placeholder="npm install" type="text" />
-          </UFormGroup>
-          <UFormGroup label="Build command" name="buildCommand">
-            <UInput v-model=" state.buildCommand " placeholder="npm run build" type="text" />
-          </UFormGroup>
-          <UFormGroup label="Start command" name="startCommand">
-            <UInput v-model=" state.startCommand " placeholder="npm run serve" type="text" />
-          </UFormGroup>
-        </div>
         <div class="w-1/2">
           <UFormGroup label="choose a build pack" name="buildPack">
             <USelect v-model=" state.buildPack" :options=" options " />
@@ -102,24 +94,28 @@ const needsfilePath = computed(() => state?.value.buildPack === 'nixpacks')
           <!-- <UFormGroup label="use our proxy?" name="proxy">
             <input v-model="state.c" type="checkbox">
           </UFormGroup> -->
+          <!-- <UFormGroup v-if="!needsfilePath" :label="filePath.label" name="filePath">
+            <UInput v-model="state.filePath" />
+          </UFormGroup> -->
           <UFormGroup label="https" name="https">
             <input v-model="https" type="checkbox">
           </UFormGroup>
-          <UFormGroup v-if="!needsfilePath" :label="filePath.label" name="filePath">
+        </div>
+        <div v-if="isNix" class="w-1/2 flex flex-col space-y-3">
+          <UFormGroup label="Install command" name="installCommand">
+            <UInput v-model=" state.installCommand " placeholder="npm install" type="text" />
+          </UFormGroup>
+          <UFormGroup label="Build command" name="buildCommand">
+            <UInput v-model=" state.buildCommand " placeholder="npm run build" type="text" />
+          </UFormGroup>
+          <UFormGroup label="Start command" name="startCommand">
+            <UInput v-model=" state.startCommand " placeholder="npm run start" type="text" />
+          </UFormGroup>
+        </div>
+        <div v-else class="w-1/2 flex flex-col space-y-3">
+          <UFormGroup :label="filePath.label" name="filePath">
             <UInput v-model="state.filePath" />
           </UFormGroup>
-          <!-- <div class="flex gap-2">
-            <div class="w-1/2">
-              <UFormGroup label="base directory" name="buildPack">
-                <USelect v-model=" state.application.buildPack" :options=" options " />
-              </UFormGroup>
-            </div>
-            <div class="w-1/2">
-              <UFormGroup label="publish directory" name="buildPack">
-                <USelect v-model=" state.application.buildPack" :options=" options " />
-              </UFormGroup>
-            </div>
-          </div> -->
         </div>
       </div>
 
