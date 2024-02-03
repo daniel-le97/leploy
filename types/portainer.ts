@@ -43,12 +43,14 @@ export interface DockerComposeService {
     volumes?: string[]
     restart?: string
     labels?: string[]
+    networks?: string[]
   }
 }
 
 export interface DockerComposeConfig {
   version?: string
   services: DockerComposeService
+  networks?: { [key: string]: { external: boolean } }
 }
 
 // ---------------------------------------------//

@@ -4,15 +4,16 @@ import consola from 'consola'
 import type { Subprocess } from 'bun'
 import type { SqliteProject } from '../../types/project'
 import { Server } from '../core/server'
-import { Job } from './job'
+import type { Job } from './job'
+import { ProjectJob } from './job'
+
 
 class Queue {
   jobs: SqliteProject[] = []
-  isProcessing: boolean = false
-  fileContents: string = ''
+  isProcessing = 0
   job: Job | null = null
-  killed = false
-  type = new Map<string, string>()
+  type = new Map()
+  limit = 1
 
   async killJob(projectId: string) {
     if (this.jobs)
@@ -22,47 +23,43 @@ class Queue {
       this.job.killed = true
   }
 
-  async addJob(Project: SqliteProject, type?: string) {
-    this.jobs?.push(Project)
-    this.type.set(Project.id, type || 'manual')
+  async addJob(project: SqliteProject, type?: string) {
+    this.jobs.push(project)
+    this.type.set(project.id, type)
 
-    if (!this.isProcessing)
+    if (this.isProcessing < this.limit)
       await this.processQueue()
   }
 
   async processQueue() {
     const project = this.jobs?.shift()
     if (!project) {
-      this.isProcessing = false
-      this.type.clear()
+      this.isProcessing = 0
       Bun.shrink()
       Bun.gc(true)
       return
     }
 
-    this.isProcessing = true
-    this.killed = false
-    this.fileContents = ''
+    this.isProcessing++
 
     console.log(`Processing project: ${project.id} at ${Date.now()}`)
-    await this.processJob(project)
-
+    await this.processJob(new ProjectJob(project, this.type.get(project.id)))
     this.type.delete(project.id)
+
     await this.processQueue()
   }
 
-  private async processJob(project: SqliteProject) {
-    this.job = new Job(project)
-    this.job.cleanPath()
-
+  private async processJob(job: Job) {
+    // make sure the build directory is clean
+    job.cleanPath()
     // clone the project and push the exit code into an array
-    await this.job.clone()
+    await job.clone()
     // build the project
-    await this.job.build()
+    await job.build()
     // deploy the project
-    await this.job.deploy()
-
-    this.job.finish(this.type.get(project.id) || 'manual')
+    await job.deploy()
+    // do some cleanup 
+    job.finish()
   }
 }
 

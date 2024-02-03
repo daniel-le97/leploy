@@ -31,20 +31,20 @@ COPY --from=prerelease /usr/src/app/.output/ ./.output/
 COPY --from=prerelease /usr/src/app/.data/ ./.data/
 
 ###################################
-#     !updated as of 12/5/23      #
+#     updated as of 02/02/2024  #
 ###################################
 
 ARG TARGETPLATFORM
 # https://download.docker.com/linux/static/stable/
-ARG DOCKER_VERSION=24.0.7
+ARG DOCKER_VERSION=25.0.2
 # https://github.com/docker/compose/releases
-ARG DOCKER_COMPOSE_VERSION=2.23.3
+ARG DOCKER_COMPOSE_VERSION=2.24.5
 # https://github.com/docker/buildx/releases
-ARG DOCKER_BUILDX_VERSION=0.12.0
+ARG DOCKER_BUILDX_VERSION=0.12.1
 # https://github.com/buildpacks/pack/releases
-ARG PACK_VERSION=0.32.1
+ARG PACK_VERSION=0.33.0
 # https://github.com/railwayapp/nixpacks/releases
-ARG NIXPACKS_VERSION=1.19.0
+ARG NIXPACKS_VERSION=1.21.0
 
 RUN apk add --no-cache bash curl git git-lfs openssh-client tar tini
 RUN mkdir -p ~/.docker/cli-plugins
