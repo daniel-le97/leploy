@@ -1,0 +1,19 @@
+version: '3.3'
+services:
+  fireshare:
+    container_name: fireshare
+    image: shaneisrael/fireshare:latest
+    restart: unless-stopped
+    ports:
+      - '8888:80'
+    volumes:
+      - /portainer/Files/AppData/Config/fireshare/data:/data
+      - /portainer/Files/AppData/Config/fireshare/processed:/processed
+      - /portainer/Files/AppData/Config/fireshare/videos:/videos
+    environment:
+      - ADMIN_USERNAME=fireadmin
+      - ADMIN_PASSWORD=firepwd # please change this
+      - SECRET_KEY=replace_this_with_some_random_string0x0
+      - MINUTES_BETWEEN_VIDEO_SCANS=1 # how often should the system scan?
+      - PUID=998 # change this to match your server settings
+      - PGID=100 # change this to match your server settings

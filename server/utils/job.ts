@@ -10,7 +10,7 @@ export interface Job {
   failed: () => boolean
   getPath: () => string
   cleanPath: (path?: string) => void
-  gitClone: () => Promise<void>
+  // gitClone: () => Promise<void>
   clone: () => Promise<void>
   build: () => Promise<void>
   deploy: () => Promise<void>
@@ -49,6 +49,7 @@ export class ProjectJob implements Job {
   }
 
   finish() {
+    console.log({content:this.logContent})
     const end = (Bun.nanoseconds() - this.buildTime)
     const enqueuedTime = (this.enqueuedTime)
     const buildLog: BuildLog = {
@@ -92,31 +93,35 @@ export class ProjectJob implements Job {
       fs.rmSync(path, { recursive: true, force: true })
   }
 
-  async gitClone() {
+  async clone() {
     this.buildTime = Bun.nanoseconds()
 
     const branch = this.project.branch || 'main'
     const commands = ['git', 'clone', '--depth=1', '--shallow-submodules', `--branch=${branch}`, `${this.project.repoUrl}.git`, this.getPath()]
-    this.publish(`clone: ${commands.join(' ')}\n\n`)
+    // this.publish(`clone: ${commands.join(' ')}\n\n`)
     this.shell = Bun.spawn(commands, { env: this.getProjectEnv(), stdio: ['ignore', 'pipe', 'pipe'] })
     await this.sendStream(this.shell)
-    this.publish(`\nclone: finished\n\n`)
+    // this.publish(`\nclone: finished\n\n`)
   }
 
-  async clone() {
+  async fetchClone() {
     this.buildTime = Bun.nanoseconds()
     const repoURL = this.project.repoUrl
+    const repoName = repoURL.split('/').pop()
     const branch = this.project.branch || 'main'
     const archiveURL = `${repoURL}/archive/${branch}.tar.gz`
     const data = (await fetch(archiveURL))
     this.tar = new Uint8Array(await data.arrayBuffer())
-    this.publish(`fetching: ${archiveURL}\n\n`)
-    const tar = `/${this.id}.tar.gz`
 
-    await Bun.write(process.cwd() + tar, data)
-    // const shell = await parseTar(tar, this.getPath())
-    this.exitCodes.push(1)
-    this.publish(`\nfetching: finished\n\n`)
+    this.publish(`fetching: ${archiveURL}\n\n`)
+    const tar = `./.data/tar/${this.id}.tar.gz`
+    await Bun.write(tar, this.tar)
+    const sizeInBytes = this.tar.length
+    const sizeInMegabytes = sizeInBytes / (1024 * 1024)
+
+    const shell = await parseTar(tar, this.getPath())
+    this.exitCodes.push(shell.exitCode)
+    this.publish(`\nfetching: finished - Size in mb ${sizeInMegabytes.toFixed(2)}\n\n`)
   }
 
   async build() {
@@ -134,10 +139,10 @@ export class ProjectJob implements Job {
     if (builder === 'docker-compose')
       commands = ['docker', 'compose', '-f', `${this.getPath()}${this.project.buildPackHelper || '/docker-compose.yml'}`, 'build']
 
-    this.publish(`\nbuild: ${commands.join(' ')}\n\n`)
+    // this.publish(`\nbuild: ${commands.join(' ')}\n\n`)
     this.shell = Bun.spawn(commands, { env: this.getProjectEnv(), stdio: ['ignore', 'pipe', 'pipe'] })
     await this.sendStream(this.shell)
-    this.publish(`\nbuild: finished\n\n`)
+    // this.publish(`\nbuild: finished\n\n`)
   }
 
   async deploy() {
@@ -154,10 +159,10 @@ export class ProjectJob implements Job {
       path = `${this.getPath()}${this.project.buildPackHelper || '/docker-compose.yml'}`
     }
     const commands = ['docker', 'compose', '-f', path, 'up', '-d']
-    this.publish(`\ndeploy: ${commands.join(' ')}\n\n`)
+    // this.publish(`\ndeploy: ${commands.join(' ')}\n\n`)
     this.shell = Bun.spawn(commands, { env: this.getProjectEnv(), stdio: ['ignore', 'pipe', 'pipe'] })
     await this.sendStream(this.shell)
-    this.publish(`\ndeploy: finished\n\n`)
+    // this.publish(`\ndeploy: finished\n\n`)
   }
 
   getProjectEnv() {
@@ -231,7 +236,7 @@ export class ProjectJob implements Job {
   }
 
   publish(data: string) {
-    console.log(data)
+    console.log(data);
     Server().publish(this.project.id, JSON.stringify({ type: 'build', data }))
     this.logContent += data
   }

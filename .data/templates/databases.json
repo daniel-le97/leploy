@@ -1,0 +1,14 @@
+{
+    "libsql":{
+        "image": "ghcr.io/tursodatabase/libsql-server",
+        "versions": [
+            "latest"
+        ]
+    },
+    "mongo":{
+        "image": "mongo",
+        "versions": [
+            "latest"
+        ]
+    }
+}
