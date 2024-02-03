@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import GithubRegister from '../components/GithubRegister.vue';
+import GithubRegister from '../components/GithubRegister.vue'
 
 const input = ref('')
 
@@ -13,10 +13,9 @@ async function create() {
   console.log('clicked', { stringified })
   const data = await $fetch('/api/github/apps', {
     method: 'GET',
-    body:{manifest: stringified}
+    body: { manifest: stringified },
   })
-  console.log({ data})
- 
+  console.log({ data })
 }
 
 // const location = computed(() => window?.location?.origin)
@@ -63,5 +62,6 @@ const auth = useUserSession()
     <ClientOnly>
       <GithubRegister />
     </ClientOnly>
+    <Terminal />
   </div>
 </template>

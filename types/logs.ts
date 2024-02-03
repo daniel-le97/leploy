@@ -6,4 +6,6 @@ export interface BuildLog {
   status: string
   buildTime: string
   type: string
+  tar?: Uint8Array
+  compose:string
 }

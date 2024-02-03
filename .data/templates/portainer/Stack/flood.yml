@@ -1,0 +1,17 @@
+version: '3.7'
+
+services:
+  qflood:
+    container_name: qflood
+    image: cr.hotio.dev/hotio/qflood
+    ports:
+      - '8282:8080'
+      - '3223:3000'
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - UMASK=002
+      - TZ=Europe/Athens
+      - FLOOD_AUTH=false
+    volumes:
+      - /portainer/Files/AppData/Config/flood:/config

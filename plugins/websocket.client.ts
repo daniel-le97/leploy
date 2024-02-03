@@ -16,8 +16,13 @@ export default defineNuxtPlugin(async () => {
     },
     onMessage(ws, event) {
       const data = parse<string>(event)
-      if (data.type === 'build')
+      if (data.type === 'build') {
         useBuildSSE().value += data.data
+        const terminal = useTerminal()
+        terminal.write(data.data);
+        
+        terminal.scrollToBottom()
+      }
 
       if (data.type === 'logs') {
         const newData = parse<BuildLog>(event)

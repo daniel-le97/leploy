@@ -1,0 +1,10 @@
+version: '3'
+services:
+  kiwix-serve:
+    image: kiwix/kiwix-serve
+    volumes:
+      - /portainer/Files/AppData/Config/kiwixserve:/data
+    ports:
+      - '78080:80'
+    command:
+      *.zim

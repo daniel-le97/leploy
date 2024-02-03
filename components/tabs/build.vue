@@ -63,8 +63,9 @@ const ansi = '#12 4.696 computing gzip size...\n#12 4.699 dist/<span style="font
     <div class=" flex  gap-2">
       <div class="w-4/5  max-w-2xl min-h-[80vh]">
         <div class=" bg-zinc-700 rounded-md h-full">
-          <pre v-if="buildData.length" id="pre-build" class="w-full h-full overflow-y-auto whitespace-pre-wrap scrollable-pre text-xs"> {{ buildData }}</pre>
-          <pre v-else id="pre-build" class="w-full h-full overflow-auto whitespace-pre-wrap scrollable-pre"> {{ 'no builds logged' }}</pre>
+          <Terminal class="w-full h-full overflow-y-auto scrollable-pre text-xs" />
+          <!-- <pre v-if="buildData.length" id="pre-build" class="w-full h-full overflow-y-auto whitespace-pre-wrap scrollable-pre text-xs"> {{ buildData }}</pre>
+          <pre v-else id="pre-build" class="w-full h-full overflow-auto whitespace-pre-wrap scrollable-pre"> {{ 'no builds logged' }}</pre> -->
         </div>
       </div>
 

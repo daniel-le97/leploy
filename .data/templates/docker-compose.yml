@@ -1,0 +1,170 @@
+volumes:
+  supa-postgres-data:
+
+services:
+  traefik:
+    image: traefik:v2.10
+    command:
+      - --api.insecure=true # Enable the Traefik API (insecure for testing)
+      - --providers.docker=true
+      - --providers.docker.exposedbydefault=false # Don't expose containers by default
+    ports:
+      - '80:80' # Expose HTTP
+      - '8080:8080' # Expose Traefik dashboard
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock # Mount Docker socket for dynamic configuration
+
+  supa-postgres:
+    image: supabase/postgres:latest
+    volumes:
+      - supa-postgres-data:/var/lib/postgresql/data
+    restart: always
+    environment:
+      POSTGRES_DB: supabase
+      POSTGRES_USER: supabase
+      POSTGRES_PASSWORD: password
+  supa-realtime:
+    image: supabase/realtime:latest
+    restart: always
+    environment:
+      DB_URI: postgres://supabase:password@supa-postgres:5432/supabase
+      DB_CHANNEL: realtime
+      DB_CHANNELS_TABLE: realtime.channels
+      INSTANCE_ID: '1'
+      PORT: 4000
+      SECRET_KEY: password
+    depends_on:
+      - supa-postgres
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.supa-api.rule=Host(`supa-realtime.localhost`)
+      - traefik.http.routers.supa-api.entrypoints=web
+      - traefik.http.services.supa-api.loadbalancer.server.port=4000
+    # caproverExtra:
+    #   containerHttpPort: 4000
+  supa-api:
+    image: supabase/supabase:latest
+    restart: always
+    environment:
+      POSTGREST_URL: http://supa-postgres:3000
+      REALTIME_URL: ws://supa-realtime:4000
+      PORT: 5000
+      JWT_SECRET: password
+    depends_on:
+      - supa-postgres
+      - supa-realtime
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.supa-api.rule=Host(`supa-api.localhost`)
+      - traefik.http.routers.supa-api.entrypoints=web
+      - traefik.http.services.supa-api.loadbalancer.server.port=5000
+    # caproverExtra:
+    #   containerHttpPort: 5000
+  supa-studio:
+    image: supabase/studio:latest
+    restart: always
+    environment:
+      DATABASE_URL: postgres://supabase:password@supa-postgres:5432/supabase
+      JWT_SECRET: password
+      PORT: 81
+    depends_on:
+      - supa-postgres
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.supa-api.rule=Host(`supa-studio.localhost`)
+      - traefik.http.routers.supa-api.entrypoints=web
+      - traefik.http.services.supa-api.loadbalancer.server.port=81
+    # caproverExtra:
+    #   containerHttpPort: 80
+  supa-kong:
+    image: kong:latest
+    restart: always
+    environment:
+      KONG_DATABASE: postgres
+      KONG_PG_HOST: supa-postgres
+      KONG_PG_USER: supabase
+      KONG_PG_PASSWORD: password
+      KONG_PG_DATABASE: supabase
+    depends_on:
+      - supa-postgres
+    # caproverExtra:
+    #   notExposeAsWebApp: true
+  supa-gotrue:
+    image: supabase/gotrue:latest
+    restart: always
+    environment:
+      API_EXTERNAL_URL: http://supa-gotrue.localhost
+      JWT_SECRET: password
+      DATABASE_URL: postgres://supabase:password@supa-postgres:5432/supabase
+      INSTANCE_ID: '1'
+      PORT: 9999
+    depends_on:
+      - supa-postgres
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.supa-api.rule=Host(`supa-gotrue.localhost`)
+      - traefik.http.routers.supa-api.entrypoints=web
+      - traefik.http.services.supa-api.loadbalancer.server.port=9999
+    # caproverExtra:
+    #   containerHttpPort: 9999
+  supa-postgrest:
+    image: postgrest/postgrest:latest
+    restart: always
+    environment:
+      PGRST_DB_URI: postgres://supabase:password@supa-postgres:5432/supabase
+      PGRST_DB_SCHEMA: public
+      PGRST_DB_ANON_ROLE: web_anon
+      PGRST_DB_CHANNEL_ENABLED: 'true'
+      PGRST_DB_CHANNEL: realtime
+      PGRST_JWT_SECRET: password
+      PGRST_SERVER_PROXY_URI: http://supa-postgrest.localhost
+      PGRST_SERVER_PORT: 3000
+    depends_on:
+      - supa-postgres
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.supa-api.rule=Host(`supa-postgrest.localhost`)
+      - traefik.http.routers.supa-api.entrypoints=web
+      - traefik.http.services.supa-api.loadbalancer.server.port=3000
+    # caproverExtra:
+    #   containerHttpPort: 3000
+  supa-storage-api:
+    image: supabase/storage-api:latest
+    restart: always
+    environment:
+      STORAGE_API_PUBLIC_URL: https://supa-storage-api.localhost
+      POSTGRES_CONNECTION_STRING: postgres://supabase:password@supa-postgres:5432/supabase
+      PORT: 2101
+      JWT_SECRET: password
+    depends_on:
+      - supa-postgres
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.supa-api.rule=Host(`supa-storage-api.localhost`)
+      - traefik.http.routers.supa-api.entrypoints=web
+      - traefik.http.services.supa-api.loadbalancer.server.port=2101
+    # caproverExtra:
+    #   containerHttpPort: 2101
+  supa-imgproxy:
+    image: darthsim/imgproxy:latest
+    restart: always
+    environment:
+      IMGPROXY_SECRET_KEY: password
+      IMGPROXY_KEY: password
+    # caproverExtra:
+    #   notExposeAsWebApp: true
+  supa-postgres-meta:
+    image: supabase/postgres-meta:latest
+    restart: always
+    environment:
+      DATABASE_URL: postgres://supabase:password@supa-postgres:5432/supabase
+      PORT: 3100
+    depends_on:
+      - supa-postgres
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.supa-api.rule=Host(`supa-imgproxy.localhost`)
+      - traefik.http.routers.supa-api.entrypoints=web
+      - traefik.http.services.supa-api.loadbalancer.server.port=3100
+    # caproverExtra:
+    #   containerHttpPort: 3100

@@ -1,0 +1,76 @@
+version: '3.9'
+
+services:
+  app:
+    image: castopod/app:latest
+    container_name: Castopod-APP
+    volumes:
+      - /portainer/Files/AppData/Config/castopod/app:/opt/castopod/public/media
+    environment:
+      MYSQL_DATABASE: castopod
+      MYSQL_USER: castopod
+      MYSQL_PASSWORD: changeme
+      CP_BASEURL: https://castopod.me
+      CP_ANALYTICS_SALT: changeme
+      CP_CACHE_HANDLER: redis
+      CP_REDIS_HOST: redis
+    networks:
+      - castopod-app
+      - castopod-db
+    restart: always
+
+  web-server:
+    image: castopod/web-server:latest
+    container_name: Castopod-WEB-SERVER
+    volumes:
+      - /portainer/Files/AppData/Config/castopod/web:/var/www/html/media
+    networks:
+      - castopod-app
+    ports:
+      - 8848:80
+    restart: unless-stopped
+
+  mariadb:
+    image: mariadb
+    container_name: Castopod-DB
+    networks:
+      - castopod-db
+    volumes:
+      - /portainer/Files/AppData/Config/castopod/db:/var/lib/mysql
+    user: 1026:100
+    environment:
+      MYSQL_ROOT_PASSWORD: changeme
+      MYSQL_DATABASE: castopod
+      MYSQL_USER: castopod
+      MYSQL_PASSWORD: changeme
+    restart: always
+
+  redis:
+    image: redis
+    container_name: Castopod-REDIS
+    volumes:
+      - /portainer/Files/AppData/Config/castopod/redis:/data
+    user: 1026:100
+    networks:
+      - castopod-app
+  video-clipper:
+    image: castopod/video-clipper:latest
+    container_name: Castopod-VIDEO
+    volumes:
+      - /portainer/Files/AppData/Config/castopod/media:/opt/castopod/public/media
+    environment:
+      MYSQL_DATABASE: castopod
+      MYSQL_USER: castopod
+      MYSQL_PASSWORD: changeme
+    networks:
+      - castopod-db
+    restart: always
+
+volumes:
+  castopod-media:
+  castopod-db:
+  castopod-cache:
+
+networks:
+  castopod-app:
+  castopod-db:

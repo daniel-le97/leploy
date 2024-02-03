@@ -1,0 +1,21 @@
+version: '3'
+
+services:
+  meilisearch:
+    container_name: meilisearch
+    restart: unless-stopped
+    image: getmeili/meilisearch:latest
+    environment:
+      - http_proxy
+      - https_proxy
+      - MEILI_MASTER_KEY=${MEILI_MASTER_KEY:-masterKey}
+      - MEILI_NO_ANALYTICS=${MEILI_NO_ANALYTICS:-true}
+      - MEILI_ENV=${MEILI_ENV:-development}
+      - MEILI_LOG_LEVEL
+      - MEILI_DB_PATH=${MEILI_DB_PATH:-/data.ms}
+    ports:
+      - 7700:7700
+    networks:
+      - meilisearch
+    volumes:
+      - /portainer/Files/AppData/Config/meilisearch/data.ms:/data.ms

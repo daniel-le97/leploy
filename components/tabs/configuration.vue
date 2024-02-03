@@ -58,15 +58,17 @@ const filePath = reactive({
 watch(state.value, (value) => {
   if (value.buildPack === 'dockerfile') {
     filePath.label = 'Dockerfile location'
-    state.value.filePath = state.value.filePath.includes('.yml') ? '/Dockerfile' : state.value.filePath
+    state.value.buildPackHelper = state.value.buildPackHelper.includes('.yml') ? '/Dockerfile' : state.value.buildPackHelper || '/Dockerfile'
   }
-
   if (value.buildPack === 'nixpacks')
-    state.value.filePath = ''
-
+    state.value.buildPackHelper = ''
   if (value.buildPack === 'docker-compose') {
     filePath.label = 'docker-compose location'
-    state.value.filePath = state.value.filePath.includes('.yml') ? state.value.filePath : '/docker-compose.yml'
+    state.value.buildPackHelper = state.value.buildPackHelper.includes('.yml') ? state.value.buildPackHelper : '/docker-compose.yml'
+  }
+  if (value.buildPack === 'buildpacks') {
+    filePath.label = 'choose a build pack'
+    state.value.buildPackHelper = state.value.buildPackHelper.includes('/') ? state.value.buildPackHelper : 'paketo-buildpacks/nodejs'
   }
 })
 
@@ -114,7 +116,7 @@ const isNix = computed(() => state?.value.buildPack === 'nixpacks')
         </div>
         <div v-else class="w-1/2 flex flex-col space-y-3">
           <UFormGroup :label="filePath.label" name="filePath">
-            <UInput v-model="state.filePath" />
+            <UInput v-model="state.buildPackHelper" />
           </UFormGroup>
         </div>
       </div>

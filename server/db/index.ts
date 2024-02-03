@@ -63,7 +63,7 @@ CREATE TABLE IF NOT EXISTS project_compose (
   buildCommand TEXT NOT NULL DEFAULT '',
   installCommand TEXT NOT NULL DEFAULT '',
   buildPack TEXT NOT NULL DEFAULT 'nixpacks',
-  filePath TEXT NOT NULL DEFAULT '',
+  buildPackHelper TEXT NOT NULL DEFAULT '',
   branch TEXT NOT NULL DEFAULT 'main'
 );
 `,

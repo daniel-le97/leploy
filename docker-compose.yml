@@ -17,35 +17,7 @@ services:
       - '/var/run/docker.sock:/var/run/docker.sock:ro'
     networks:
       - le-ploy
-
-  # realtime:
-  #   container_name: 'le-ploy-realtime'
-  #   depends_on:
-  #     - proxy
-  #   restart: unless-stopped
-  #   image: quay.io/soketi/soketi:1.0-16-distroless
-  #   ports:
-  #     - '${SOKETI_PORT:-6001}:6001'
-  #     - '${SOKETI_METRICS_SERVER_PORT:-9601}:9601'
-  #   labels:
-  #     - traefik.enable=true
-  #     - traefik.http.routers.socketio.rule=Host(`le-ploy-realtime.localhost`)
-  #     - traefik.http.routers.socketio.entrypoints=web
-  #     - traefik.http.services.socketio.loadbalancer.server.port=6001
-  #     - traefik.http.services.socketio.loadbalancer.server.scheme=http
-  #   environment:
-  #     - SOKETI_DEBUG='${SOCKETI_DEBUG:-1}'
-  #     - DEFAULT_APP_ID='${PUSHER_APP_ID:-some-id}'
-  #     - DEFAULT_APP_KEY='${PUSHER_APP_KEY:-app-key}'
-  #     - DEFAULT_APP_SECRET='${PUSHER_APP_SECRET:-some-app-secret}'
-  #     - PUSHER_HOST='${PUSHER_HOST:-127.0.0.1}'
-  #     - PUSHER_PORT= '${PUSHER_PORT:-6001}'
-  #     - PUSHER_SCHEME='${PUSHER_SCHEME:-http}' # or https
-  #     - METRICS_SERVER_PORT=${METRICS_SERVER_PORT:-9601}
-  #     - DEFAULT_APP_ENABLE_CLIENT_MESSAGES=${DEFAULT_APP_ENABLE_CLIENT_MESSAGES:-false}
-  #   networks:
-  #     - le-ploy
-
+      
   core:
     build:
       context: .

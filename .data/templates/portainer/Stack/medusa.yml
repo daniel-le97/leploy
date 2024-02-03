@@ -1,0 +1,63 @@
+version: '3.8'
+services:
+  medusa-backend:
+    build:
+      dockerfile: Dockerfile.prod
+    image: backend:latest
+    container_name: medusa-server
+    restart: always
+    depends_on:
+      - medusa-postgres
+      - medusa-redis
+    environment:
+      DATABASE_URL: postgres://postgres:postgres@postgres:5432/medusa-docker
+      NODE_ENV: production
+      STORE_CORS: http://localhost
+    volumes:
+      - /portainer/Files/AppData/Config/medusacms/backend:/app/medusa
+      - /portainer/Files/AppData/Config/medusacms/backend/node_modules:/app/medusa/node_modules
+    ports:
+      - '9009:9000'
+
+  medusa-postgres:
+    image: postgres:13.9-alpine
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: medusa-docker
+
+  medusa-redis:
+    image: redis:latest
+    restart: always
+
+  medusa-admin:
+    build:
+      context: ./admin
+      dockerfile: Dockerfile.prod
+    image: admin:latest
+    restart: always
+    depends_on:
+      - medusa-backend
+    container_name: medusa-admin
+    environment:
+      NODE_ENV: production
+      NODE_OPTIONS: --openssl-legacy-provider
+    ports:
+      - '7007:80'
+
+  medusa-storefront:
+    build:
+      dockerfile: Dockerfile.prod
+    image: storefront:latest
+    container_name: medusa-storefront
+    restart: always
+    environment:
+      NODE_ENV: production
+    volumes:
+      - /portainer/Files/AppData/Config/medusacms/storefront:/app/storefront
+      - /portainer/Files/AppData/Config/medusacms/storefront/node_modules:/app/storefront/node_modules
+    depends_on:
+      - medusa-backend
+    ports:
+      - '808:80'
