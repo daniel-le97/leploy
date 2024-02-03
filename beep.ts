@@ -14,5 +14,6 @@ const repoURL = 'https://github.com/daniel-le97/nitro-app-bun'
 const archiveURL = `${repoURL}/archive/main.tar.gz`
 const id = crypto.randomUUID()
 const data = await fetch(archiveURL)
-await Bun.write('./temp/test.tar.gz', data)
-await parseTar('./temp/test.tar.gz', `./temp/${id}`)
+const path = `${process.cwd()}/.data/tar/${id}.tar.gz`
+await Bun.write(path, data)
+await parseTar(path, `./temp/${id}`)
