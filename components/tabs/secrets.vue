@@ -84,9 +84,9 @@ function updateProjectEnv(projectEnv: ProjectEnv) {
 </script>
 
 <template>
-  <div class="flex flex-col border ">
+  <div class="flex flex-col border border-gray-300/30 rounded-sm ">
     <!-- Top Section -->
-    <div class="p-4 border-b border-gray-300">
+    <div class="p-4  border-b border-gray-300/30 ">
       <div v-for="env in data" :key="env.id" class="mb-4 flex flex-row justify-between items-center">
         <RippleBtn class="ml-4 bg-blue-500 text-white px-2 py-1 rounded" @click="updateProjectEnv(env)">
           Update
@@ -106,7 +106,7 @@ function updateProjectEnv(projectEnv: ProjectEnv) {
             <input v-model="env.forBuild" type="checkbox">
         </div>
       </div>
-      <form class="flex flex-row justify-between items-center border-t py-2">
+      <form class="flex flex-row justify-between items-center py-2">
         <RippleBtn class="ml-4 bg-blue-500 text-white px-2 py-1 rounded" type="submit" @click.prevent="handleEnvCreate(envRef, true)">
           create
         </RippleBtn>

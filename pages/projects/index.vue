@@ -50,18 +50,18 @@ const items = [[{
   </UDropdown>
     </div>
     <div v-if="data" class="flex flex-wrap justify-evenly gap-7 p-3 m-3">
-      <div v-for="template in data" :key="template.name" class="group flex-shrink-0 shadow-md relative p-2 rounded-md dark:bg-gray-900 h-full hover:shadow-xl transition-all duration-150 ease-linear" style="width: calc(50% - 1.4rem); max-width: 400px;">
+      <div v-for="template in data" :key="template.name" class="group flex-shrink-0 shadow-md relative p-2 rounded-md dark:bg-zinc-800 h-full hover:dark:bg-emerald-600 hover:shadow-lg  hover:shadow-emerald-300/10 transition-all duration-150 ease-linear" style="width: calc(50% - 1.4rem); max-width: 400px;">
         <!-- Adjust width based on the total width of the container and the desired number of items per row -->
-        <NuxtLink :to="`/projects/${template.id}`">
+        <NuxtLink :to="`/projects/${template.id}`" class="">
           <div class="flex items-center justify-center space-x-3">
-            <div class="text-xl font-bold">
+            <div class="text-xl font-bold px-4">
               {{ template.name }}
             </div>
             <span class="group-hover:translate-x-4 transition-transform duration-150 ease-linear">
               <Icon name="material-symbols:arrow-right-alt-rounded" size="25" />
             </span>
           </div>
-          <UDivider class="mt-2" />
+          <!-- <UDivider class="mt-2  bg-white !text-white" /> -->
           <div class="p-2 flex justify-between">
             <div>
               {{ formattedDate(new Date(template.createdAt)) }}
@@ -70,9 +70,21 @@ const items = [[{
               {{ useTimeAgo(new Date(template.createdAt)).value }}
             </div>
             <div>
+
+            
               <!-- {{ template }}
             </div> -->
-              <Icon name="material-symbols-light:deployed-code-outline" class="text-green-500" size="25" />
+              <Icon name="material-symbols-light:deployed-code-outline" class="group-hover:opacity-10 transition-all duration-200 group-hover:drop-shadow-lg text-green-500   absolute -left-4 -top-4" size="50" />
+              <Icon name="material-symbols-light:deployed-code" class="opacity-50 group-hover:opacity-90 group-hover:text-white transition-all duration-200 group-hover:drop-shadow-lg text-green-500   absolute -left-4 -top-4" size="50" />
+            </div>
+          </div>
+          <div class="my-1.5 px-2 flex justify-end">
+            <div class="flex gap-2">
+       <Icon name="iconamoon:link-external-duotone" class="opacity-50 group-hover:opacity-90 hover:dark:text-white/50 group-hover:text-white transition-all duration-200 group-hover:drop-shadow-lg text-green-500   " size="35" />
+
+  <Icon name="solar:trash-bin-minimalistic-bold-duotone" class="opacity-50 group-hover:opacity-90 group-hover:text-white
+  hover:dark:text-white/50 transition-all duration-200 group-hover:drop-shadow-lg text-green-500   " size="35" />
+
             </div>
           </div>
         </NuxtLink>

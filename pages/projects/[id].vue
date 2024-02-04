@@ -38,7 +38,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="p-5 w-full">
+  <div class="p-2 w-full">
     <div class="flex items-center justify-between mb-20">
       <div class="flex items-center space-x-2 ">
         <h1 class="text-2xl font-bold">
@@ -52,9 +52,9 @@ onUnmounted(() => {
 
       <!-- Right side with page title and badge -->
     </div>
-    <div class="flex  px-5 gap-3">
+    <div class="flex   gap-3">
       <!-- Left sidebar with buttons -->
-      <div class="p-2  border h-fit rounded-lg">
+      <div class="p-2  border border-gray-300/30 h-fit rounded-sm">
         <RippleBtn
           v-for="(tab, index) in tabs"
           :key="index"

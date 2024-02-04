@@ -14,7 +14,7 @@ const timeago = useTimeAgo(props.date)
 </script>
 
 <template>
-  <div class="flex   ">
+  <div class="flex  w-full  ">
     <div class=" rounded-md flex gap-2   hover:bg-zinc-700 p-2 transition-all duration-150">
       <div class="w-1/3">
         <div class="flex flex-col items-center justify-center text-center space-y-0.5">

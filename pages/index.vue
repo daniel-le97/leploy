@@ -53,8 +53,24 @@ const auth = useUserSession()
 <template>
   <div>
     <div>
-      auth
-      {{ auth }}
+   
+
+
+      <div class="p-5 flex flex-col gap-4">
+        <div class="flex items-center justify-center text-5xl font-extrabold  ">
+          That Home Page Though.
+        </div>
+       <div class="">
+         {{ auth.loggedIn }}
+       </div>
+       <div class="">
+          {{ auth.user }}
+       </div>
+    
+    
+     
+       
+      </div>
       <button class="bg-green text-green-600" type="button" @click="authLogout">
         logout
       </button>

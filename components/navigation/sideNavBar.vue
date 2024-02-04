@@ -77,12 +77,12 @@ const items = ref(navItems)
 </script>
 
 <template>
-  <div ref="SideNavBar" class="flex flex-col items-center justify-between w-20 h-full bg-zinc-800 text-white p-1 py-3">
-    <div class=" flex flex-col  w-full  justify-center items-center  space-y-3">
-      <UTooltip v-for="navItem in items" :key="navItem.label" :text="navItem.label" :popper="{ placement: 'right' }">
-        <NuxtLink :to="navItem.link" class="flex items-center justify-center " active-class="active">
+  <div ref="SideNavBar" class="flex flex-col items-center justify-between w-20 h-full bg-gray-800 text-white ">
+    <div class=" flex flex-col  w-full  justify-center items-center ">
+      <UTooltip v-for="navItem in items" :key="navItem.label" :text="navItem.label" :popper="{ placement: 'right' }" class="group">
+        <NuxtLink :to="navItem.link" class="flex items-center justify-center  hover:dark:bg-zinc-500/10 transition-all duration-200" active-class="active">
           <RippleBtn>
-            <Icon :name="navItem.icon" class="text-5xl" />
+            <Icon :name="navItem.icon" class="text-5xl group-hover:text-emerald-100" />
           </RippleBtn>
         </NuxtLink>
       </UTooltip>
@@ -92,6 +92,6 @@ const items = ref(navItems)
 
 <style scoped>
 .active{
-@apply text-emerald-300 bg-gray-200/20 cursor-pointer rounded-md
+@apply text-emerald-400 bg-gray-200/20 cursor-pointer 
 }
 </style>

@@ -6,7 +6,7 @@ const isLoginOrRegister = computed(() => route.fullPath.includes('/login') || ro
 </script>
 
 <template>
-  <div class="flex w-full  min-h-screen">
+  <div class="flex w-full  min-h-screen bg-gray-950">
     <div v-if="!isLoginOrRegister" class="">
       <SideNavBar />
     </div>
