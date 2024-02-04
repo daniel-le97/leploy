@@ -8,6 +8,8 @@ const dockerCompose = Bun.which('docker-compose')
 const nixpacks = Bun.which('nixpacks')
 const tar = Bun.which('tar')
 const git = Bun.which('git')
+const pack = Bun.which('pack')
+const bash = Bun.which('bash')
 
 const items = {
   docker,
@@ -15,6 +17,8 @@ const items = {
   nixpacks,
   tar,
   git,
+  pack,
+  bash,
 }
 console.log(items)
 console.log(process.platform)

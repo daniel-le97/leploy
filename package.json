@@ -17,15 +17,16 @@
     "remove:db": "rm sqlite.db*",
     "reset:workspace": "rm -rf node_modules && rm -rf .nuxt && rm bun.lockb && bun i",
     "reset": "bun run remove:db && bun test.ts",
-    "upgrade": "bun upgrade --canary && bun --version && npx taze major -w && bun i",
+    "upgrade": "bun upgrade --canary && bun --version && bun taze major -w && bun i",
     "bench": "bombardier -c 125 -n 100000 http://localhost:3000"
   },
   "dependencies": {
-    "@types/js-yaml": "^4.0.9",
-    "drizzle-orm": "^0.29.3",
+    "@vueuse/nuxt": "latest",
     "js-yaml": "^4.1.0",
-    "nanotar": "^0.1.1",
     "nitropack": "^2.8.1",
+    "nuxt": "npm:nuxt-nightly@latest",
+    "vue": "^3.4.15",
+    "vue-router": "^4.2.5",
     "xterm": "^5.3.0"
   },
   "devDependencies": {
@@ -33,13 +34,10 @@
     "@nuxt/devtools": "^1.0.8",
     "@nuxt/ui": "latest",
     "@types/bun": "^1.0.4",
-    "@vueuse/nuxt": "latest",
-    "drizzle-kit": "^0.20.14",
+    "@types/js-yaml": "^4.0.9",
     "eslint": "^8.56.0",
-    "nuxt": "npm:nuxt-nightly@latest",
     "nuxt-auth-utils": "latest",
     "smee-client": "^2.0.1",
-    "vue": "^3.4.15",
-    "vue-router": "^4.2.5"
+    "taze": "^0.13.2"
   }
 }
