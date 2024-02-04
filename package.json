@@ -1,7 +1,11 @@
 {
-  "name": "nuxt-app",
+  "name": "leploy",
   "type": "module",
-  "private": true,
+  "version": "0.0.1",
+  "description": "A platform as a service for deploying and managing your applications built with bun",
+  "bin": {
+    "leploy": "bin/leploy.ts"
+  },
   "scripts": {
     "build": "bun --bun nuxt build",
     "dev": "bun --bun nuxt dev",
@@ -14,7 +18,6 @@
     "reset:workspace": "rm -rf node_modules && rm -rf .nuxt && rm bun.lockb && bun i",
     "reset": "bun run remove:db && bun test.ts",
     "upgrade": "bun upgrade --canary && bun --version && npx taze major -w && bun i",
-    "upgrade:taze": "npx taze major -w",
     "bench": "bombardier -c 125 -n 100000 http://localhost:3000"
   },
   "dependencies": {
@@ -26,7 +29,7 @@
     "xterm": "^5.3.0"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^2.6.3",
+    "@antfu/eslint-config": "^2.6.4",
     "@nuxt/devtools": "^1.0.8",
     "@nuxt/ui": "latest",
     "@types/bun": "^1.0.4",

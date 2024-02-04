@@ -22,11 +22,10 @@ COPY . .
 
 # [optional] tests & build
 # RUN bun test
-RUN bun run build
+# RUN bun run build
 
 # copy production dependencies and source code into final image
 FROM oven/bun:canary-alpine
-COPY --from=install /temp/dev/node_modules node_modules
 COPY --from=prerelease /usr/src/app/.output/ ./.output/
 COPY --from=prerelease /usr/src/app/.data/ ./.data/
 

@@ -49,7 +49,7 @@ export class ProjectJob implements Job {
   }
 
   finish() {
-    console.log({content:this.logContent})
+    console.log({ content: this.logContent })
     const end = (Bun.nanoseconds() - this.buildTime)
     const enqueuedTime = (this.enqueuedTime)
     const buildLog: BuildLog = {
@@ -165,9 +165,10 @@ export class ProjectJob implements Job {
     // this.publish(`\ndeploy: finished\n\n`)
   }
 
-  getProjectEnv() {
+  getProjectEnv(includeProcessEnv = true) {
+    const processENV = includeProcessEnv ? process.env : undefined
     const envs: Record<string, any> = {
-      ...process.env,
+      ...processENV,
       NIXPACKS_INSTALL_CMD: this.project.installCommand ?? undefined,
       NIXPACKS_BUILD_CMD: this.project.buildCommand ?? undefined,
       NIXPACKS_START_CMD: this.project.startCommand ?? undefined,
@@ -188,7 +189,7 @@ export class ProjectJob implements Job {
       ports = ['3000']
 
     const domain = 'localhost'
-    const environment = Object.entries(this.getProjectEnv()).filter(env => env[1]).map(compose => `${compose[0]}=${compose[1]}`)
+    const environment = Object.entries(this.getProjectEnv(false)).filter(env => env[1]).map(compose => `${compose[0]}=${compose[1]}`)
     const compose: DockerComposeConfig = {
       version: '3',
       services: {
@@ -236,7 +237,7 @@ export class ProjectJob implements Job {
   }
 
   publish(data: string) {
-    console.log(data);
+    console.log(data)
     Server().publish(this.project.id, JSON.stringify({ type: 'build', data }))
     this.logContent += data
   }
