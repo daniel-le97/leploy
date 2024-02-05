@@ -30,11 +30,11 @@ CREATE TABLE IF NOT EXISTS project_compose (
   type TEXT,
   UNIQUE (name, dir)
 );`,
-  // 'kv': /* sql */`
-  // CREATE TABLE IF NOT EXISTS kv (
-  //   key BLOB NOT NULL PRIMARY KEY,
-  //   value BLOB
-  //   );`,
+  'kv': /* sql */`
+  CREATE TABLE IF NOT EXISTS kv (
+    key BLOB NOT NULL PRIMARY KEY,
+    value BLOB
+    );`,
   'project-env': /* sql */`
   CREATE TABLE IF NOT EXISTS project_env (
     id TEXT NOT NULL PRIMARY KEY,

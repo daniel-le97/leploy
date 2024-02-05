@@ -1,7 +1,7 @@
 import type { BuildLog } from '../types/logs'
 
 export default defineNuxtPlugin(async () => {
-  const port = await $fetch('/api/server')
+  const port = process.dev ? await $fetch('/api/server') : process.env.PORT || 3000
   console.log('websocket port', port)
 
   const { loggedIn, user, session, fetch, clear } = useUserSession()
@@ -19,8 +19,8 @@ export default defineNuxtPlugin(async () => {
       if (data.type === 'build') {
         useBuildSSE().value += data.data
         const terminal = useTerminal()
-        terminal.write(data.data);
-        
+        terminal.write(data.data)
+
         terminal.scrollToBottom()
       }
 
@@ -31,6 +31,10 @@ export default defineNuxtPlugin(async () => {
       }
     },
   })
+
+  setInterval(() => {
+    console.log('websocket', websocket.status)
+  }, 1000)
 
   watch(loggedIn, (loggedIn) => {
     if (loggedIn)

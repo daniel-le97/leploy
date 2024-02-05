@@ -7,7 +7,6 @@ COPY . .
 FROM base AS main
 COPY --from=copy /usr/src/app/.output /usr/src/app/.output
 COPY --from=copy /usr/src/app/.data /usr/src/app/.data
-COPY --from=copy /usr/src/app/.cache /usr/src/app/.cache
 
 
 

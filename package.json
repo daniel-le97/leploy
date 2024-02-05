@@ -22,7 +22,9 @@
   },
   "dependencies": {
     "@vueuse/nuxt": "latest",
+    "citty": "^0.1.5",
     "js-yaml": "^4.1.0",
+    "nanotar": "latest",
     "nitropack": "^2.8.1",
     "nuxt": "npm:nuxt-nightly@latest",
     "vue": "^3.4.15",
