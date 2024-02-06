@@ -1,7 +1,7 @@
 {
   "name": "leploy",
   "type": "module",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "A platform as a service for deploying and managing your applications built with bun",
   "author": "Daniel Le <daniel97.le@gmail.com>",
   "license": "MIT",
