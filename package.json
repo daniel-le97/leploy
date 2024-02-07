@@ -1,7 +1,7 @@
 {
   "name": "@leinad54/leploy",
   "type": "module",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "A platform as a service for deploying and managing your applications built with bun",
   "author": "Daniel Le <daniel97.le@gmail.com>",
   "license": "MIT",
@@ -31,7 +31,7 @@
     "reset": "bun run remove:db && bun test.ts",
     "upgrade": "bun upgrade --canary && bun --version && bun taze major -w && bun i",
     "bench": "bombardier -c 125 -n 100000 http://localhost:3000",
-    "release": "bun build.ts && bunx bumpp && npm publish --access public"
+    "release": "bunx bumpp && npm publish --access public"
   },
   "dependencies": {
     "@vueuse/nuxt": "latest",
