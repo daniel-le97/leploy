@@ -1,8 +1,8 @@
 {
   "name": "@leinad54/leploy",
   "type": "module",
-  "version": "0.0.8",
-  "description": "A platform as a service for deploying and managing your applications built with bun",
+  "version": "0.0.9-beta.0",
+  "description": "A platform as a service for deploying and managing your applications",
   "author": "Daniel Le <daniel97.le@gmail.com>",
   "license": "MIT",
   "homepage": "https://github.com/daniel-le97/leploy#readme",
@@ -11,6 +11,11 @@
     "url": "git+https://github.com/daniel-le97/leploy.git"
   },
   "bugs": "https://github.com/daniel-le97/leploy/issues",
+  "keywords": [
+    "bun",
+    "PaaS",
+    "nuxt"
+  ],
   "bin": {
     "leploy": "bin/leploy.ts"
   },
