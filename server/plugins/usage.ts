@@ -1,5 +1,3 @@
-import { Server } from '../core/server'
-
 export default defineNitroPlugin(async (nitroApp) => {
   const os = await import('node:os')
 

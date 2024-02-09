@@ -78,7 +78,7 @@ const isNix = computed(() => state?.value.buildPack === 'nixpacks')
 <template>
   <div v-if="state.id">
     <UForm :schema=" schema " :state=" state " class="space-y-4" @submit="onSubmit">
-      <UFormGroup   label="Repo URL" name="repoUrl" size="lg">
+      <UFormGroup label="Repo URL" name="repoUrl" size="lg">
         <UInput v-model=" state.repoUrl " type="url" />
       </UFormGroup>
       <UFormGroup label="Branch" name="branch" size="lg">

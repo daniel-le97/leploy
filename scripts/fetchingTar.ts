@@ -1,4 +1,3 @@
-import * as os from 'node:os'
 import { $ } from 'bun'
 import { Database } from 'bun:sqlite'
 

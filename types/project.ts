@@ -63,6 +63,3 @@ export interface SqliteProject {
   buildPackHelper: string
   branch: string
 }
-
-
-

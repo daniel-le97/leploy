@@ -36,28 +36,31 @@
     "reset": "bun run remove:db && bun test.ts",
     "upgrade": "bun upgrade --canary && bun --version && bun taze major -w && bun i",
     "bench": "bombardier -c 125 -n 100000 http://localhost:3000",
-    "release": "bunx bumpp && npm publish --access public"
+    "release": "bunx bumpp && npm publish --access public",
+    "kill": "kill $(lsof -t -i:3000)"
   },
   "dependencies": {
     "@vueuse/nuxt": "latest",
+    "bunview": "^0.0.3",
     "citty": "^0.1.5",
     "js-yaml": "^4.1.0",
     "nanotar": "latest",
     "nitropack": "^2.8.1",
     "nuxt": "npm:nuxt-nightly@latest",
-    "vue": "^3.4.15",
+    "vue": "^3.4.16",
     "vue-router": "^4.2.5",
+    "webview-bun": "^1.0.1",
     "xterm": "^5.3.0"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^2.6.4",
     "@nuxt/devtools": "^1.0.8",
     "@nuxt/ui": "latest",
-    "@types/bun": "^1.0.4",
+    "@types/bun": "^1.0.5",
     "@types/js-yaml": "^4.0.9",
     "eslint": "^8.56.0",
     "nuxt-auth-utils": "latest",
     "smee-client": "^2.0.1",
-    "taze": "^0.13.2"
+    "taze": "^0.13.3"
   }
 }

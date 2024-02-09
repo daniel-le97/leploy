@@ -24,7 +24,7 @@ function getUser(session: UserSession) {
       name = key
     id = value.id
   }
-  return {id}
+  return { id }
 }
 
 export function defineAuthRequiredHandler<T extends EventHandlerRequest, D>(handler: EventHandler<T, D>): EventHandler<T, D> {

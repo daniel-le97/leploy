@@ -7,5 +7,5 @@ export interface BuildLog {
   buildTime: string
   type: string
   tar?: Uint8Array
-  compose:string
+  compose: string
 }

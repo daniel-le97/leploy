@@ -23,7 +23,7 @@ const timeago = useTimeAgo(props.date)
             {{ props.type ?? 'manual' }}
           </div>
           <span v-if="props.status === 'success'" class=" text-xs bg-zinc-800 rounded-lg  flex items-center justify-center text-green-300 ">{{ props.status }}</span>
-          <span  v-else class=" text-xs bg-zinc-800 rounded-lg  flex items-center justify-center text-red-300 ">{{ props.status }}</span>
+          <span v-else class=" text-xs bg-zinc-800 rounded-lg  flex items-center justify-center text-red-300 ">{{ props.status }}</span>
         </div>
       </div>
       <div class="w-2/3  text-xs flex flex-col items-center justify-center text-center">

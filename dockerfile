@@ -26,8 +26,11 @@ COPY . .
 
 # copy production dependencies and source code into final image
 FROM oven/bun:canary-alpine
+LABEL org.opencontainers.image.source https://github.com/daniel-le97/leploy
 COPY --from=prerelease /usr/src/app/.output/ ./.output/
 COPY --from=prerelease /usr/src/app/.data/ ./.data/
+# COPY --from=prerelease /usr/src/app/cli ./cli
+# RUN ./cli
 COPY --from=prerelease /usr/src/app/scripts/install.ts ./scripts/install.ts
 RUN  bun ./scripts/install.ts
 COPY --from=minio/mc /usr/bin/mc /usr/bin/mc

@@ -1,6 +1,5 @@
 import * as fs from 'node:fs'
 import * as path from 'node:path'
-import { createTarGzip } from 'nanotar'
 
 const fileDetails: { filename: string, path: string }[] = []
 const usedPaths: string[] = []

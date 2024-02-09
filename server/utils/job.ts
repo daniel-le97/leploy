@@ -1,8 +1,8 @@
 import * as fs from 'node:fs'
 import * as os from 'node:os'
-import * as YAML from 'js-yaml'
 import type { Subprocess } from 'bun'
 import { $ } from 'bun'
+import * as YAML from 'js-yaml'
 import { Server } from '../core/server'
 
 export interface Job {
@@ -140,7 +140,7 @@ export class ProjectJob implements Job {
       commands = ['docker', 'compose', '-f', `${this.getPath()}${this.project.buildPackHelper || '/docker-compose.yml'}`, 'build']
 
     // this.publish(`\nbuild: ${commands.join(' ')}\n\n`)
-    this.shell = Bun.spawn(commands, { env: this.getProjectEnv(), stdio: ['ignore', 'pipe', 'pipe']})
+    this.shell = Bun.spawn(commands, { env: this.getProjectEnv(), stdio: ['ignore', 'pipe', 'pipe'] })
     await this.sendStream(this.shell)
     // this.publish(`\nbuild: finished\n\n`)
   }

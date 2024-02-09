@@ -71,11 +71,9 @@ async function deleteEnv(projectEnv: ProjectEnv) {
   await refresh()
 }
 
-
 async function handleForBuildChange(projectEnv: ProjectEnv) {
   // Logic to enable editing for the selected projectEnv
   console.log(`Updating projectEnv: ${projectEnv}`)
-
 }
 function updateProjectEnv(projectEnv: ProjectEnv) {
   // Logic to update the selected projectEnv
@@ -98,12 +96,12 @@ function updateProjectEnv(projectEnv: ProjectEnv) {
         </div>
         <div>
           <strong>Value: </strong>
-          <input v-model="env.value" class="w-48 border rounded text-xs" >
+          <input v-model="env.value" class="w-48 border rounded text-xs">
         </div>
         <!-- <div> {{ env.id }}</div> -->
         <div>
           <strong>Build Time: </strong>
-            <input v-model="env.forBuild" type="checkbox">
+          <input v-model="env.forBuild" type="checkbox">
         </div>
       </div>
       <form class="flex flex-row justify-between items-center py-2">

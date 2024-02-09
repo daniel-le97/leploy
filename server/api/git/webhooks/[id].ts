@@ -43,8 +43,8 @@ export default defineEventHandler(async (event) => {
   const body = await readBody<GitHubWebhookPayload>(event)
   const url = 'https://github.com/daniel-le97/astro-portfolio'
   const headers = filterHeadersBySubstring<GitHubWebhookHeaders>(getHeaders(event), 'hub')
-  console.log({body});
-  
+  console.log({ body })
+
   if (!body?.repository?.html_url)
     return 'ok'
 

@@ -1,12 +1,6 @@
-import * as fs from 'node:fs'
-import { kill } from 'node:process'
-import consola from 'consola'
-import type { Subprocess } from 'bun'
 import type { SqliteProject } from '../../types/project'
-import { Server } from '../core/server'
 import type { Job } from './job'
 import { ProjectJob } from './job'
-
 
 class Queue {
   jobs: SqliteProject[] = []
@@ -58,7 +52,7 @@ class Queue {
     await job.build()
     // deploy the project
     await job.deploy()
-    // do some cleanup 
+    // do some cleanup
     job.finish()
   }
 }

@@ -14,6 +14,5 @@ const target = 'archive.tar.gz'
 await createTarGZip(source, target)
 await parseTarGZip(target, './hello')
 
-
 const file = Bun.file('archive.tar.gz')
 console.log(file.size / (1024 * 1024))

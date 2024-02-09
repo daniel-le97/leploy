@@ -4,7 +4,6 @@ export default defineNitroPlugin(async (nitroApp) => {
   if (!import.meta.dev)
     return
 
-
   const SmeeClient = await import('smee-client').then(m => m.default || m)
 
   const smee = new SmeeClient({
@@ -14,7 +13,6 @@ export default defineNitroPlugin(async (nitroApp) => {
   })
 
   const events = smee.start()
-  
 
   // consola.info('Smee started forwarding https://smee.io/2CheYVHetZe4ROm to http://localhost:3000/api/webhooks ')
 

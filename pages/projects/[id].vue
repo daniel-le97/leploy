@@ -23,7 +23,6 @@ const tabs = computed(() => {
   ]
 })
 
-
 function selectTab(index: string) {
   selectedTab.value = index
 }

@@ -16,17 +16,17 @@ const formattedDate = new Intl.DateTimeFormat('en-US', {
 }).format
 
 const items = [[{
-    label: 'Application',
-    icon: 'i-heroicons-pencil-square-20-solid',
-    // shortcuts: ['E'],
-    click: handleProjectCreate
-  }, {
-    label: 'Database',
-    icon: 'i-heroicons-document-duplicate-20-solid',
-    click:() => console.log('clicked'),
-    // shortcuts: ['D'],
-    disabled: true
-  }]
+  label: 'Application',
+  icon: 'i-heroicons-pencil-square-20-solid',
+  // shortcuts: ['E'],
+  click: handleProjectCreate,
+}, {
+  label: 'Database',
+  icon: 'i-heroicons-document-duplicate-20-solid',
+  click: () => console.log('clicked'),
+  // shortcuts: ['D'],
+  disabled: true,
+}],
   // , [{
   //   label: 'Archive',
   //   icon: 'i-heroicons-archive-box-20-solid'
@@ -39,15 +39,14 @@ const items = [[{
   //   shortcuts: ['⌘', 'D']
   // }]
 ]
-
 </script>
 
 <template>
   <div class="m-2 p-2 min-h-screen w-full">
     <div class="flex justify-end">
       <UDropdown :items="items" :popper="{ placement: 'bottom-start' }">
-    <UButton color="white" label="Create Resource" trailing-icon="i-heroicons-chevron-down-20-solid" />
-  </UDropdown>
+        <UButton color="white" label="Create Resource" trailing-icon="i-heroicons-chevron-down-20-solid" />
+      </UDropdown>
     </div>
     <div v-if="data" class="flex flex-wrap justify-evenly gap-7 p-3 m-3">
       <div v-for="template in data" :key="template.name" class="group flex-shrink-0 shadow-md relative p-2 rounded-md dark:bg-zinc-800 h-full hover:dark:bg-emerald-600 hover:shadow-lg  hover:shadow-emerald-300/10 transition-all duration-150 ease-linear" style="width: calc(50% - 1.4rem); max-width: 400px;">
@@ -70,8 +69,6 @@ const items = [[{
               {{ useTimeAgo(new Date(template.createdAt)).value }}
             </div>
             <div>
-
-            
               <!-- {{ template }}
             </div> -->
               <Icon name="material-symbols-light:deployed-code-outline" class="group-hover:opacity-10 transition-all duration-200 group-hover:drop-shadow-lg text-green-500   absolute -left-4 -top-4" size="50" />
@@ -80,11 +77,12 @@ const items = [[{
           </div>
           <div class="my-1.5 px-2 flex justify-end">
             <div class="flex gap-2">
-       <Icon name="iconamoon:link-external-duotone" class="opacity-50 group-hover:opacity-90 hover:dark:text-white/50 group-hover:text-white transition-all duration-200 group-hover:drop-shadow-lg text-green-500   " size="35" />
+              <Icon name="iconamoon:link-external-duotone" class="opacity-50 group-hover:opacity-90 hover:dark:text-white/50 group-hover:text-white transition-all duration-200 group-hover:drop-shadow-lg text-green-500   " size="35" />
 
-  <Icon name="solar:trash-bin-minimalistic-bold-duotone" class="opacity-50 group-hover:opacity-90 group-hover:text-white
-  hover:dark:text-white/50 transition-all duration-200 group-hover:drop-shadow-lg text-green-500   " size="35" />
-
+              <Icon
+                name="solar:trash-bin-minimalistic-bold-duotone" class="opacity-50 group-hover:opacity-90 group-hover:text-white
+  hover:dark:text-white/50 transition-all duration-200 group-hover:drop-shadow-lg text-green-500   " size="35"
+              />
             </div>
           </div>
         </NuxtLink>

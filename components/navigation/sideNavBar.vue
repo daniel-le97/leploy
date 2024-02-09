@@ -92,6 +92,6 @@ const items = ref(navItems)
 
 <style scoped>
 .active{
-@apply text-emerald-400 bg-gray-200/20 cursor-pointer 
+@apply text-emerald-400 bg-gray-200/20 cursor-pointer
 }
 </style>

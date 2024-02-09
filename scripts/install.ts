@@ -30,7 +30,7 @@ const PACKIDENTIFIER = os.arch() === 'amd64' ? 'linux' : 'linux-arm64'
 
 try {
   const ARCHIDENTIFIER = ArchitectureIdentifier()
-  console.log('installing deps')
+  console.log('installing deps for', TARGETPLATFORM, 'using', ARCHIDENTIFIER)
 
   $.cwd(os.homedir())
   if (!(PLATFORM === 'darwin')) {
@@ -41,7 +41,7 @@ try {
     await $`curl -sSL https://download.docker.com/${PLATFORM}/static/stable/${ARCHIDENTIFIER}/docker-${DOCKER_VERSION}.tgz | tar -C /usr/bin/ --no-same-owner -xzv --strip-components=1 docker/docker`
     await $`curl -sSL https://github.com/buildpacks/pack/releases/download/v${PACK_VERSION}/pack-v${PACK_VERSION}-${PACKIDENTIFIER}.tgz | tar -C /usr/local/bin/ --no-same-owner -xzv pack`
     await $`curl -sSL https://nixpacks.com/install.sh | bash`
-    await $`chmod +x ~/.docker/cli-plugins/docker-compose /usr/bin/docker /usr/local/bin/pack /root/.docker/cli-plugins/docker-buildx`
+    await $`chmod +x ~/.docker/cli-plugins/docker-compose /usr/bin/docker /usr/local/bin/pack ~/.docker/cli-plugins/docker-buildx`
   }
   // if (TARGETPLATFORM === 'linux/amd64') {
   //   await $`curl -sSL https://github.com/docker/buildx/releases/download/v${DOCKER_BUILDX_VERSION}/buildx-v${DOCKER_BUILDX_VERSION}.linux-amd64 -o ~/.docker/cli-plugins/docker-buildx`

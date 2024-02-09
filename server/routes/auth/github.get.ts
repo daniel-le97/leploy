@@ -6,12 +6,11 @@ export default oauth.githubEventHandler({
       },
       loggedInAt: Date.now(),
     })
-    console.log('github:success', user);
-    
+    console.log('github:success', user)
+
     return sendRedirect(event, '/')
   },
   onError(event, error) {
-    console.log('github:error', error);
-    
-  }
+    console.log('github:error', error)
+  },
 })

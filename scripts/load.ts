@@ -9,7 +9,6 @@ const numUsers = 10
 // Number of requests per user
 const requestsPerUser = 1000
 
-
 const totalRequests = numUsers * requestsPerUser
 
 function updateProgressBar() {

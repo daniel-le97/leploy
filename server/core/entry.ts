@@ -47,7 +47,8 @@ const server = Bun.serve({
   port: process.env.NITRO_PORT || process.env.PORT || 3000,
   async fetch(request, server) {
     try {
-      return await handler(request, { server, request })
+      const res = await handler(request, { server, request })
+      return res
     }
     catch (error) {
       console.error(request.url, error)
@@ -58,8 +59,5 @@ const server = Bun.serve({
 setServer(server)
 
 serverHooks.callHook('start', server)
-
-
-
 
 console.log(`Listening on http://localhost:${server.port}...`)

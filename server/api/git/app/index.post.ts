@@ -1,4 +1,3 @@
-
 export default defineEventHandler(async (event) => {
   const location = 'http://localhost:3000'
   const manifest = {
