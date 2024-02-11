@@ -1,5 +1,5 @@
-import type { NitroPreset } from 'nitropack'
 import { $ } from 'bun'
+import type { NitroPreset } from 'nitropack'
 import { version } from '../../package.json'
 
 interface MyConfig {

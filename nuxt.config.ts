@@ -56,5 +56,5 @@ export default defineNuxtConfig({
     },
   },
 
-  modules: ['@nuxt/ui', '@vueuse/nuxt', 'nuxt-auth-utils', "nuxt-build-cache"],
+  modules: ['@nuxt/ui', '@vueuse/nuxt', 'nuxt-auth-utils', 'nuxt-build-cache'],
 })

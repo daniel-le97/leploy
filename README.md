@@ -1,8 +1,6 @@
 # Leploy
 a platform as a service built [bun](https://bun.sh/) and [nuxt](https://nuxt.com)
 
-
-
 ## Local Developement
 
 The server and client are built with nuxt allowing for full access to nuxt utilities and module ecosystem if needed

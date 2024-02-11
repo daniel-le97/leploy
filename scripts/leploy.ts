@@ -4,7 +4,7 @@
 import * as os from 'node:os'
 import type { ParseArgsConfig } from 'node:util'
 import { parseArgs } from 'node:util'
-import { $, FileSystemRouter, isMainThread, main } from 'bun'
+import { $, FileSystemRouter } from 'bun'
 
 const mains = {
   bunMain: Bun.main,
@@ -41,8 +41,8 @@ const {
 
 if (values.serve) {
   const dir = `${process.cwd()}/.output/public`
-  console.log(dir);
-  
+  console.log(dir)
+
   const router = new FileSystemRouter({
 
     directory: dir,
