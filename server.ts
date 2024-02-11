@@ -1,8 +1,10 @@
 import { FileSystemRouter } from 'bun'
 
-const router = new FileSystemRouter({
-  dir: `${process.cwd()}/.output/public`,
-  style: 'nextjs',
-})
+const encrypt = new Bun.ArrayBufferSink()
 
-console.log(router.routes)
+// const router = new FileSystemRouter({
+//   dir: `${process.cwd()}/.output/public`,
+//   style: 'nextjs',
+// })
+
+// console.log(router.routes)

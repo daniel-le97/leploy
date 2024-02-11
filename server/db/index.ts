@@ -100,6 +100,7 @@ class DB extends Database {
 }
 
 const path = `${process.cwd()}/.data/db`
-fs.mkdirSync(path, { recursive: true })
+if (!Bun.file(`${path}/sqlite.db`).exists())
+  fs.mkdirSync(path, { recursive: true })
 
 export const db = new DB(`${path}/sqlite.db`)
