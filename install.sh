@@ -44,7 +44,7 @@
         echo "Current working directory is: $current_directory"
         tar -czvf leploy.tar.gz --exclude="/db" .data
         tar -xzvf leploy.tar.gz -C "$current_directory" --strip-components=1
-        zip -r data_archive.zip .data -9
+        zip -r leploy.zip .data -9
         # rm -rf $current_directory/db
         
     fi

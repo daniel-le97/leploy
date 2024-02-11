@@ -30,7 +30,7 @@
     "generate:nuxt": "nuxt generate",
     "postinstall": "bun --bun nuxt prepare",
     "lint": "bun --bun eslint .",
-    "lint:fix": "bun --bun eslint . --fix",
+    "lint:fix": "bun eslint . --fix",
     "remove:db": "rm sqlite.db*",
     "reset:workspace": "rm -rf node_modules && rm -rf .nuxt && rm bun.lockb && bun i",
     "reset": "bun run remove:db && bun test.ts",

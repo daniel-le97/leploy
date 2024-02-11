@@ -2,6 +2,7 @@ FROM node:latest as base
 WORKDIR /usr/src/app
 RUN npm install -g bun
 
+
 # install dependencies into temp directory
 # this will cache them and speed up future builds
 FROM base AS install
@@ -10,25 +11,25 @@ COPY package.json bun.lockb /temp/dev/
 RUN cd /temp/dev && bun install
 
 # install with --production (exclude devDependencies)
-RUN mkdir -p /temp/prod
-COPY package.json bun.lockb /temp/prod/
-RUN cd /temp/prod && bun install --frozen-lockfile --production
+# RUN mkdir -p /temp/prod
+# COPY package.json bun.lockb /temp/prod/
+# RUN cd /temp/prod && bun install --frozen-lockfile --production
 
 # copy node_modules from temp directory
 # then copy all (non-ignored) project files into the image
-FROM base AS prerelease
-COPY --from=install /temp/prod/node_modules node_modules
+FROM base AS build
+COPY --from=install /temp/dev/node_modules node_modules
 COPY . .
-
 # [optional] tests & build
 # RUN bun test
 RUN bun run build
 
 # copy production dependencies and source code into final image
-FROM alpine:3.18
+FROM oven/bun:canary-alpine as release
+WORKDIR /usr/src/app
 LABEL org.opencontainers.image.source https://github.com/daniel-le97/leploy
-COPY --from=prerelease /usr/src/app/.output/ ./.output/
-COPY --from=prerelease /usr/src/app/.data/ ./.data/
+COPY --from=build /usr/src/app/.output/ /usr/src/app/output/
+COPY --from=build /usr/src/app/.data/ /usr/src/app/.data/
 
 ARG TARGETPLATFORM
 # https://download.docker.com/linux/static/stable/
@@ -42,8 +43,7 @@ ARG PACK_VERSION=0.32.1
 # https://github.com/railwayapp/nixpacks/releases
 ARG NIXPACKS_VERSION=1.21.0
 
-RUN apk add --no-cache bash curl git tar
-RUN curl -fsSL https://bun.sh/install | bash
+RUN apk add --no-cache bash curl git git-lfs openssh-client tar tini
 RUN mkdir -p ~/.docker/cli-plugins
 RUN if [[ ${TARGETPLATFORM} == 'linux/amd64' ]]; then \
     curl -sSL https://github.com/docker/buildx/releases/download/v${DOCKER_BUILDX_VERSION}/buildx-v${DOCKER_BUILDX_VERSION}.linux-amd64 -o ~/.docker/cli-plugins/docker-buildx && \
@@ -73,4 +73,6 @@ RUN chmod +x /usr/bin/mc
 # run the app
 USER bun
 EXPOSE 3000/tcp
-CMD ["bun .output/server/index.mjs"]
+CMD ["bun", "output/server/index.mjs"]
+# CMD ["sh", "-c", "bun .output/server/index.mjs"]
+

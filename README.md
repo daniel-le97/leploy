@@ -22,7 +22,6 @@ bun run dev
 bun run build
 ```
 
-
 # notes
 
 @nuxt/ui breaks builds in docker when using bun -> workaround is just bundle with node and run with bun

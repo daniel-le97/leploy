@@ -1,6 +1,5 @@
 import { fileURLToPath } from 'node:url'
 import type { NitroPreset } from 'nitropack'
-import { version } from '../../package.json'
 
 interface MyConfig {
   date: string
@@ -16,10 +15,12 @@ interface MyConfig {
     [key: string]: string
   }
 }
+const entry = fileURLToPath(new URL('./entry.ts', import.meta.url))
+console.log('entry', entry)
 
 export default <NitroPreset>{
   extends: 'node', // You can extend existing presets
-  entry: fileURLToPath(new URL('./entry.ts', import.meta.url)),
+  entry,
   exportConditions: ['bun', 'worker', 'node', 'import', 'default'],
   minify: true,
   serveStatic: true,
