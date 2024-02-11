@@ -15,3 +15,4 @@ worker.onmessage = (event) => {
     webview.setHTML(event.data.html)
   }
 }
+

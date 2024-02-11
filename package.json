@@ -60,6 +60,7 @@
     "@types/js-yaml": "^4.0.9",
     "eslint": "^8.56.0",
     "nuxt-auth-utils": "latest",
+    "nuxt-build-cache": "latest",
     "smee-client": "^2.0.1",
     "taze": "^0.13.3"
   }
