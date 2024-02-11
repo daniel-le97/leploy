@@ -1,4 +1,4 @@
-const commands = [`docker`, `build`, '--pull', '--rm', '-f', '/Users/daniel/homelab/GitHub/nuxt-elysia/final-paas/temp/13f1f268-f77b-40dd-8f42-e5ede853cacc/Dockerfile', `-t`, `wqerqwer33234`, '/Users/daniel/homelab/GitHub/nuxt-elysia/final-paas/temp/13f1f268-f77b-40dd-8f42-e5ede853cacc']
+const commands = [`docker`, `build`, '--pull', '--rm', '-f', `${process.cwd()}/temp/13f1f268-f77b-40dd-8f42-e5ede853cacc`]
 
 const spawned = Bun.spawn(commands, { stdin: 'inherit', stdout: 'pipe', stderr: 'pipe' })
 

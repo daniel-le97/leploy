@@ -1,16 +1,6 @@
 version: '3'
 
 services:
-  # dockerproxy:
-  #   environment:
-  #     CONTAINERS: 1
-  #   image: tecnativa/docker-socket-proxy
-  #   networks:
-  #     - traefik
-  #   ports:
-  #     - 2375
-  #   volumes:
-  #     - "/var/run/docker.sock:/var/run/docker.sock"
   proxy:
     image: 'traefik:v2.10'
     container_name: le-ploy-proxy
