@@ -1,4 +1,4 @@
-import { $ } from 'bun'
+import { fileURLToPath } from 'node:url'
 import type { NitroPreset } from 'nitropack'
 import { version } from '../../package.json'
 
@@ -19,20 +19,11 @@ interface MyConfig {
 
 export default <NitroPreset>{
   extends: 'node', // You can extend existing presets
-  entry: Bun.fileURLToPath(new URL('./barebone.ts', import.meta.url)),
+  entry: fileURLToPath(new URL('./entry.ts', import.meta.url)),
   exportConditions: ['bun', 'worker', 'node', 'import', 'default'],
   minify: true,
   serveStatic: true,
   commands: {
     preview: 'bun ./server/index.mjs',
-  },
-  hooks: {
-    close: async () => {
-      const dir = `${process.cwd()}/.output/nitro.json`
-      const data = await Bun.file(dir).json() as MyConfig
-      data.versions.bun = `${Bun.version}:${Bun.revision}`
-      data.versions.leploy = `${version}:${(await $`git rev-parse HEAD`.text())}`
-      await Bun.write(dir, JSON.stringify(data))
-    },
   },
 }
