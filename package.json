@@ -40,6 +40,7 @@
     "kill": "kill $(lsof -t -i:3000)"
   },
   "dependencies": {
+    "@nuxt/ui": "latest",
     "@vueuse/nuxt": "latest",
     "js-yaml": "^4.1.0",
     "nuxt": "npm:nuxt-nightly@latest",
@@ -52,7 +53,6 @@
   "devDependencies": {
     "@antfu/eslint-config": "^2.6.4",
     "@nuxt/devtools": "^1.0.8",
-    "@nuxt/ui": "latest",
     "@types/bun": "^1.0.5",
     "@types/js-yaml": "^4.0.9",
     "eslint": "^8.56.0",

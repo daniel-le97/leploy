@@ -90,8 +90,8 @@ CREATE TABLE IF NOT EXISTS queue (
 }
 
 class DB extends Database {
-  constructor(path: string) {
-    super(path)
+  constructor(dbPath: string) {
+    super(dbPath)
     // set wal mode directly after opening the database
     this.exec('PRAGMA journal_mode = WAL')
     // create tables if they don't exist
@@ -99,8 +99,11 @@ class DB extends Database {
   }
 }
 
-const path = `${process.cwd()}/.data/db`
-if (!Bun.file(`${path}/sqlite.db`).exists())
+const path = `${process.cwd()}/app-data/db`
+const sqlitePath = `${path}/sqlite.db`
+if (!fs.existsSync(path)) {
+  console.log('Creating db directory')
   fs.mkdirSync(path, { recursive: true })
+}
 
-export const db = new DB(`${path}/sqlite.db`)
+export const db = new DB(sqlitePath)

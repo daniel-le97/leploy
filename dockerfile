@@ -2,7 +2,6 @@ FROM node:latest as base
 WORKDIR /usr/src/app
 RUN npm install -g bun
 
-
 # install dependencies into temp directory
 # this will cache them and speed up future builds
 FROM base AS install
@@ -20,7 +19,6 @@ RUN cd /temp/dev && bun install
 FROM base AS build
 COPY --from=install /temp/dev/node_modules node_modules
 COPY . .
-# [optional] tests & build
 # RUN bun test
 RUN bun run build
 
@@ -29,7 +27,9 @@ FROM oven/bun:canary-alpine as release
 WORKDIR /usr/src/app
 LABEL org.opencontainers.image.source https://github.com/daniel-le97/leploy
 COPY --from=build /usr/src/app/.output/ /usr/src/app/output/
-COPY --from=build /usr/src/app/.data/ /usr/src/app/.data/
+COPY --from=build /usr/src/app/app-data/ /usr/src/app/app-data/
+RUN apk add --no-cache bash curl git git-lfs openssh-client tar tini
+RUN rm -rf /usr/src/app/app-data/db
 
 ARG TARGETPLATFORM
 # https://download.docker.com/linux/static/stable/
@@ -43,7 +43,6 @@ ARG PACK_VERSION=0.32.1
 # https://github.com/railwayapp/nixpacks/releases
 ARG NIXPACKS_VERSION=1.21.0
 
-RUN apk add --no-cache bash curl git git-lfs openssh-client tar tini
 RUN mkdir -p ~/.docker/cli-plugins
 RUN if [[ ${TARGETPLATFORM} == 'linux/amd64' ]]; then \
     curl -sSL https://github.com/docker/buildx/releases/download/v${DOCKER_BUILDX_VERSION}/buildx-v${DOCKER_BUILDX_VERSION}.linux-amd64 -o ~/.docker/cli-plugins/docker-buildx && \
@@ -71,7 +70,7 @@ RUN chmod +x /usr/bin/mc
 # RUN chmod +x /usr/bin/mc
 
 # run the app
-USER bun
+# USER bun
 EXPOSE 3000/tcp
 CMD ["bun", "output/server/index.mjs"]
 # CMD ["sh", "-c", "bun .output/server/index.mjs"]

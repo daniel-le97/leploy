@@ -27,7 +27,7 @@ export default defineNuxtConfig({
     devStorage: {
       cache: {
         driver: 'fsLite',
-        base: './.data',
+        base: './app-data',
       },
 
     },
@@ -41,10 +41,10 @@ export default defineNuxtConfig({
     },
     storage: {
       cache: {
-        driver: './server/utils/sqliteDriver',
-        base: './.data',
+        driver: 'fsLite',
+        base: './app-data',
       },
-      db: { driver: 'fsLite', base: './.data' },
+      db: { driver: 'fsLite', base: './app-data' },
     },
     // set to undefined in prod so during build we use the correct entry and not the dev entry
     entry: dev ? './core/entry.dev.ts' : undefined,
