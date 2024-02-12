@@ -5,9 +5,9 @@
   "scripts": {
     "dev": "nuxi dev",
     "build": "nuxi build",
-    "generate": "bun --bun nuxi generate",
+    "generate": "nuxi generate",
     "preview": "nuxi preview",
-    "deploy": "bunx gh-pages --dotfiles -d .output/public",
+    "deploy": "npx gh-pages --dotfiles -d .output/public",
     "lint": "eslint ."
   },
   "devDependencies": {

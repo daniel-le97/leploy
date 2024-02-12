@@ -3,7 +3,7 @@ set -e          # Exit immediately if a command exits with a non-zero status
 set -o pipefail # Cause a pipeline to return the status of the last command that exited with a non-zero status
 
 echo -e "-------------"
-echo -e "Welcome to leploy beta installer!"
+echo -e "Welcome to leploy installer!"
 echo -e "This script will install everything for you."
 echo -e "(Source code: https://github.com/daniel-le97/leploy/blob/main/scripts/install.sh)\n"
 echo -e "-------------"
