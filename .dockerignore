@@ -3,7 +3,8 @@
 
 dist
 
-
+app-data/db
+app-data/nitro
 # Node dependencies
 node_modules
 

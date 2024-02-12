@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -e # Exit immediately if a command exits with a non-zero status
+set -e          # Exit immediately if a command exits with a non-zero status
 set -o pipefail # Cause a pipeline to return the status of the last command that exited with a non-zero status
 # Constants
 OS_TYPE=$(uname -o)
@@ -18,26 +18,26 @@ usage() {
     echo "  -u, --up         start the leploy compose"
     echo "  -d, --down       stop the leploy compose"
     echo "  -l, --list       List files in current directory"
-    echo $OS_TYPE
+    echo "$OS_TYPE"
     # echo $OS_VERSION
 }
 
 # Function to greet the user
 greet() {
     # Check if .env file exists
-if [ -f .env ]; then
-    # Read the .env file line by line
-    while IFS='=' read -r key value; do
-        # Export each key-value pair as an environment variable
-        export "$key"="$value"
-    done < .env
-fi
+    if [ -f .env ]; then
+        # Read the .env file line by line
+        while IFS='=' read -r key value; do
+            # Export each key-value pair as an environment variable
+            export "$key"="$value"
+        done <.env
+    fi
 
     echo "Hello, $USER!"
-    echo $GITHUB_PERSONAL_TOKEN
+    echo "$GITHUB_PERSONAL_TOKEN"
 }
 
-installDocker(){
+installDocker() {
     if ! [ -x "$(command -v docker)" ]; then
         echo "Docker is not installed. Installing Docker."
         curl https://releases.rancher.com/install-docker/${DOCKER_VERSION}.sh | sh
@@ -55,7 +55,7 @@ installDocker(){
                 exit 1
             fi
         fi
-    fi 
+    fi
     echo "Docker is installed."
 }
 
@@ -68,30 +68,30 @@ install() {
 
     installDocker
     INSTALL_DIR="./.data/compose"
-   if [ ! -d "$INSTALL_DIR" ]; then
+    if [ ! -d "$INSTALL_DIR" ]; then
         echo "Creating directory $INSTALL_DIR."
         # mkdir -p $INSTALL_DIR
         # echo "Directory $INSTALL_DIR created."
     else
         echo "Directory $INSTALL_DIR already exists."
-   fi
-   home_dir=$HOME/leploy  # This will store the home directory of the current user in the variable 'home_dir'
-   echo "Home directory: $home_dir/leploy"
+    fi
+    home_dir=$HOME/leploy # This will store the home directory of the current user in the variable 'home_dir'
+    echo "Home directory: $home_dir/leploy"
 
 }
 
-isDockerRunning(){
-    if ! docker info &> /dev/null; then
+isDockerRunning() {
+    if ! docker info &>/dev/null; then
         echo "Docker is not running."
         exit 1
     fi
 }
 
-up(){
+up() {
     isDockerRunning
     docker compose -f "docker-compose.yml" up -d
 }
-down(){
+down() {
     isDockerRunning
     docker compose -f "docker-compose.yml" down
 }
@@ -112,33 +112,33 @@ list_files() {
 while [[ $# -gt 0 ]]; do
     echo "Processing argument: $1"
     case $1 in
-        -h|--help)
-            usage
-            exit 0
-            ;;
-        -g|--greet)
-            greet
-            ;;
-        -u|--up)
-            up
-            ;;
-        -d|--down)
-            down
-            ;;
-        -t|--time)
-            display_time
-            ;;
-        -l|--list)
-            list_files
-            ;;
-        -i|--install)
-            install
-            ;;
-        *)
-            echo "Error: Unknown option: $1"
-            usage
-            exit 1
-            ;;
+    -h | --help)
+        usage
+        exit 0
+        ;;
+    -g | --greet)
+        greet
+        ;;
+    -u | --up)
+        up
+        ;;
+    -d | --down)
+        down
+        ;;
+    -t | --time)
+        display_time
+        ;;
+    -l | --list)
+        list_files
+        ;;
+    -i | --install)
+        install
+        ;;
+    *)
+        echo "Error: Unknown option: $1"
+        usage
+        exit 1
+        ;;
     esac
     shift
 done
