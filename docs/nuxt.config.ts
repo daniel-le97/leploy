@@ -7,4 +7,8 @@ export default defineNuxtConfig({
   //   // https://github.com/nuxt-modules/plausible
   //   // '@nuxtjs/plausible'
   // ]
+  app:{
+    buildAssetsDir: 'assets',
+    baseURL: '/leploy/'
+  }
 })
