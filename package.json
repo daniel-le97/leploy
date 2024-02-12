@@ -37,7 +37,8 @@
     "upgrade": "bun upgrade --canary && bun --version && bun taze major -w && bun i",
     "bench": "bombardier -c 125 -n 100000 http://localhost:3000",
     "release": "bunx bumpp && npm publish --access public",
-    "kill": "kill $(lsof -t -i:3000)"
+    "kill": "kill $(lsof -t -i:3000)",
+    "publish:docs": "bun --bun nuxt generate docs && bunx gh-pages -d docs/.output/public"
   },
   "dependencies": {
     "@nuxt/ui": "latest",
