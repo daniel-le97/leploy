@@ -24,11 +24,11 @@
     "docker-compose.yml"
   ],
   "scripts": {
-    "build": "bun nuxt build",
+    "build": "nuxt build",
     "dev": "bun --bun nuxt dev",
     "start": "bun .output/server/index.mjs",
     "generate:nuxt": "nuxt generate",
-    "postinstall": "bun --bun nuxt prepare",
+    "postinstall": "nuxt prepare",
     "lint": "bun --bun eslint .",
     "lint:fix": "bun eslint . --fix",
     "remove:db": "rm sqlite.db*",
@@ -45,7 +45,7 @@
     "@nuxt/ui": "latest",
     "@vueuse/nuxt": "latest",
     "js-yaml": "^4.1.0",
-    "nuxt": "npm:nuxt-nightly@latest",
+    "nuxt": "3.10.1",
     "nuxt-auth-utils": "latest",
     "vue": "^3.4.18",
     "vue-router": "^4.2.5",

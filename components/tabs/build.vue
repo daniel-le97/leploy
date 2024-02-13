@@ -24,7 +24,7 @@ if (data.value)
 
 watch(data, (newVal) => {
   if (newVal !== null)
-    logs.value = newVal.value!
+    logs.value = newVal
 })
 // async function getLogs(id: string) {
 // //  console.log(id);
@@ -70,9 +70,9 @@ const ansi = '#12 4.696 computing gzip size...\n#12 4.699 dist/<span style="font
       </div>
 
       <div class="w-3/12">
-        <div v-if="logs.value?.length" class=" ">
-          <div v-for="log in logs.value" :key="log.id" class="w-full flex justify-center items-center max-h-[75vh]">
-            <BuildLogCard :duration="log.buildTime" :type="log.type" :status="log.status" :date="log.createdAt" :class=" activeId.value === log.id ? 'bg-white text-black' : ''" @click="handleClick(log)" />
+        <div v-if="logs.length" class=" ">
+          <div v-for="log in logs" :key="log.id" class="w-full flex justify-center items-center max-h-[75vh]">
+            <BuildLogCard :duration="log.buildTime" :type="log.type" :status="log.status" :date="log.createdAt" :class=" activeId === log.id ? 'bg-white text-black' : ''" @click="handleClick(log)" />
           </div>
         </div>
         <div v-else>

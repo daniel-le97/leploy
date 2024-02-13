@@ -81,7 +81,7 @@ const items = [[{
 
               <Icon
                 name="solar:trash-bin-minimalistic-bold-duotone" class="opacity-50 group-hover:opacity-90 group-hover:text-white
-  hover:dark:text-white/50 transition-all duration-200 group-hover:drop-shadow-lg text-green-500   " size="35"
+  hover:dark:text-white/50 transition-all duration-200 group-hover:drop-shadow-lg text-green-500" size="35"
               />
             </div>
           </div>

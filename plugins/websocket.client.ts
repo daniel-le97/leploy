@@ -32,9 +32,9 @@ export default defineNuxtPlugin(async () => {
     },
   })
 
-  setInterval(() => {
-    console.log('websocket', websocket.status)
-  }, 1000)
+  // setInterval(() => {
+  //   console.log('websocket', websocket.status)
+  // }, 1000)
 
   watch(loggedIn, (loggedIn) => {
     if (loggedIn)

@@ -13,32 +13,33 @@ function handleCollapse() {
 }
 
 const navItems = [
-  {
-    link: '/',
-    icon: 'uil:home',
-    label: 'Home',
-    auth: true,
+  // {
+  //   link: '/',
+  //   icon: 'uil:home',
+  //   label: 'Home',
+  //   auth: true,
 
-  },
+  // },
   {
     link: '/projects',
-    icon: 'material-symbols:add-box-outline',
+    // icon: 'material-symbols:add-box-outline',
+    icon: 'uil:home',
     label: 'Projects',
     auth: true,
   },
-  {
-    link: '/providers/portainer',
-    icon: 'uil:apps',
-    label: 'Portainer',
-    auth: true,
+  // {
+  //   link: '/providers/portainer',
+  //   icon: 'uil:apps',
+  //   label: 'Portainer',
+  //   auth: true,
 
-  },
-  {
-    link: '/providers/caprover',
-    icon: 'ri:apps-2-fill',
-    label: 'Caprover',
-    auth: true,
-  },
+  // },
+  // {
+  //   link: '/providers/caprover',
+  //   icon: 'ri:apps-2-fill',
+  //   label: 'Caprover',
+  //   auth: true,
+  // },
   {
     link: '/login',
     icon: 'material-symbols:login-rounded',
