@@ -23,8 +23,8 @@ if (data.value)
   logs.value = data.value
 
 watch(data, (newVal) => {
-  if (newVal)
-    logs.value = newVal
+  if (newVal !== null)
+    logs.value = newVal.value!
 })
 // async function getLogs(id: string) {
 // //  console.log(id);
@@ -63,20 +63,20 @@ const ansi = '#12 4.696 computing gzip size...\n#12 4.699 dist/<span style="font
     <div class=" flex  justify-between gap-2  w-full">
       <div class=" w-9/12   min-h-[80vh]">
         <div class=" bg-gray-800  rounded-sm h-full ">
-          <Terminal class="w-full h-full overflow-y-auto scrollable-pre text-xs" />
-          <!-- <pre v-if="buildData.length" id="pre-build" class="w-full h-full overflow-y-auto whitespace-pre-wrap scrollable-pre text-xs"> {{ buildData }}</pre>
-          <pre v-else id="pre-build" class="w-full h-full overflow-auto whitespace-pre-wrap scrollable-pre"> {{ 'no builds logged' }}</pre> -->
+          <!-- <Terminal class="w-full h-full overflow-y-auto scrollable-pre text-xs" /> -->
+          <pre v-if="buildData" id="pre-build" class="w-full h-full overflow-y-auto whitespace-pre-wrap scrollable-pre text-xs"> {{ buildData }}</pre>
+          <pre v-else id="pre-build" class="w-full h-full overflow-auto whitespace-pre-wrap scrollable-pre"> {{ 'no builds logged' }}</pre>
         </div>
       </div>
 
       <div class="w-3/12">
-        <div v-if="logs.length" class=" ">
-          <div v-for="log in logs" :key="log.id" class="w-full flex justify-center items-center max-h-[75vh]">
-            <BuildLogCard :duration="log.buildTime" :type="log.type" :status="log.status" :date="log.createdAt" :class=" activeId === log.id ? 'bg-white text-black' : ''" @click="handleClick(log)" />
+        <div v-if="logs.value?.length" class=" ">
+          <div v-for="log in logs.value" :key="log.id" class="w-full flex justify-center items-center max-h-[75vh]">
+            <BuildLogCard :duration="log.buildTime" :type="log.type" :status="log.status" :date="log.createdAt" :class=" activeId.value === log.id ? 'bg-white text-black' : ''" @click="handleClick(log)" />
           </div>
         </div>
         <div v-else>
-          hello
+          waiting for builds...
         </div>
       </div>
     </div>

@@ -1,7 +1,7 @@
 import * as http from 'http'
 import { $ } from 'bun'
 
-const req = http.request({'socketPath': '/var/run/docker.sock', 'path': '/v1.24/containers/json', 'method': 'GET'}, (res) => {})
+const req = http.request({ socketPath: '/var/run/docker.sock', path: '/v1.24/containers/json', method: 'GET' }, (res) => {})
 
 let code = 0
 const image = 'ghcr.io/daniel-le97/leploy'
