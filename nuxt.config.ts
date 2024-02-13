@@ -1,12 +1,18 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 const dev = process.env.NODE_ENV !== 'production'
 const cwd = process.cwd()
+
+const exclude = ['../eslint.config.js', `../temp`, `../app-data`, `../.output`, 'pino-std-serializers', `../docs`]
 export default defineNuxtConfig({
   ssr: false,
   routeRules: {
     '/providers/caprover': { prerender: true },
     '/providers/portainer': { prerender: true },
-
+  },
+  typescript: {
+    tsConfig: {
+      exclude,
+    },
   },
   experimental: {
     componentIslands: true,
@@ -51,7 +57,7 @@ export default defineNuxtConfig({
     preset: './server/core',
     typescript: {
       tsConfig: {
-        exclude: ['../eslint.config.js', `${cwd}/temp`, `${cwd}/data`, `${cwd}/.output`, 'pino-std-serializers'],
+        exclude,
       },
     },
   },

@@ -42,24 +42,24 @@
     "publish:docs": "bun --bun nuxt generate docs && bunx gh-pages -d docs/.output/public"
   },
   "dependencies": {
-    "@nuxt/ui": "latest",
-    "@vueuse/nuxt": "latest",
+    "@nuxt/ui": "2.13.0",
+    "@vueuse/nuxt": "10.7.2",
     "js-yaml": "^4.1.0",
     "nuxt": "3.10.1",
-    "nuxt-auth-utils": "latest",
-    "vue": "^3.4.18",
+    "nuxt-auth-utils": "^0.0.16",
+    "vue": "^3.4.19",
     "vue-router": "^4.2.5",
     "xterm": "^5.3.0",
     "zod": "^3.22.4"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^2.6.4",
-    "@nuxt-themes/docus": "latest",
+    "@nuxt-themes/docus": "1.15.0",
     "@nuxt/devtools": "^1.0.8",
     "@types/bun": "^1.0.5",
     "@types/js-yaml": "^4.0.9",
     "eslint": "^8.56.0",
-    "nuxt-build-cache": "latest",
+    "nuxt-build-cache": "0.1.1",
     "smee-client": "^2.0.1",
     "taze": "^0.13.3"
   }
