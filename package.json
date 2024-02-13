@@ -38,6 +38,7 @@
     "bench": "bombardier -c 125 -n 100000 http://localhost:3000",
     "release": "bunx bumpp && npm publish --access public",
     "kill": "kill $(lsof -t -i:3000)",
+    "dev:docs": "nuxt dev docs",
     "publish:docs": "bun --bun nuxt generate docs && bunx gh-pages -d docs/.output/public"
   },
   "dependencies": {
@@ -53,6 +54,7 @@
   },
   "devDependencies": {
     "@antfu/eslint-config": "^2.6.4",
+    "@nuxt-themes/docus": "latest",
     "@nuxt/devtools": "^1.0.8",
     "@types/bun": "^1.0.5",
     "@types/js-yaml": "^4.0.9",
