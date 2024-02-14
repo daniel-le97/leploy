@@ -28,7 +28,7 @@
     "dev": "bun --bun nuxt dev",
     "start": "bun .output/server/index.mjs",
     "generate:nuxt": "nuxt generate",
-    "postinstall": "nuxt prepare",
+    "postinstall": "bun --bun nuxt prepare",
     "lint": "bun --bun eslint .",
     "lint:fix": "bun eslint . --fix",
     "remove:db": "rm sqlite.db*",
@@ -62,5 +62,8 @@
     "nuxt-build-cache": "0.1.1",
     "smee-client": "^2.0.1",
     "taze": "^0.13.3"
+  },
+  "overrides": {
+    "globby": "14.0.0"
   }
 }
