@@ -39,6 +39,8 @@ const items = [[{
   //   shortcuts: ['⌘', 'D']
   // }]
 ]
+
+// const id = useId()
 </script>
 
 <template>

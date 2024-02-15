@@ -28,6 +28,6 @@ export default defineNitroPlugin(async (nitroApp) => {
   // setInterval(() => {
   //   // Server().publish('server:usage', JSON.stringify(stats()))
   //   console.log(stats());
-    
+
   // }, 1000)
 })

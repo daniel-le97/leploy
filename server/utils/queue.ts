@@ -53,7 +53,7 @@ class Queue {
     // deploy the project
     await job.deploy()
     // do some cleanup
-    job.finish()
+    await job.finish()
   }
 }
 

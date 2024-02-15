@@ -6,7 +6,7 @@ import * as YAML from 'js-yaml'
 import { Server } from '../core/server'
 
 export interface Job {
-  finish: () => void
+  finish: () => Promise<void>
   failed: () => boolean
   getPath: () => string
   cleanPath: (path?: string) => void
@@ -31,12 +31,28 @@ function getPort() {
   const server = Bun.serve({
     port: 0,
     fetch(request, server) {
-        return new Response('Hello, world!')
+      return new Response('Hello, world!')
     },
   })
   const port = server.port
   server.stop()
   return port
+}
+
+// const label = 'leploy=a0a6a8b7-acca-4642-8129-a35ac9a6d315'
+async function getContainerPort(label: string) {
+  const projectId = label.split('=')[1]
+  try {
+    const containerId = (await $`docker ps -q --filter "label=${label}"`.text()).split('\n')[0]
+    const containerInspect = await $`docker container inspect ${containerId}`.json()
+    const ports = (containerInspect[0].NetworkSettings as { Ports: { [key: string]: [{ HostPort: string }] } }).Ports
+    const key = Object.keys(ports)[0]
+    const port = ports[key][0].HostPort
+    return port
+  }
+  catch (error) {
+    console.log(`error getting container port for project:${projectId}`, error)
+  }
 }
 
 export class ProjectJob implements Job {
@@ -53,6 +69,7 @@ export class ProjectJob implements Job {
   compose = ''
   isCompose: boolean
   url = ''
+  label = ''
 
   constructor(project: SqliteProject, type?: string) {
     this.project = project
@@ -61,12 +78,17 @@ export class ProjectJob implements Job {
     // we probably want to create a job in the database here
   }
 
-  finish() {
+  async finish() {
+    const port = await getContainerPort(this.label)
+    this.url = `http://${this.project.name}.localhost:${port}`
     this.publish(`\n\n${this.url}\n\n`)
     this.project.deployed = this.url
+
     projectsService.updateProject(this.project.id, this.project)
-    Server().publish(this.project.id, JSON.stringify({ type: 'deployed', data: this.url}))
-    console.log({ content: this.logContent })
+    Server().publish(this.project.id, JSON.stringify({ type: 'deployed', data: this.url }))
+    // console.log({ content: this.logContent })
+    console.log(this.label)
+
     const end = (Bun.nanoseconds() - this.buildTime)
     const enqueuedTime = (this.enqueuedTime)
     const buildLog: BuildLog = {
@@ -85,7 +107,7 @@ export class ProjectJob implements Job {
   }
 
   failed() {
-    getPort()
+    // getPort()
     for (const code of this.exitCodes) {
       if (code !== 0)
         return true
@@ -208,14 +230,16 @@ export class ProjectJob implements Job {
 
     const domain = 'localhost'
     const environment = Object.entries(this.getProjectEnv(false)).filter(env => env[1]).map(compose => `${compose[0]}=${compose[1]}`)
-    const freePort = getPort()  // this is a hack to get a free port
+    const freePort = getPort() // this is a hack to get a free port
+    this.label = `leploy=${project.id}`
     const compose: DockerComposeConfig = {
       version: '3',
       services: {
         [serviceName]: {
           image: `${project.id}`,
-          // networks: ['le-ploy'],
-          ports: ports.map(port => `${freePort}:${port}`).filter(Boolean),
+
+          networks: process.dev ? undefined : ['le-ploy'],
+          ports: [`${ports[0]}`],
           restart: 'always',
           environment,
           labels: traefik
@@ -223,20 +247,23 @@ export class ProjectJob implements Job {
                 'traefik.enable=true',
         `traefik.http.routers.${serviceName}.rule=Host(\`${project.name}.${domain}\`)`,
         `traefik.http.routers.${serviceName}.entrypoints=web`,
-        `traefik.http.services.${serviceName}.loadbalancer.server.port=${freePort}`,
+        `traefik.http.services.${serviceName}.loadbalancer.server.port=${ports[0]}`,
         `traefik.http.services.${serviceName}.loadbalancer.server.scheme=http`,
+        this.label,
               ]
             : undefined,
         },
       },
-      // networks: {
-      //   'le-ploy': {
-      //     external: true,
-      //   },
-      // },
+      networks: process.dev
+        ? undefined
+        : {
+            'le-ploy': {
+              external: true,
+            },
+          },
 
     }
-    this.url = `http://${project.name}.${domain}:${freePort}`
+
     const yaml = YAML.dump(compose)
     // console.log(yaml)
     return yaml

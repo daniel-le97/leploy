@@ -4,9 +4,7 @@ import { setServer } from './server'
 
 const nitroApp = useNitroApp()
 
-
 const handler = toWebHandler(nitroApp.h3App)
-
 
 const server = Bun.serve({
   port: process.env.NITRO_PORT || process.env.PORT || 3000,

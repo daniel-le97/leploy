@@ -39,18 +39,15 @@ onUnmounted(() => {
 <template>
   <div class="p-2 w-full">
     <div class="flex items-center justify-between mb-20">
-      <div class="flex items-center space-x-2 ">
+      <!-- <div class="flex items-center space-x-2 ">
         <h1 class="text-2xl font-bold">
           Configurations
         </h1>
         <UBadge>Healthy</UBadge>
-      </div>
-      <!-- Left side with buttons and icons -->
-
+      </div> -->
       <TabsApplicationControlBar class="flex gap-2" />
-
-      <!-- Right side with page title and badge -->
     </div>
+    <!-- <TabsApplicationControlBar class="flex gap-2" /> -->
     <div class="flex   gap-3">
       <!-- Left sidebar with buttons -->
       <div class="p-2  border border-gray-300/30 h-fit rounded-sm">
