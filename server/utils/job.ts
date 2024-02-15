@@ -27,6 +27,18 @@ async function parseTar(path: string, out: string) {
   return shell
 }
 
+function getPort() {
+  const server = Bun.serve({
+    port: 0,
+    fetch(request, server) {
+        return new Response('Hello, world!')
+    },
+  })
+  const port = server.port
+  server.stop()
+  return port
+}
+
 export class ProjectJob implements Job {
   project: SqliteProject
   id = crypto.randomUUID()
@@ -40,6 +52,7 @@ export class ProjectJob implements Job {
   type: string
   compose = ''
   isCompose: boolean
+  url = ''
 
   constructor(project: SqliteProject, type?: string) {
     this.project = project
@@ -49,6 +62,10 @@ export class ProjectJob implements Job {
   }
 
   finish() {
+    this.publish(`\n\n${this.url}\n\n`)
+    this.project.deployed = this.url
+    projectsService.updateProject(this.project.id, this.project)
+    Server().publish(this.project.id, JSON.stringify({ type: 'deployed', data: this.url}))
     console.log({ content: this.logContent })
     const end = (Bun.nanoseconds() - this.buildTime)
     const enqueuedTime = (this.enqueuedTime)
@@ -68,6 +85,7 @@ export class ProjectJob implements Job {
   }
 
   failed() {
+    getPort()
     for (const code of this.exitCodes) {
       if (code !== 0)
         return true
@@ -190,33 +208,35 @@ export class ProjectJob implements Job {
 
     const domain = 'localhost'
     const environment = Object.entries(this.getProjectEnv(false)).filter(env => env[1]).map(compose => `${compose[0]}=${compose[1]}`)
+    const freePort = getPort()  // this is a hack to get a free port
     const compose: DockerComposeConfig = {
       version: '3',
       services: {
         [serviceName]: {
           image: `${project.id}`,
-          networks: ['le-ploy'],
-          ports: ports.map(port => `${port}:${port}`).filter(Boolean),
+          // networks: ['le-ploy'],
+          ports: ports.map(port => `${freePort}:${port}`).filter(Boolean),
           restart: 'always',
           environment,
           labels: traefik
             ? [
                 'traefik.enable=true',
-        `traefik.http.routers.${serviceName}.rule=Host(\`${serviceName}.${domain}\`)`,
+        `traefik.http.routers.${serviceName}.rule=Host(\`${project.name}.${domain}\`)`,
         `traefik.http.routers.${serviceName}.entrypoints=web`,
-        `traefik.http.services.${serviceName}.loadbalancer.server.port=${ports[0]}`,
+        `traefik.http.services.${serviceName}.loadbalancer.server.port=${freePort}`,
         `traefik.http.services.${serviceName}.loadbalancer.server.scheme=http`,
               ]
             : undefined,
         },
       },
-      networks: {
-        'le-ploy': {
-          external: true,
-        },
-      },
+      // networks: {
+      //   'le-ploy': {
+      //     external: true,
+      //   },
+      // },
 
     }
+    this.url = `http://${project.name}.${domain}:${freePort}`
     const yaml = YAML.dump(compose)
     // console.log(yaml)
     return yaml

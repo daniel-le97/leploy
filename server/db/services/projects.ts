@@ -14,7 +14,7 @@ class ProjectsService {
   formatProject(partialProject: SqliteProject | Partial<SqliteProject>) {
     partialProject.https = this.formatBoolean(partialProject.https)
     partialProject.www = this.formatBoolean(partialProject.www)
-    partialProject.deployed = this.formatBoolean(partialProject.deployed)
+    // partialProject.deployed = this.formatBoolean(partialProject.deployed)
     partialProject.configured = this.formatBoolean(partialProject.configured)
     return partialProject
   }

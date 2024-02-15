@@ -29,6 +29,11 @@ export default defineNuxtPlugin(async () => {
         useBuildLogs().value = [newData.data, ...useBuildLogs().value]
         useBuildSSE().value = newData.data.data
       }
+      if (data.type === 'deployed') {
+        const newData = parse<string>(event)
+        const project = useLiteProject()
+        project.value.deployed = newData.data
+      }
     },
   })
 

@@ -53,7 +53,7 @@ CREATE TABLE IF NOT EXISTS project_compose (
   createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
   updatedAt DATETIME DEFAULT CURRENT_TIMESTAMP,
   name TEXT NOT NULL DEFAULT '',
-  deployed BOOLEAN NOT NULL DEFAULT false,
+  deployed TEXT NOT NULL DEFAULT '',
   configured BOOLEAN NOT NULL DEFAULT false,
   ports TEXT NOT NULL DEFAULT '', -- Store the JSON array as a string
   https BOOLEAN NOT NULL DEFAULT false,

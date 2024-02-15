@@ -50,7 +50,7 @@ export interface SqliteProject {
   createdAt: string // Assuming you want to represent DATETIME as a string, adjust if needed
   updatedAt: string // Assuming you want to represent DATETIME as a string, adjust if needed
   name: string
-  deployed: number
+  deployed: string
   configured: number
   ports: string// Store the JSON array as a string
   https: number
