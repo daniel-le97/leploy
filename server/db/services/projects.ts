@@ -59,6 +59,10 @@ class ProjectsService {
     return project
   }
 
+  async deleteProject(id: string) {
+    db.prepare('DELETE FROM projects WHERE id = ?1').run(id)
+  }
+
   async getProjectByRepoUrl(url: string) {
     return db.prepare('SELECT * FROM projects WHERE repoUrl = ?1').all(url) as SqliteProject[]
   }

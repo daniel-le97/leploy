@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS project_compose (
   createdAt DATETIME,
   updatedAt DATETIME,
   projectId TEXT,
-  FOREIGN KEY (projectId) REFERENCES projects(id)
+  FOREIGN KEY (projectId) REFERENCES projects(id) ON DELETE CASCADE
 );`,
   'fs': /* sql */`
   CREATE TABLE IF NOT EXISTS fs (
@@ -38,18 +38,18 @@ CREATE TABLE IF NOT EXISTS project_compose (
   'project-env': /* sql */`
   CREATE TABLE IF NOT EXISTS project_env (
     id TEXT NOT NULL PRIMARY KEY,
-    projectId TEXT NOT NULL REFERENCES projects(id),
+    projectId TEXT NOT NULL,
     createdAt DATETIME NOT NULL,
     updatedAt DATETIME NOT NULL,
     name TEXT NOT NULL,
     value TEXT NOT NULL,
     forBuild BOOLEAN NOT NULL DEFAULT false,
-    UNIQUE (name, projectId)
+    FOREIGN KEY (projectId) REFERENCES projects(id) ON DELETE CASCADE
     );`,
   'projects': /* sql */`
   CREATE TABLE IF NOT EXISTS projects (
   id TEXT PRIMARY KEY,
-  user TEXT NOT NULL REFERENCES users(id),
+  user TEXT NOT NULL,
   createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
   updatedAt DATETIME DEFAULT CURRENT_TIMESTAMP,
   name TEXT NOT NULL DEFAULT '',
@@ -64,27 +64,31 @@ CREATE TABLE IF NOT EXISTS project_compose (
   installCommand TEXT NOT NULL DEFAULT '',
   buildPack TEXT NOT NULL DEFAULT 'nixpacks',
   buildPackHelper TEXT NOT NULL DEFAULT '',
-  branch TEXT NOT NULL DEFAULT 'main'
+  branch TEXT NOT NULL DEFAULT 'main',
+  FOREIGN KEY (user) REFERENCES users(id) ON DELETE CASCADE
 );
 `,
   'buildlogs': /* sql */`
 CREATE TABLE IF NOT EXISTS build_logs (
   id TEXT NOT NULL PRIMARY KEY,
-  projectId TEXT NOT NULL REFERENCES projects(id),
+  projectId TEXT NOT NULL,
   createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
   data TEXT,
   status TEXT,
   buildTime TEXT,
-  type TEXT NOT NULL DEFAULT 'manual'
+  compose TEXT,
+  type TEXT NOT NULL DEFAULT 'manual',
+  FOREIGN KEY (projectId) REFERENCES projects(id) ON DELETE CASCADE
 );`,
   'queue': /* sql */`
 CREATE TABLE IF NOT EXISTS queue (
   id TEXT NOT NULL PRIMARY KEY,
   status TEXT NOT NULL DEFAULT 'enqueued',
-  projectId TEXT NOT NULL REFERENCES projects(id),
+  projectId TEXT NOT NULL,
   logs TEXT,
   date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  buildTime TEXT
+  buildTime TEXT,
+  FOREIGN KEY (projectId) REFERENCES projects(id) ON DELETE CASCADE
 );`,
 
 }
@@ -94,6 +98,7 @@ class DB extends Database {
     super(dbPath)
     // set wal mode directly after opening the database
     this.exec('PRAGMA journal_mode = WAL')
+    this.exec('PRAGMA foreign_keys = ON')
     // create tables if they don't exist
     Object.values(tables).map(table => this.exec(table))
   }

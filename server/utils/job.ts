@@ -2,7 +2,6 @@ import * as fs from 'node:fs'
 import * as os from 'node:os'
 import type { Subprocess } from 'bun'
 import { $ } from 'bun'
-import * as YAML from 'js-yaml'
 import { Server } from '../core/server'
 
 export interface Job {
@@ -15,7 +14,6 @@ export interface Job {
   build: () => Promise<void>
   deploy: () => Promise<void>
   getProjectEnv: () => Record<string, any>
-  getComposeFile: (project: SqliteProject) => string
   project: SqliteProject
   id: string
   killed: boolean
@@ -79,15 +77,16 @@ export class ProjectJob implements Job {
   }
 
   async finish() {
-    const port = await getContainerPort(this.label)
-    this.url = `http://${this.project.name}.localhost:${port}`
-    this.publish(`\n\n${this.url}\n\n`)
-    this.project.deployed = this.url
-
-    projectsService.updateProject(this.project.id, this.project)
-    Server().publish(this.project.id, JSON.stringify({ type: 'deployed', data: this.url }))
-    // console.log({ content: this.logContent })
-    console.log(this.label)
+    if (this.failed() === false) {
+      const port = await getContainerPort(`leploy=${this.project.id}`)
+      this.url = `http://${this.project.name}.localhost:${port}`
+      this.publish(`\n\n${this.url}\n\n`)
+      this.project.deployed = this.url
+      projectsService.updateProject(this.project.id, this.project)
+      Server().publish(this.project.id, JSON.stringify({ type: 'deployed', data: this.url }))
+      console.log(this.label)
+    }
+    await fs.promises.rm(this.getPath(), { force: true, recursive: true })
 
     const end = (Bun.nanoseconds() - this.buildTime)
     const enqueuedTime = (this.enqueuedTime)
@@ -107,7 +106,6 @@ export class ProjectJob implements Job {
   }
 
   failed() {
-    // getPort()
     for (const code of this.exitCodes) {
       if (code !== 0)
         return true
@@ -191,7 +189,7 @@ export class ProjectJob implements Job {
 
     let path = `${this.getPath()}`
     if (!this.isCompose) {
-      this.compose = this.getComposeFile()
+      this.compose = getComposeFile(this.project, this.getProjectEnv(false))
       path = `${this.getPath()}/${this.id}.yml`
       await Bun.write(path, this.compose)
     }
@@ -220,55 +218,6 @@ export class ProjectJob implements Job {
     return envs
   }
 
-  getComposeFile(project: SqliteProject = this.project) {
-    const traefik = true
-    const serviceName = project.name
-    let labels: string[]
-    let ports = project.ports.split(',')
-    if (!ports.length)
-      ports = ['3000']
-
-    const domain = 'localhost'
-    const environment = Object.entries(this.getProjectEnv(false)).filter(env => env[1]).map(compose => `${compose[0]}=${compose[1]}`)
-    const freePort = getPort() // this is a hack to get a free port
-    this.label = `leploy=${project.id}`
-    const compose: DockerComposeConfig = {
-      version: '3',
-      services: {
-        [serviceName]: {
-          image: `${project.id}`,
-
-          networks: process.dev ? undefined : ['le-ploy'],
-          ports: [`${ports[0]}`],
-          restart: 'always',
-          environment,
-          labels: traefik
-            ? [
-                'traefik.enable=true',
-        `traefik.http.routers.${serviceName}.rule=Host(\`${project.name}.${domain}\`)`,
-        `traefik.http.routers.${serviceName}.entrypoints=web`,
-        `traefik.http.services.${serviceName}.loadbalancer.server.port=${ports[0]}`,
-        `traefik.http.services.${serviceName}.loadbalancer.server.scheme=http`,
-        this.label,
-              ]
-            : undefined,
-        },
-      },
-      networks: process.dev
-        ? undefined
-        : {
-            'le-ploy': {
-              external: true,
-            },
-          },
-
-    }
-
-    const yaml = YAML.dump(compose)
-    // console.log(yaml)
-    return yaml
-  }
-
   async sendStream(buildProcess: Subprocess<'ignore', 'pipe', 'pipe'>) {
     const write = (chunk: Uint8Array) => {
       let data = decode(chunk)
@@ -284,7 +233,7 @@ export class ProjectJob implements Job {
   }
 
   publish(data: string) {
-    console.log(data)
+    // console.log(data)
     Server().publish(this.project.id, JSON.stringify({ type: 'build', data }))
     this.logContent += data
   }

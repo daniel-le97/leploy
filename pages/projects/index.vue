@@ -40,6 +40,13 @@ const items = [[{
   // }]
 ]
 
+async function deleteProject(id: string) {
+  await $fetch(`/api/projects/${id}`, {
+    method: 'DELETE',
+  })
+  await refresh()
+}
+
 // const id = useId()
 </script>
 
@@ -77,17 +84,33 @@ const items = [[{
               <Icon name="material-symbols-light:deployed-code" class="opacity-50 group-hover:opacity-90 group-hover:text-white transition-all duration-200 group-hover:drop-shadow-lg text-green-500   absolute -left-4 -top-4" size="50" />
             </div>
           </div>
-          <div class="my-1.5 px-2 flex justify-end">
+          <!-- <div class="my-1.5 px-2 flex justify-end">
             <div class="flex gap-2">
-              <Icon name="iconamoon:link-external-duotone" class="opacity-50 group-hover:opacity-90 hover:dark:text-white/50 group-hover:text-white transition-all duration-200 group-hover:drop-shadow-lg text-green-500   " size="35" />
+              <a :href="template.deployed" target="_blank" rel="noopener noreferrer" v-if="template.deployed">
+                <Icon name="iconamoon:link-external-duotone" class="opacity-50 group-hover:opacity-90 hover:dark:text-white/50 group-hover:text-white transition-all duration-200 group-hover:drop-shadow-lg text-green-500   " size="35" />
+              </a>
 
               <Icon
                 name="solar:trash-bin-minimalistic-bold-duotone" class="opacity-50 group-hover:opacity-90 group-hover:text-white
-  hover:dark:text-white/50 transition-all duration-200 group-hover:drop-shadow-lg text-green-500" size="35"
+                hover:dark:text-white/50 transition-all duration-200 group-hover:drop-shadow-lg text-green-500" size="35"
+                @click="deleteProject(template.id)"
               />
             </div>
-          </div>
+          </div> -->
         </NuxtLink>
+        <div class="my-1.5 px-2 flex justify-end">
+          <div class="flex gap-2">
+            <a v-if="template.deployed" :href="template.deployed" target="_blank" rel="noopener noreferrer">
+              <Icon name="iconamoon:link-external-duotone" class="opacity-50 group-hover:opacity-90 hover:dark:text-white/50 group-hover:text-white transition-all duration-200 group-hover:drop-shadow-lg text-green-500   " size="35" />
+            </a>
+
+            <Icon
+              name="solar:trash-bin-minimalistic-bold-duotone" class="opacity-50 group-hover:opacity-90 group-hover:text-white
+                hover:dark:text-white/50 transition-all duration-200 group-hover:drop-shadow-lg text-green-500" size="35"
+              @click="deleteProject(template.id)"
+            />
+          </div>
+        </div>
       </div>
     </div>
     <div v-else class="flex justify-evenly flex-row align-middle gap-7 p-3 m-3">

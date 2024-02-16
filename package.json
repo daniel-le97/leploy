@@ -30,7 +30,7 @@
     "generate:nuxt": "nuxt generate",
     "postinstall": "bun --bun nuxt prepare",
     "lint": "bun --bun eslint .",
-    "lint:fix": "bunx eslint . --fix",
+    "lint:fix": "bun --bun eslint . --fix",
     "remove:db": "rm sqlite.db*",
     "traefik": "docker compose -f 'docker-compose-dev.yml' down && docker compose -f 'docker-compose-dev.yml' up -d",
     "reset:workspace": "rm -rf node_modules && rm -rf .nuxt && rm bun.lockb && bun i",

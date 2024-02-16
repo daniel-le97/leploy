@@ -5,8 +5,12 @@ class LogsService {
     return db.prepare('SELECT * FROM build_logs WHERE projectId = ?1 ORDER BY createdAt DESC').all(id) as BuildLog[]
   }
 
+  getLatestByProjectId(id: string) {
+    return db.prepare('SELECT * FROM build_logs WHERE projectId = ?1 ORDER BY createdAt DESC LIMIT 1').get(id) as BuildLog
+  }
+
   createLogs(log: BuildLog) {
-    db.prepare('INSERT INTO build_logs (id, projectId, createdAt, data, status, buildTime, type) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7)').run(
+    db.prepare('INSERT INTO build_logs (id, projectId, createdAt, data, status, buildTime, type, compose) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8)').run(
       log.id,
       log.projectId,
       log.createdAt,
@@ -14,6 +18,7 @@ class LogsService {
       log.status,
       log.buildTime,
       log.type,
+      log.compose,
     )
   }
 }
