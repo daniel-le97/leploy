@@ -6,7 +6,7 @@ a platform as a service built with [bun](https://bun.sh/) and [nuxt](https://nux
 - automatic deployments by pointing github apps to http://localhost:3000/api/git/webhooks/:id
 - leverages bun:sqlite for a blazingly fast database
 
-## TODO 
+## TODO
 - add docker volumes for each service
 - Documentation via /docs
 - back ups for data
@@ -45,5 +45,3 @@ bun run build
 nuxt dev in docker container running with bun produces a FileNotFound error
 
 @nuxt/ui breaks builds in docker when using bun -> workaround is to build without --bun flag
-
-

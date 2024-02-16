@@ -46,6 +46,16 @@ CREATE TABLE IF NOT EXISTS project_compose (
     forBuild BOOLEAN NOT NULL DEFAULT false,
     FOREIGN KEY (projectId) REFERENCES projects(id) ON DELETE CASCADE
     );`,
+  'project-volume': /* sql */`
+  CREATE TABLE IF NOT EXISTS project_volumes (
+    id TEXT NOT NULL PRIMARY KEY,
+    projectId TEXT NOT NULL,
+    createdAt DATETIME NOT NULL,
+    updatedAt DATETIME NOT NULL,
+    name TEXT NOT NULL,
+    value TEXT NOT NULL,
+    FOREIGN KEY (projectId) REFERENCES projects(id) ON DELETE CASCADE
+    );`,
   'projects': /* sql */`
   CREATE TABLE IF NOT EXISTS projects (
   id TEXT PRIMARY KEY,

@@ -7,3 +7,11 @@ export interface ProjectEnv {
   value: string
   forBuild: boolean
 }
+export interface ProjectVolume {
+  id: string
+  projectId: string
+  createdAt: string // Assuming the date is stored as a string, you can change the type accordingly
+  updatedAt: string // Assuming the date is stored as a string, you can change the type accordingly
+  name: string
+  value: string
+}
