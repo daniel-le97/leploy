@@ -1,6 +1,19 @@
 version: '3'
 
+# volumes:
+#   node_modules:
+
 services:
+  # my-app-dev:
+  #   build:
+  #     context: .
+  #     dockerfile: ./dev.dockerfile
+  #   ports:
+  #     - "3000:3000"
+  #     - "24678:24678"
+  #   volumes:
+  #     - .:/usr/src/app
+  #     - node_modules:/usr/src/app/node_modules
   proxy:
     image: 'traefik:v2.10'
     container_name: le-ploy-proxy

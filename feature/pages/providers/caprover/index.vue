@@ -26,7 +26,7 @@ function handleActiveTemplate(template: any) {
 
 <template>
   <div class="grid grid-cols-3 gap-12 items-center justify-center p-24">
-    <div v-for="template in templates.value" :key="template.name" class="group shadow-md relative p-2 rounded-md dark:bg-gray-900 h-full hover:shadow-xl transition-all duration-150 ease-linear">
+    <div v-for="template in templates" :key="template.name" class="group shadow-md relative p-2 rounded-md dark:bg-gray-900 h-full hover:shadow-xl transition-all duration-150 ease-linear">
       <NuxtLink :to="`/providers/caprover/${template.name}`">
         <div class="flex    items-center justify-center space-x-3">
           <img
