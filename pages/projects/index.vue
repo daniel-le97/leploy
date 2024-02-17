@@ -1,7 +1,32 @@
 <script setup lang="ts">
+import type { WatchStopHandle } from 'vue';
 import type { SqliteProject } from '../../types/project'
+import type RippleBtnVue from '../../components/RippleBtn.vue';
 
 const { data, pending, error, refresh } = await useFetch<SqliteProject[]>('/api/projects')
+const pingMap = new Map<string, Timer>()
+
+// console.log(data.value);
+onMounted(() => {
+  const hello = computed( () => data.value)
+  watch(hello, (projects) => {
+  //  console.log(projects);
+
+})
+
+ })
+
+ const checkIsRunning = (projects: SqliteProject[]) => {
+  const ws = useWs()
+  for (const p of projects) {
+    if (p.deployed) {
+      ws.send(JSON.stringify({ type: 'ping', data: p.id }))
+    }
+  }
+}
+
+let watching: WatchStopHandle | undefined = undefined
+
 
 async function handleProjectCreate() {
   const projectId = await $fetch<string>('/api/projects', {
@@ -52,7 +77,10 @@ async function deleteProject(id: string) {
 
 <template>
   <div class="m-2 p-2 min-h-screen w-full">
-    <div class="flex justify-end">
+    <div class="flex justify-between">
+      <RippleBtn type="button" class=" font-bold py-1rounded-lg bg-white rounded text-black" @click="refresh">
+        refresh
+      </RippleBtn>
       <UDropdown :items="items" :popper="{ placement: 'bottom-start' }">
         <UButton color="white" label="Create Resource" trailing-icon="i-heroicons-chevron-down-20-solid" />
       </UDropdown>

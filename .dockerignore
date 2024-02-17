@@ -5,6 +5,7 @@ dist
 
 app-data/db
 app-data/nitro
+app-data/temp
 # Node dependencies
 node_modules
 

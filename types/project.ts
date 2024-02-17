@@ -62,4 +62,5 @@ export interface SqliteProject {
   buildPack: 'nixpacks' | 'dockerfile' | 'docker-compose' | 'buildpacks'
   buildPackHelper: string
   branch: string
+  running: boolean
 }

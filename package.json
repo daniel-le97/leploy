@@ -46,6 +46,7 @@
     "@nuxt/ui": "2.13.0",
     "@vueuse/nuxt": "10.7.2",
     "js-yaml": "^4.1.0",
+    "nanotar": "^0.1.1",
     "nuxt": "3.10.2",
     "nuxt-auth-utils": "^0.0.16",
     "vue": "^3.4.19",

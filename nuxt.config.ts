@@ -28,7 +28,7 @@ export default defineNuxtConfig({
     addTwUtil: true,
 
   },
-  ignore: ['/temp', '/data', '/stack'],
+  ignore: ['/temp', '/data', '/stack', '/app-data'],
   nitro: {
     devStorage: {
       cache: {

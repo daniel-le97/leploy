@@ -9,6 +9,8 @@ export function getComposeFile(project: SqliteProject, envs: Record<string, any>
   if (!ports[0])
     ports = ['3000']
 
+
+  const volumes = projectVolumesService.getProjectVolumes(project.id).map(volume => `${volume.name}:${volume.value}`)
   const domain = 'localhost'
   const environment = Object.entries(envs).filter(env => env[1]).map(compose => `${compose[0]}=${compose[1]}`)
   const label = `leploy=${project.id}`
@@ -17,9 +19,9 @@ export function getComposeFile(project: SqliteProject, envs: Record<string, any>
     services: {
       [serviceName]: {
         image: `${project.id}`,
-
         networks: process.dev ? undefined : ['le-ploy'],
         ports: [`${ports[0]}`],
+        volumes,
         restart: 'always',
         environment,
         labels: traefik

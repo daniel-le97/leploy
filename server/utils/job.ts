@@ -9,6 +9,7 @@ export interface Job {
   failed: () => boolean
   getPath: () => string
   cleanPath: (path?: string) => void
+  fetchClone: () => Promise<void> 
   // gitClone: () => Promise<void>
   clone: () => Promise<void>
   build: () => Promise<void>
@@ -21,7 +22,7 @@ export interface Job {
 
 async function parseTar(path: string, out: string) {
   await $`mkdir -p ${out}`
-  const shell = await $`tar -xzvf ${path} -C ${out}`
+  const shell = await $`tar -xzvf ${path} -C ${out} --strip-components=1`
   return shell
 }
 
@@ -86,7 +87,7 @@ export class ProjectJob implements Job {
       Server().publish(this.project.id, JSON.stringify({ type: 'deployed', data: this.url }))
       console.log(this.label)
     }
-    await fs.promises.rm(this.getPath(), { force: true, recursive: true })
+    // await fs.promises.rm(this.getPath(), { force: true, recursive: true })
 
     const end = (Bun.nanoseconds() - this.buildTime)
     const enqueuedTime = (this.enqueuedTime)
@@ -115,7 +116,7 @@ export class ProjectJob implements Job {
 
   getPath() {
     const temp = os.tmpdir()
-    return `./temp/${this.project.id}`
+    return `${process.cwd()}/app-data/temp/${this.project.id}`
   }
 
   ensurePath(path = this.getPath()) {
@@ -152,7 +153,7 @@ export class ProjectJob implements Job {
     this.tar = new Uint8Array(await data.arrayBuffer())
 
     this.publish(`fetching: ${archiveURL}\n\n`)
-    const tar = `./.data/tar/${this.id}.tar.gz`
+    const tar = `${process.cwd()}/app-data/tar/${this.id}.tar.gz`
     await Bun.write(tar, this.tar)
     const sizeInBytes = this.tar.length
     const sizeInMegabytes = sizeInBytes / (1024 * 1024)

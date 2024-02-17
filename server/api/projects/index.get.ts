@@ -4,7 +4,8 @@ export default defineEventHandler(async (event) => {
   const session = await requireAuthSession(event)
   // console.log(session.id);
 
-  return await projectsService.getProjectsByUserId(session.id)
+  const projects = await projectsService.getProjectsByUserId(session.id)
+  return projects ? projects : []
 
   // const db = useDbStorage('projects')
   // const keys = await db.getKeys(session.id)

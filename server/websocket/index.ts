@@ -28,6 +28,10 @@ const handlers = new Map<string, (server: BunServer, ws: WS, payload: Payload) =
     ws.subscribe(data)
   })
 
+  .set('ping', (server, ws, payload) => {
+    console.log('server:ws:ping', payload)
+  })
+
   .set('unsubscribe', (server, ws, payload) => {
     console.log('server:ws:unsubscribe', payload)
 

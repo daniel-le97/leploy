@@ -21,6 +21,8 @@ async function handleVolCreate(vol: VOL, _refresh = false) {
   if (!vol.name || !vol.value)
     return
 
+    console.log(vol);
+    
   const projectId = await $fetch<string>(`/api/projects/${id}/volumes`, {
     method: 'POST',
     body: vol,
@@ -57,12 +59,13 @@ function updateProjectVolume(projectVolume: ProjectVolume) {
 <template>
   <div class="flex flex-col border border-gray-300/30 rounded-sm ">
     <!-- Top Section -->
+
     <div class="p-4  border-b border-gray-300/30 ">
       <div v-for="vol in data" :key="vol.id" class="mb-4 flex flex-row justify-between items-center">
         <RippleBtn class="ml-4 bg-blue-500 text-white px-2 py-1 rounded">
           Update
         </RippleBtn>
-        <Icon name="uil:trash-alt" class="text-2xl text-red-500 cursor-pointer" />
+        <Icon name="uil:trash-alt" class="text-2xl text-red-500 cursor-pointer" @click="deletevol(vol)" />
         <div>
           <strong>Key: </strong>
           <input v-model="vol.name" class="w-48 border rounded text-xs">
@@ -77,8 +80,9 @@ function updateProjectVolume(projectVolume: ProjectVolume) {
           <input v-model="vol.forBuild" type="checkbox">
         </div> -->
       </div>
+      <div class="border border-white"></div>
       <form class="flex flex-row justify-center gap-8 items-center py-2">
-        <RippleBtn class="ml-4 bg-blue-500 text-white px-2 py-1 rounded" type="submit">
+        <RippleBtn class="ml-4 bg-blue-500 text-white px-2 py-1 rounded" type="submit" @click.prevent="handleVolCreate(volRef, true)">
           create
         </RippleBtn>
         <div class="flex flex-row gap-4">
@@ -99,12 +103,10 @@ function updateProjectVolume(projectVolume: ProjectVolume) {
       </form>
     </div>
 
-    <!-- <RippleBtn class="pt-3" @click="handlevolSubmit">
+   <!-- <RippleBtn class="pt-3" @click="handleVolCreate(volRef, true)">
       SUBMIT vol
-    </RippleBtn>
+    </RippleBtn>  -->
 
-    <div class="flex-grow overflow-y-auto p-4">
-      <textarea v-model="bottomTextArea" class="w-full h-full p-2 border" placeholder="Enter text..." />
-    </div> -->
+
   </div>
 </template>

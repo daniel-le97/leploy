@@ -2,6 +2,7 @@
 .output
 app-data/db
 app-data/nitro
+app-data/temp
 .nuxt
 .nitro
 .cache
