@@ -1,24 +1,30 @@
 import * as YAML from 'js-yaml'
 import type { SqliteProject } from '../../types/project'
+import {randomBytes} from 'node:crypto'
 
-export function getComposeFile(project: SqliteProject, envs: Record<string, any>) {
+
+
+export function getRandomSubdomain(length = 6) {
+  return randomBytes(length).toString('base64url')
+}
+
+export function getComposeFile(project: SqliteProject, envs: Record<string, any>, domain:string) {
   const traefik = true
   const serviceName = project.name
   let labels: string[]
   let ports = project.ports.split(',')
-  if (!ports[0])
+  if (!Number(ports[0]))
     ports = ['3000']
 
-
-  const volumes = projectVolumesService.getProjectVolumes(project.id).map(volume => `${volume.name}:${volume.value}`)
-  const domain = 'localhost'
+  const id = project.id
+  const volumes = projectVolumesService.getProjectVolumes(id).map(volume => `${volume.name}:${volume.value}`)
   const environment = Object.entries(envs).filter(env => env[1]).map(compose => `${compose[0]}=${compose[1]}`)
-  const label = `leploy=${project.id}`
+  const label = `leploy=${id}`
   const compose: DockerComposeConfig = {
     version: '3',
     services: {
-      [serviceName]: {
-        image: `${project.id}`,
+      [id]: {
+        image: `${id}`,
         networks: process.dev ? undefined : ['le-ploy'],
         ports: [`${ports[0]}`],
         volumes,
@@ -27,10 +33,10 @@ export function getComposeFile(project: SqliteProject, envs: Record<string, any>
         labels: traefik
           ? [
               'traefik.enable=true',
-      `traefik.http.routers.${serviceName}.rule=Host(\`${project.name}.${domain}\`)`,
-      `traefik.http.routers.${serviceName}.entrypoints=web`,
-      `traefik.http.services.${serviceName}.loadbalancer.server.port=${ports[0]}`,
-      `traefik.http.services.${serviceName}.loadbalancer.server.scheme=http`,
+      `traefik.http.routers.${id}.rule=Host(\`${domain}\`)`,
+      `traefik.http.routers.${id}.entrypoints=web`,
+      `traefik.http.services.${id}.loadbalancer.server.port=${ports[0]}`,
+      `traefik.http.services.${id}.loadbalancer.server.scheme=http`,
       label,
             ]
           : undefined,

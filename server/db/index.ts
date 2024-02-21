@@ -87,6 +87,7 @@ CREATE TABLE IF NOT EXISTS build_logs (
   status TEXT,
   buildTime TEXT,
   compose TEXT,
+  commitHash TEXT,
   type TEXT NOT NULL DEFAULT 'manual',
   FOREIGN KEY (projectId) REFERENCES projects(id) ON DELETE CASCADE
 );`,

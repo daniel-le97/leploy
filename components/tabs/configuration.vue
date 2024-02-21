@@ -25,7 +25,7 @@ watch(https, (value) => {
 const options = [
   { label: 'nixpacks', value: 'nixpacks' },
   { label: 'dockerfile', value: 'dockerfile' },
-  { label: 'docker-compose', value: 'docker-compose' },
+  // { label: 'docker-compose', value: 'docker-compose' },
 ]
 
 async function onSubmit() {

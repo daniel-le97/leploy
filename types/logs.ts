@@ -8,4 +8,5 @@ export interface BuildLog {
   type: string
   tar?: Uint8Array
   compose: string
+  commitHash: string
 }

@@ -10,7 +10,7 @@ class LogsService {
   }
 
   createLogs(log: BuildLog) {
-    db.prepare('INSERT INTO build_logs (id, projectId, createdAt, data, status, buildTime, type, compose) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8)').run(
+    db.prepare('INSERT INTO build_logs (id, projectId, createdAt, data, status, buildTime, type, compose, commitHash) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9)').run(
       log.id,
       log.projectId,
       log.createdAt,
@@ -19,6 +19,7 @@ class LogsService {
       log.buildTime,
       log.type,
       log.compose,
+      log.commitHash
     )
   }
 }

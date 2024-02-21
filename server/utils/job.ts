@@ -3,6 +3,7 @@ import * as os from 'node:os'
 import type { Subprocess } from 'bun'
 import { $ } from 'bun'
 import { Server } from '../core/server'
+import { getRandomSubdomain } from './getCompose';
 
 export interface Job {
   finish: () => Promise<void>
@@ -69,18 +70,21 @@ export class ProjectJob implements Job {
   isCompose: boolean
   url = ''
   label = ''
+  commitHash = ''
+  domain = ''
 
   constructor(project: SqliteProject, type?: string) {
     this.project = project
     this.type = type || 'manual'
     this.isCompose = this.project.buildPack === 'docker-compose'
+    this.domain = `${project.name}.${getRandomSubdomain()}.localhost`
     // we probably want to create a job in the database here
   }
 
   async finish() {
     if (this.failed() === false) {
       const port = await getContainerPort(`leploy=${this.project.id}`)
-      this.url = `http://${this.project.name}.localhost:${port}`
+      this.url = `http://${this.domain}:${port}`
       this.publish(`\n\n${this.url}\n\n`)
       this.project.deployed = this.url
       projectsService.updateProject(this.project.id, this.project)
@@ -96,6 +100,7 @@ export class ProjectJob implements Job {
       projectId: this.project.id,
       buildTime: end.toString(),
       data: this.logContent,
+      commitHash: this.commitHash || '',
       tar: this.failed() ? undefined : this.tar!,
       compose: this.compose,
       status: this.failed() ? 'failed' : 'success',
@@ -140,9 +145,11 @@ export class ProjectJob implements Job {
     // this.publish(`clone: ${commands.join(' ')}\n\n`)
     this.shell = Bun.spawn(commands, { env: this.getProjectEnv(), stdio: ['ignore', 'pipe', 'pipe'] })
     await this.sendStream(this.shell)
+    this.commitHash = (await $`git -C ${this.getPath()} rev-parse HEAD`.text()).trim()
     // this.publish(`\nclone: finished\n\n`)
   }
 
+  // prefer clone over fetchClone
   async fetchClone() {
     this.buildTime = Bun.nanoseconds()
     const repoURL = this.project.repoUrl
@@ -190,7 +197,7 @@ export class ProjectJob implements Job {
 
     let path = `${this.getPath()}`
     if (!this.isCompose) {
-      this.compose = getComposeFile(this.project, this.getProjectEnv(false))
+      this.compose = getComposeFile(this.project, this.getProjectEnv(false), this.domain)
       path = `${this.getPath()}/${this.id}.yml`
       await Bun.write(path, this.compose)
     }
@@ -206,11 +213,15 @@ export class ProjectJob implements Job {
 
   getProjectEnv(includeProcessEnv = true) {
     const processENV = includeProcessEnv ? process.env : undefined
-    const envs: Record<string, any> = {
-      ...processENV,
+    const nixEnvs = this.project.buildPack === 'nixpacks' ? { 
       NIXPACKS_INSTALL_CMD: this.project.installCommand ?? undefined,
       NIXPACKS_BUILD_CMD: this.project.buildCommand ?? undefined,
       NIXPACKS_START_CMD: this.project.startCommand ?? undefined,
+    } : undefined
+    const envs: Record<string, any> = {
+      ...processENV,
+      ...nixEnvs,
+      FORCE_COLOR: '1',
     }
     const projectEnvs = projectEnvService.getProjectEnvs(this.project.id)
     for (const env of projectEnvs)
@@ -225,9 +236,19 @@ export class ProjectJob implements Job {
       if (this.killed) {
         buildProcess.kill(9)
         data += '\nERROR: build process killed by user\n'
+        this.publish(data)
+        return
       }
+      console.log(data);
+      
       this.publish(data)
     }
+    // for await (const data of buildProcess.stderr) {
+    //   write(data)
+    // }
+    // for await (const data of buildProcess.stdout) {
+    //   write(data)
+    // }
     buildProcess.stdout.pipeTo(new WritableStream({ write }))
     buildProcess.stderr.pipeTo(new WritableStream({ write }))
     this.exitCodes.push(await buildProcess.exited)
