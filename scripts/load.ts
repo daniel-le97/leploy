@@ -48,7 +48,7 @@ async function runLoadTest() {
   const end = Bun.nanoseconds()
   const timeTaken = (end - start) / 1e9
   const requestsPerSecond = numUsers * requestsPerUser / timeTaken
-  console.log(`\nLoad test complete. Time taken: ${timeTaken.toFixed(2)} seconds. Requests per second: ${requestsPerSecond.toFixed(2)}`)
+  console.log(`\nLoad test complete. Time taken: ${timeTaken.toFixed(2)} seconds. Requests per second: ${requestsPerSecond.toFixed(2)}\n`)
 }
 
 // Run the load test

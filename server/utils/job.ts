@@ -146,6 +146,8 @@ export class ProjectJob implements Job {
     this.shell = Bun.spawn(commands, { env: this.getProjectEnv(), stdio: ['ignore', 'pipe', 'pipe'] })
     await this.sendStream(this.shell)
     this.commitHash = (await $`git -C ${this.getPath()} rev-parse HEAD`.text()).trim()
+    console.log(this.commitHash);
+    
     // this.publish(`\nclone: finished\n\n`)
   }
 
@@ -239,7 +241,7 @@ export class ProjectJob implements Job {
         this.publish(data)
         return
       }
-      console.log(data);
+      // console.log(data);
       
       this.publish(data)
     }
