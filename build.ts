@@ -14,7 +14,7 @@ try {
   console.log(cwd)
 
   $.cwd(cwd)
-  await $`bun run build`
+  // await $`bun run build`
   await $`docker build --pull --rm -f "dockerfile" -t ${image} "."`
   await $`docker login ${image.split('/')[0]} -u ${image.split('/')[1]} -p ${process.env.GITHUB_PERSONAL_TOKEN}`
   await $`docker push ${image}`

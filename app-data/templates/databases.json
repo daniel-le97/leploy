@@ -5,10 +5,26 @@
       "latest"
     ]
   },
-  "mongo": {
+  "mongo-db": {
     "image": "mongo",
     "versions": [
       "latest"
     ]
+  },
+  "postgres":{
+    "categories": [
+      "Database"
+    ],
+    "description": "PostgreSQL is a powerful, open-source relational database system known for its reliability, robustness, and extensibility. It offers advanced features such as ACID compliance, transactions, and support for various data types.",
+    "logo": "/logos/postgresql.png",
+    "name": "postgresql",
+    "platform": "linux",
+    "repository": {
+      "stackfile": "Template/Stack/postgresql.yml",
+      "url": "https://github.com/xneo1/portainer_templates"
+    },
+    "title": "PostgreSQL",
+    "type": 3
   }
+  
 }
