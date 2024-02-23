@@ -39,8 +39,6 @@ interface DockerServiceNetworkConfig {
 
 export default defineEventHandler(async (event) => {
   try {
-    // TODO change with auth
-
     const session = await requireAuthSession(event)
     const id = getRouterParam(event, 'id')
 
@@ -49,11 +47,17 @@ export default defineEventHandler(async (event) => {
 
     const db = useDbStorage('projects')
 
-    const project = await db.getItem<Project>(`${session.id}:${id}`)
+    // const project = await db.getItem<Project>(`${session.id}:${id}`)
+    const project = await projectsService.getProjectById(id)
+    if (!project) {
+      throw createError({ message: 'project not found' })
+    }
 
-    // const compose = await getComposeFile(project!)
 
-    throw NOTIMPLEMENTED
+    const compose = getComposeFile(project)
+    return compose
+
+    // throw NOTIMPLEMENTED
   }
   catch (error) {
     console.log('invalid id or user')

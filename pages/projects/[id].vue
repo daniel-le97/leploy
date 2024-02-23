@@ -1,6 +1,6 @@
 <!-- components/Tabs.vue -->
 <script setup lang="ts">
-import { LazyTabsBuild, LazyTabsConfiguration, LazyTabsSecrets, LazyTabsVolumes } from '#components'
+import { LazyTabsBuild, LazyTabsConfiguration, LazyTabsSecrets, LazyTabsVolumes, LazyTabsCompose } from '#components'
 
 const route = useRoute('projects-id')
 // console.log(route.params)
@@ -8,7 +8,7 @@ const route = useRoute('projects-id')
 const selectedTab = useState('selectedTab', () => 'configuration')
 
 const tabs = computed(() => {
-  // if (useActiveProject().value.configured) {
+  // if (useLiteProject().value.repoUrl) {
   //   return [
   //     { label: 'configuration', component: LazyTabsConfiguration },
   //     { label: 'compose', component: LazyTabsCompose },
@@ -21,6 +21,7 @@ const tabs = computed(() => {
     { label: 'build', component: LazyTabsBuild },
     { label: 'secrets', component: LazyTabsSecrets },
     { label: 'volumes', component: LazyTabsVolumes },
+    { label: 'compose', component: LazyTabsCompose },
   ]
 })
 

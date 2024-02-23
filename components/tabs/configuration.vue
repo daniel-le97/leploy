@@ -62,14 +62,14 @@ watch(state.value, (value) => {
   }
   if (value.buildPack === 'nixpacks')
     state.value.buildPackHelper = ''
-  if (value.buildPack === 'docker-compose') {
-    filePath.label = 'docker-compose location'
-    state.value.buildPackHelper = state.value.buildPackHelper.includes('.yml') ? state.value.buildPackHelper : '/docker-compose.yml'
-  }
-  if (value.buildPack === 'buildpacks') {
-    filePath.label = 'choose a build pack'
-    state.value.buildPackHelper = state.value.buildPackHelper.includes('/') ? state.value.buildPackHelper : 'paketo-buildpacks/nodejs'
-  }
+  // if (value.buildPack === 'docker-compose') {
+  //   filePath.label = 'docker-compose location'
+  //   state.value.buildPackHelper = state.value.buildPackHelper.includes('.yml') ? state.value.buildPackHelper : '/docker-compose.yml'
+  // }
+  // if (value.buildPack === 'buildpacks') {
+  //   filePath.label = 'choose a build pack'
+  //   state.value.buildPackHelper = state.value.buildPackHelper.includes('node') ? state.value.buildPackHelper : 'paketo-buildpacks/nodejs'
+  // }
 })
 
 const isNix = computed(() => state?.value.buildPack === 'nixpacks')

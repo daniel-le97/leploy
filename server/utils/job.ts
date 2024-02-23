@@ -3,7 +3,7 @@ import * as os from 'node:os'
 import type { Subprocess } from 'bun'
 import { $ } from 'bun'
 import { Server } from '../core/server'
-import { getRandomSubdomain } from './getCompose';
+import { getDomain, randomUUIDToBase64url } from './getCompose';
 
 export interface Job {
   finish: () => Promise<void>
@@ -40,10 +40,11 @@ function getPort() {
 }
 
 // const label = 'leploy=a0a6a8b7-acca-4642-8129-a35ac9a6d315'
+// grabs the port of the container based off of label id
 async function getContainerPort(label: string) {
   const projectId = label.split('=')[1]
   try {
-    const containerId = (await $`docker ps -q --filter "label=${label}"`.text()).split('\n')[0]
+    const containerId = (await $`docker ps -q --filter "label=${label}"`.text()).trim()
     const containerInspect = await $`docker container inspect ${containerId}`.json()
     const ports = (containerInspect[0].NetworkSettings as { Ports: { [key: string]: [{ HostPort: string }] } }).Ports
     const key = Object.keys(ports)[0]
@@ -77,7 +78,7 @@ export class ProjectJob implements Job {
     this.project = project
     this.type = type || 'manual'
     this.isCompose = this.project.buildPack === 'docker-compose'
-    this.domain = `${project.name}.${getRandomSubdomain()}.localhost`
+    this.domain = getDomain(project)
     // we probably want to create a job in the database here
   }
 
@@ -199,7 +200,7 @@ export class ProjectJob implements Job {
 
     let path = `${this.getPath()}`
     if (!this.isCompose) {
-      this.compose = getComposeFile(this.project, this.getProjectEnv(false), this.domain)
+      this.compose = getComposeFile(this.project,this.domain)
       path = `${this.getPath()}/${this.id}.yml`
       await Bun.write(path, this.compose)
     }

@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import type { ProjectVolume } from '../../types/env'
 
-interface VOL {
+interface Vol {
   name: string | null
   value: string | null
 
 }
 
-const volRef = ref<VOL>({
+const volRef = ref<Vol>({
   name: null,
   value: null,
 })
@@ -17,7 +17,7 @@ const id = useRoute('projects-id').params.id
 const { data, pending, error, refresh } = await useFetch<ProjectVolume[]>(`/api/projects/${id}/volumes`)
 console.log({ data: data.value })
 
-async function handleVolCreate(vol: VOL, _refresh = false) {
+async function handleVolCreate(vol: Vol, _refresh = false) {
   if (!vol.name || !vol.value)
     return
 

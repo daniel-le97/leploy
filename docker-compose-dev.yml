@@ -1,28 +1,17 @@
 version: '3'
 
-# volumes:
-#   node_modules:
-
 services:
-  # my-app-dev:
-  #   build:
-  #     context: .
-  #     dockerfile: ./dev.dockerfile
-  #   ports:
-  #     - "3000:3000"
-  #     - "24678:24678"
-  #   volumes:
-  #     - .:/usr/src/app
-  #     - node_modules:/usr/src/app/node_modules
   proxy:
     image: 'traefik:v2.10'
     container_name: le-ploy-proxy
     command:
-      - --api.insecure=true
-      - --api.dashboard=true
-      - --providers.docker=true
-      - --providers.docker.exposedbydefault=false
-      - '--entrypoints.web.address=:80'
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.web-secure.address=:443"
+      - "--providers.docker.exposedbydefault=false"
+      - "--certificatesresolvers.local.acme.httpchallenge=true"
+      - "--certificatesresolvers.local.acme.httpchallenge.entrypoint=web"
     ports:
       - '80:80'
       - '443:443'
