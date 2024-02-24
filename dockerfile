@@ -7,7 +7,7 @@ RUN npm install -g bun
 FROM base AS install
 RUN mkdir -p /temp/dev
 COPY package.json bun.lockb /temp/dev/
-RUN cd /temp/dev && bun install
+RUN cd /temp/dev && bun install --production
 
 # Build stage
 FROM base AS build

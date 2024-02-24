@@ -5,6 +5,7 @@ const cwd = process.cwd()
 const exclude = ['../eslint.config.js', `../temp`, `../app-data`, `../.output`, 'pino-std-serializers', `../docs`]
 export default defineNuxtConfig({
   ssr: false,
+  
   routeRules: {
     '/providers/caprover': { prerender: true },
     '/providers/portainer': { prerender: true },
@@ -30,7 +31,10 @@ export default defineNuxtConfig({
   },
   ignore: ['/temp', '/data', '/stack', '/app-data'],
   nitro: {
-    devStorage: {
+    rollupConfig:{
+      'external': ['bun', 'bun:sqlite'],
+    },
+      devStorage: {
       cache: {
         driver: 'fsLite',
         base: './app-data',
@@ -62,5 +66,5 @@ export default defineNuxtConfig({
     },
   },
 
-  modules: ['@nuxt/ui', '@vueuse/nuxt', 'nuxt-auth-utils', 'nuxt-build-cache'],
+  modules: ['@nuxt/ui', '@vueuse/nuxt', 'nuxt-auth-utils', dev ? 'nuxt-build-cache' : undefined].filter(Boolean),
 })
