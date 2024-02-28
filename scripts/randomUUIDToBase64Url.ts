@@ -1,10 +1,10 @@
-import * as nodeCrypto from "crypto";
+import {createHash} from "crypto";
 
 
 
 async function randomUUIDToBase64url(uuid:string, length = 6) {
     // Create a SHA-256 hash of the UUID
-    const hash = nodeCrypto.createHash('SHA512').update(uuid).digest();
+    const hash = createHash('SHA512').update(uuid).digest();
     const base64url = hash.toString('base64url')
     .replace(/\+/g, '-')
     .replace(/\//g, '_')

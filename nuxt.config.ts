@@ -5,6 +5,7 @@ const cwd = process.cwd()
 const exclude = ['../eslint.config.js', `../temp`, `../app-data`, `../.output`, 'pino-std-serializers', `../docs`]
 export default defineNuxtConfig({
   ssr: false,
+  // srcDir: 'src/',
   
   routeRules: {
     '/providers/caprover': { prerender: true },
