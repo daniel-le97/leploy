@@ -9,6 +9,9 @@ app-data/temp
 dist
 content-app
 
+docs2/.vitepress/dist
+docs2/.vitepress/cache
+
 test
 /temp
 

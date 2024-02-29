@@ -39,18 +39,21 @@
     "bench": "bombardier -c 125 -n 100000 http://localhost:3000",
     "release": "bunx bumpp && npm publish --access public",
     "kill": "kill $(lsof -t -i:3000)",
-    "dev:docs": "nuxt dev docs",
-    "publish:docs": "bun --bun nuxt generate docs && bunx gh-pages -d docs/.output/public"
+    "dev:docs": "nuxt dev old-docs",
+    "publish:docs": "bun --bun nuxt generate old-docs && bunx gh-pages -d docs/.output/public",
+    "docs:dev": "vitepress dev docs",
+    "docs:build": "vitepress build docs",
+    "docs:preview": "vitepress preview docs"
   },
   "dependencies": {
-    "@nuxt/ui": "2.13.0",
-    "@vueuse/nuxt": "10.7.2",
+    "@nuxt/ui": "2.14.1",
+    "@vueuse/nuxt": "10.9.0",
     "js-yaml": "^4.1.0",
     "nanotar": "^0.1.1",
-    "nuxt": "3.10.2",
-    "nuxt-auth-utils": "^0.0.19",
+    "nuxt": "3.10.3",
+    "nuxt-auth-utils": "^0.0.20",
     "nuxt-build-cache": "0.1.1",
-    "vue": "^3.4.19",
+    "vue": "^3.4.21",
     "vue-router": "^4.3.0",
     "xterm": "^5.3.0",
     "zod": "^3.22.4"
@@ -59,11 +62,12 @@
     "@antfu/eslint-config": "^2.6.4",
     "@nuxt-themes/docus": "1.15.0",
     "@nuxt/devtools": "^1.0.8",
-    "@types/bun": "^1.0.7",
+    "@types/bun": "^1.0.8",
     "@types/js-yaml": "^4.0.9",
     "eslint": "^8.57.0",
     "smee-client": "^2.0.1",
-    "taze": "^0.13.3"
+    "taze": "^0.13.3",
+    "vitepress": "^1.0.0-rc.44"
   },
   "overrides": {
     "globby": "14.0.0"
