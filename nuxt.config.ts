@@ -66,6 +66,6 @@ export default defineNuxtConfig({
       },
     },
   },
-
+  // @ts-expect-error - this error is a bug in the types
   modules: ['@nuxt/ui', '@vueuse/nuxt', 'nuxt-auth-utils', dev ? 'nuxt-build-cache' : undefined].filter(Boolean),
 })
