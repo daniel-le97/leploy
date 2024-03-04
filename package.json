@@ -39,11 +39,10 @@
     "bench": "bombardier -c 125 -n 100000 http://localhost:3000",
     "release": "bunx bumpp && npm publish --access public",
     "kill": "kill $(lsof -t -i:3000)",
-    "dev:docs": "nuxt dev old-docs",
-    "publish:docs": "bun --bun nuxt generate old-docs && bunx gh-pages -d docs/.output/public",
-    "docs:dev": "vitepress dev docs",
-    "docs:build": "vitepress build docs",
-    "docs:preview": "vitepress preview docs"
+    "docs:publish": "bun run docs:build && bunx gh-pages -d docs/.output/public",
+    "docs:dev": "nuxt dev docs",
+    "docs:build": "bun --bun nuxt generate docs",
+    "docs:preview": "nuxt preview docs"
   },
   "dependencies": {
     "@nuxt/ui": "2.14.1",

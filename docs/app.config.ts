@@ -1,4 +1,5 @@
 export default defineAppConfig({
+  title: 'Leploy',
   docus: {
     title: 'Leploy',
     'titleTemplate': '%s - Leploy',
@@ -31,7 +32,7 @@ export default defineAppConfig({
     },
     header: {
      'title': 'Leploy',
-      logo: true,
+      logo: false,
       showLinkIcon: true,
       exclude: [],
       fluid: true,
