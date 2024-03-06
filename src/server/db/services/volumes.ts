@@ -1,4 +1,4 @@
-import type { ProjectVolume } from '../../../types/env'
+import type { ProjectVolume } from '../../../../types/env'
 
 class ProjectVolumesService {
   deleteVolume(id: string) {

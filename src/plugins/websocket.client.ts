@@ -1,4 +1,4 @@
-import type { BuildLog } from '../types/logs'
+import type { BuildLog } from '../../types/logs'
 
 export default defineNuxtPlugin(async () => {
   const port = process.dev ? await $fetch('/api/server') : process.env.PORT || 3000

@@ -3,9 +3,16 @@ const dev = process.env.NODE_ENV !== 'production'
 const cwd = process.cwd()
 
 const exclude = ['../eslint.config.js', `../temp`, `../app-data`, `../.output`, 'pino-std-serializers', `../docs`]
+const modules = () => {
+  const modules = ['@nuxt/ui', '@vueuse/nuxt', 'nuxt-auth-utils']
+  if (dev) {
+    modules.push('nuxt-build-cache')
+  }
+  return modules
+}
 export default defineNuxtConfig({
   ssr: false,
-  // srcDir: 'src/',
+  srcDir: 'src/',
 
   routeRules: {
     '/providers/caprover': { prerender: true },
@@ -48,7 +55,7 @@ export default defineNuxtConfig({
       // wasm: true,
     },
     imports: {
-      dirs: ['./server/db', './server/db/services', './types'],
+      dirs: ['./src/server/db', './src/server/db/services', './types'],
     },
     storage: {
       cache: {
@@ -58,14 +65,13 @@ export default defineNuxtConfig({
       db: { driver: 'fsLite', base: './app-data' },
     },
     // set to undefined in prod so during build we use the correct entry and not the dev entry
-    entry: dev ? './core/entry.dev.ts' : undefined,
-    preset: './server/core',
+    entry: dev ?  cwd + '/src/server/core/entry.dev.ts' : undefined,
+    preset: cwd + '/src/server/core',
     typescript: {
       tsConfig: {
         exclude,
       },
     },
   },
-  // @ts-expect-error - this error is a bug in the types
-  modules: ['@nuxt/ui', '@vueuse/nuxt', 'nuxt-auth-utils', dev ? 'nuxt-build-cache' : undefined].filter(Boolean),
+  modules: modules(),
 })

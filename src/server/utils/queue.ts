@@ -1,4 +1,4 @@
-import type { SqliteProject } from '../../types/project'
+import type { SqliteProject } from '../../../types/project'
 import type { Job } from './job'
 import { ProjectJob } from './job'
 

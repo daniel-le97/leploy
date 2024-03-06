@@ -1,4 +1,4 @@
-import type { ProjectVolume } from '../../../../../types/env'
+import type { ProjectEnv } from '../../../../../../types/env'
 
 export default defineEventHandler(async (event) => {
   const projectId = getRouterParam(event, 'id')
@@ -8,13 +8,14 @@ export default defineEventHandler(async (event) => {
   const body = await readBody<{ name: string, value: string, forBuild: boolean | number }>(event)
   console.log(body)
 
-  const vol: ProjectVolume = {
+  const env: ProjectEnv = {
     id: crypto.randomUUID(),
     projectId,
     createdAt: Date.now().toString(),
     updatedAt: Date.now().toString(),
     name: body.name,
     value: body.value,
+    forBuild: body.forBuild === 1 || body.forBuild === true,
   }
-  projectVolumesService.createVolume(vol)
+  projectEnvService.createEnv(env)
 })

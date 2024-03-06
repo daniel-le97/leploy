@@ -1,4 +1,4 @@
-import { convertPortainerTemplatesToDockerCompose } from '~/server/extra/DockerComposeService'
+import { convertPortainerTemplatesToDockerCompose } from '~/src/server/extra/DockerComposeService'
 
 export default defineEventHandler(async (event) => {
   const id = getRouterParam(event, 'id')

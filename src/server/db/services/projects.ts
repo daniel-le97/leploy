@@ -1,5 +1,5 @@
 import { defu } from 'defu'
-import type { SqliteProject } from '../../../types/project'
+import type { SqliteProject } from '../../../../types/project'
 
 class Project {
   id: string

@@ -2,7 +2,7 @@
 // that means you do not need to add `@nuxt/kit` to your project's dependencies
 import { writeFile } from 'fs/promises'
 import { defineNuxtModule, useNitro } from 'nuxt/kit'
-import { version } from '../../package.json'
+import { version } from '../../../package.json'
 
 export default defineNuxtModule({
   meta: {

@@ -1,4 +1,4 @@
-import type { BuildLog } from '../../../types/logs'
+import type { BuildLog } from '../../../../types/logs'
 
 class LogsService {
   getLogsByProjectId(id: string) {
