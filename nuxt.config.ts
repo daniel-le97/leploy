@@ -2,6 +2,8 @@
 const dev = process.env.NODE_ENV !== 'production'
 const cwd = process.cwd()
 
+const pathFromCWD = (path: string) => `${cwd}${path}`
+// these get resolved from .nuxt/tsconfig.json
 const exclude = ['../eslint.config.js', `../temp`, `../app-data`, `../.output`, 'pino-std-serializers', `../docs`]
 const modules = () => {
   const modules = ['@nuxt/ui', '@vueuse/nuxt', 'nuxt-auth-utils']
@@ -30,7 +32,7 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   imports: {
     autoImport: true,
-    dirs: ['./types'],
+    dirs: ['./src/types'],
   },
   tailwindcss: {
     quiet: true,
@@ -55,7 +57,7 @@ export default defineNuxtConfig({
       // wasm: true,
     },
     imports: {
-      dirs: ['./src/server/db', './src/server/db/services', './types'],
+      dirs: ['./src/server/db', './src/server/db/services', './src/types'],
     },
     storage: {
       cache: {
@@ -64,9 +66,9 @@ export default defineNuxtConfig({
       },
       db: { driver: 'fsLite', base: './app-data' },
     },
-    // set to undefined in prod so during build we use the correct entry and not the dev entry
-    entry: dev ?  cwd + '/src/server/core/entry.dev.ts' : undefined,
-    preset: cwd + '/src/server/core',
+    // during production/builds, entry is resolved from the preset
+    entry: dev ?  pathFromCWD('/src/server/core/entry.dev.ts') : undefined,
+    preset: pathFromCWD('/src/server/core'),
     typescript: {
       tsConfig: {
         exclude,

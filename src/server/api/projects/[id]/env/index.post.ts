@@ -1,4 +1,4 @@
-import type { ProjectEnv } from '../../../../../../types/env'
+import type { ProjectEnv } from '../../../../../types/env'
 
 export default defineEventHandler(async (event) => {
   const projectId = getRouterParam(event, 'id')

@@ -1,24 +1,10 @@
 <script lang="ts" setup>
-import type { WatchStopHandle } from 'vue'
-import type { BuildLog } from '../../types/logs'
-
 const buildData = useBuildSSE()
-
-interface EventWatch {
-  [key: string]: WatchStopHandle | null
-}
-
-const Logs = useActiveProject()
-
-const defaults: EventWatch = {}
-
 const activeId = useState('active-log-id')
-
 const routerId = useRoute('projects-id').params.id
-
 const logs = useBuildLogs()
 
-const { data, pending, error, refresh } = await useFetch<BuildLog[]>(`/api/build/${routerId}/logs`)
+const { data, pending, error, refresh } = await useFetch<BuildLog[]>(`/api/projects/${routerId}/builds`)
 if (data.value)
   logs.value = data.value
 
@@ -26,14 +12,6 @@ watch(data, (newVal) => {
   if (newVal !== null)
     logs.value = newVal
 })
-// async function getLogs(id: string) {
-// //  console.log(id);
-//   activeId.value = id
-//   const { data, pending, error, refresh } = await useFetch(`/api/build/${routerId}/logs/${id}`)
-//   // console.log(data.value);
-
-//   buildData.value = data.value as string
-// }
 
 async function handleClick(log: BuildLog) {
   buildData.value = log.data
@@ -45,8 +23,6 @@ async function handleBuildKill() {
   })
 }
 
-const term = ref()
-const ansi = '#12 4.696 computing gzip size...\n#12 4.699 dist/<span style="font-weight:normal;text-decoration:none;font-style:normal"><span style="color:#0AA">_astro/hoisted.ec938008.js  <span style="color:#FFF"><b>8.74 kB<span style="font-weight:normal;text-decoration:none;font-style:normal"><b><span style="font-weight:normal;text-decoration:none;font-style:normal"> │ gzip: 3.01 kB<span style="font-weight:normal;text-decoration:none;font-style:normal">\n#12 4.699 <span style="color:#0A0">✓ built in 80ms<span style="color:#FFF">\n#12 4.699 Completed in 90ms.\n#12 4.699 \n#12 4.705 \n#12 4.705  generating static routes \n#12 4.803 ▶ src/pages/index.astro\n</span></span></span></span></b></span></b></span></span></span>'
 </script>
 
 <template>

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { WatchStopHandle } from 'vue'
-import type { SqliteProject } from '../../types/project'
+
 
 const { data, pending, error, refresh } = await useFetch<SqliteProject[]>('/api/projects')
 const pingMap = new Map<string, Timer>()

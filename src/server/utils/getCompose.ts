@@ -1,6 +1,6 @@
 import { createHash } from 'node:crypto'
 import * as YAML from 'js-yaml'
-import type { SqliteProject } from '../../../types/project'
+import type { SqliteProject } from '../../types/project'
 
 export function getDomain(project: SqliteProject) {
   return `${project.name}.${randomUUIDToBase64url(project.id)}.localhost`

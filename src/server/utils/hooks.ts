@@ -1,6 +1,6 @@
 import type { Server as BunServer } from 'bun'
 import { createHooks } from 'hookable'
-import type { SqliteProject } from '../../../types/project'
+import type { SqliteProject } from '../../types/project'
 
 export interface BuildPayload {
   id: string

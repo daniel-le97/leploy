@@ -1,7 +1,7 @@
 // import type { Project } from "../types/project";
 
-import type { BuildLog } from '../../types/logs'
-import type { Project, SqliteProject } from '../../types/project'
+import type { BuildLog } from '../types/logs'
+import type { Project, SqliteProject } from '../types/project'
 
 export const useTabIndex = () => useState('tab-index', () => 0)
 

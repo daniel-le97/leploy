@@ -1,4 +1,4 @@
-import type { SqliteProject } from '../../../../../types/project'
+import type { SqliteProject } from '../../../../types/project'
 
 export default defineEventHandler(async (event) => {
   try {
