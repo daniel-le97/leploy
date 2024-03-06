@@ -6,7 +6,7 @@ const exclude = ['../eslint.config.js', `../temp`, `../app-data`, `../.output`, 
 export default defineNuxtConfig({
   ssr: false,
   // srcDir: 'src/',
-  
+
   routeRules: {
     '/providers/caprover': { prerender: true },
     '/providers/portainer': { prerender: true },
@@ -32,10 +32,10 @@ export default defineNuxtConfig({
   },
   ignore: ['/temp', '/data', '/stack', '/app-data'],
   nitro: {
-    rollupConfig:{
-      'external': ['bun', 'bun:sqlite'],
+    rollupConfig: {
+      external: ['bun', 'bun:sqlite'],
     },
-      devStorage: {
+    devStorage: {
       cache: {
         driver: 'fsLite',
         base: './app-data',

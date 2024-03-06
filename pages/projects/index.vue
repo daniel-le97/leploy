@@ -1,32 +1,28 @@
 <script setup lang="ts">
-import type { WatchStopHandle } from 'vue';
+import type { WatchStopHandle } from 'vue'
 import type { SqliteProject } from '../../types/project'
-import type RippleBtnVue from '../../components/RippleBtn.vue';
 
 const { data, pending, error, refresh } = await useFetch<SqliteProject[]>('/api/projects')
 const pingMap = new Map<string, Timer>()
 
 // console.log(data.value);
 onMounted(() => {
-  const hello = computed( () => data.value)
+  const hello = computed(() => data.value)
   watch(hello, (projects) => {
   //  console.log(projects);
 
+  })
 })
 
- })
-
- const checkIsRunning = (projects: SqliteProject[]) => {
+function checkIsRunning(projects: SqliteProject[]) {
   const ws = useWs()
   for (const p of projects) {
-    if (p.deployed) {
+    if (p.deployed)
       ws.send(JSON.stringify({ type: 'ping', data: p.id }))
-    }
   }
 }
 
-let watching: WatchStopHandle | undefined = undefined
-
+const watching: WatchStopHandle | undefined = undefined
 
 async function handleProjectCreate() {
   const projectId = await $fetch<string>('/api/projects', {

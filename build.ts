@@ -1,12 +1,10 @@
-
 import { $, type ShellOutput } from 'bun'
 
 let code = 0
-const keepRunning = (output: ShellOutput) => {
+function keepRunning(output: ShellOutput) {
   code = output.exitCode
-  if (code !== 0 || Number(code) !== 0) {
+  if (code !== 0 || Number(code) !== 0)
     process.exit(code)
-  }
 }
 const image = 'ghcr.io/daniel-le97/leploy'
 try {

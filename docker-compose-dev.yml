@@ -5,13 +5,13 @@ services:
     image: 'traefik:v2.10'
     container_name: le-ploy-proxy
     command:
-      - "--api.insecure=true"
-      - "--providers.docker=true"
-      - "--entrypoints.web.address=:80"
-      - "--entrypoints.web-secure.address=:443"
-      - "--providers.docker.exposedbydefault=false"
-      - "--certificatesresolvers.local.acme.httpchallenge=true"
-      - "--certificatesresolvers.local.acme.httpchallenge.entrypoint=web"
+      - --api.insecure=true
+      - --providers.docker=true
+      - '--entrypoints.web.address=:80'
+      - '--entrypoints.web-secure.address=:443'
+      - --providers.docker.exposedbydefault=false
+      - --certificatesresolvers.local.acme.httpchallenge=true
+      - --certificatesresolvers.local.acme.httpchallenge.entrypoint=web
     ports:
       - '80:80'
       - '443:443'

@@ -49,10 +49,8 @@ export default defineEventHandler(async (event) => {
 
     // const project = await db.getItem<Project>(`${session.id}:${id}`)
     const project = await projectsService.getProjectById(id)
-    if (!project) {
+    if (!project)
       throw createError({ message: 'project not found' })
-    }
-
 
     const compose = getComposeFile(project)
     return compose

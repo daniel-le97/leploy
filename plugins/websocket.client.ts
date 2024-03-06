@@ -24,10 +24,8 @@ export default defineNuxtPlugin(async () => {
         terminal.scrollToBottom()
       }
 
-      if (data.type === 'ping') {
-        console.log('ping', parse<string>(event));
-        
-      }
+      if (data.type === 'ping')
+        console.log('ping', parse<string>(event))
 
       if (data.type === 'logs') {
         const newData = parse<BuildLog>(event)

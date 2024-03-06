@@ -11,7 +11,7 @@
       "latest"
     ]
   },
-  "postgres":{
+  "postgres": {
     "categories": [
       "Database"
     ],
@@ -26,5 +26,5 @@
     "title": "PostgreSQL",
     "type": 3
   }
-  
+
 }

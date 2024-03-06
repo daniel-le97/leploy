@@ -6,4 +6,3 @@ export default defineEventHandler(async (event) => {
   if (await db.hasItem(id))
     await db.removeItem(id)
 })
-

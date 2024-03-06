@@ -21,8 +21,8 @@ async function handleVolCreate(vol: Vol, _refresh = false) {
   if (!vol.name || !vol.value)
     return
 
-    console.log(vol);
-    
+  console.log(vol)
+
   const projectId = await $fetch<string>(`/api/projects/${id}/volumes`, {
     method: 'POST',
     body: vol,
@@ -80,7 +80,7 @@ function updateProjectVolume(projectVolume: ProjectVolume) {
           <input v-model="vol.forBuild" type="checkbox">
         </div> -->
       </div>
-      <div class="border border-white"></div>
+      <div class="border border-white" />
       <form class="flex flex-row justify-center gap-8 items-center py-2">
         <RippleBtn class="ml-4 bg-blue-500 text-white px-2 py-1 rounded" type="submit" @click.prevent="handleVolCreate(volRef, true)">
           create
@@ -103,10 +103,8 @@ function updateProjectVolume(projectVolume: ProjectVolume) {
       </form>
     </div>
 
-   <!-- <RippleBtn class="pt-3" @click="handleVolCreate(volRef, true)">
+    <!-- <RippleBtn class="pt-3" @click="handleVolCreate(volRef, true)">
       SUBMIT vol
     </RippleBtn>  -->
-
-
   </div>
 </template>

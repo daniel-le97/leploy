@@ -19,7 +19,7 @@ class LogsService {
       log.buildTime,
       log.type,
       log.compose,
-      log.commitHash
+      log.commitHash,
     )
   }
 }

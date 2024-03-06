@@ -1,25 +1,25 @@
+import { createHash } from 'node:crypto'
 import * as YAML from 'js-yaml'
 import type { SqliteProject } from '../../types/project'
-import {createHash} from 'node:crypto'
 
 export function getDomain(project: SqliteProject) {
   return `${project.name}.${randomUUIDToBase64url(project.id)}.localhost`
 }
 
 // function takes in a crypto.randomUUID() and always returns the same character base64url string
-export function randomUUIDToBase64url(uuid:string, length = 6) {
+export function randomUUIDToBase64url(uuid: string, length = 6) {
   // Create a SHA-256 hash of the UUID
-  const hash = createHash('SHA512').update(uuid).digest();
+  const hash = createHash('SHA512').update(uuid).digest()
   const base64url = hash.toString('base64url')
-  .replace(/\+/g, '-')
-  .replace(/\//g, '_')
-  .replace(/=/g, '')
-  .substring(0, length); // Take the first 6 characters
+    .replace(/\+/g, '-')
+    .replace(/\//g, '_')
+    .replace(/=/g, '')
+    .substring(0, length) // Take the first 6 characters
 
-  return base64url;
+  return base64url
 }
 
-export function getComposeFile(project: SqliteProject, domain?:string) {
+export function getComposeFile(project: SqliteProject, domain?: string) {
   domain = domain || getDomain(project)
   const traefik = true
   const serviceName = project.name

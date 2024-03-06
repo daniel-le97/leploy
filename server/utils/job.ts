@@ -3,14 +3,14 @@ import * as os from 'node:os'
 import type { Subprocess } from 'bun'
 import { $ } from 'bun'
 import { Server } from '../core/server'
-import { getDomain, randomUUIDToBase64url } from './getCompose';
+import { getDomain } from './getCompose'
 
 export interface Job {
   finish: () => Promise<void>
   failed: () => boolean
   getPath: () => string
   cleanPath: (path?: string) => void
-  fetchClone: () => Promise<void> 
+  fetchClone: () => Promise<void>
   // gitClone: () => Promise<void>
   clone: () => Promise<void>
   build: () => Promise<void>
@@ -147,8 +147,8 @@ export class ProjectJob implements Job {
     this.shell = Bun.spawn(commands, { env: this.getProjectEnv(), stdio: ['ignore', 'pipe', 'pipe'] })
     await this.sendStream(this.shell)
     this.commitHash = (await $`git -C ${this.getPath()} rev-parse HEAD`.text()).trim()
-    console.log(this.commitHash);
-    
+    console.log(this.commitHash)
+
     // this.publish(`\nclone: finished\n\n`)
   }
 
@@ -200,7 +200,7 @@ export class ProjectJob implements Job {
 
     let path = `${this.getPath()}`
     if (!this.isCompose) {
-      this.compose = getComposeFile(this.project,this.domain)
+      this.compose = getComposeFile(this.project, this.domain)
       path = `${this.getPath()}/${this.id}.yml`
       await Bun.write(path, this.compose)
     }
@@ -216,11 +216,13 @@ export class ProjectJob implements Job {
 
   getProjectEnv(includeProcessEnv = true) {
     const processENV = includeProcessEnv ? process.env : undefined
-    const nixEnvs = this.project.buildPack === 'nixpacks' ? { 
-      NIXPACKS_INSTALL_CMD: this.project.installCommand ?? undefined,
-      NIXPACKS_BUILD_CMD: this.project.buildCommand ?? undefined,
-      NIXPACKS_START_CMD: this.project.startCommand ?? undefined,
-    } : undefined
+    const nixEnvs = this.project.buildPack === 'nixpacks'
+      ? {
+          NIXPACKS_INSTALL_CMD: this.project.installCommand ?? undefined,
+          NIXPACKS_BUILD_CMD: this.project.buildCommand ?? undefined,
+          NIXPACKS_START_CMD: this.project.startCommand ?? undefined,
+        }
+      : undefined
     const envs: Record<string, any> = {
       ...processENV,
       ...nixEnvs,
@@ -243,7 +245,7 @@ export class ProjectJob implements Job {
         return
       }
       // console.log(data);
-      
+
       this.publish(data)
     }
     // for await (const data of buildProcess.stderr) {
